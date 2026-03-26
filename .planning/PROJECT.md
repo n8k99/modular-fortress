@@ -29,9 +29,11 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Ghosts perceive dispatched projects and assigned tasks through perception API — Phase 2
 - ✓ Project ownership urgency boost (+15/project) code path verified end-to-end — Phase 2
 
+- ✓ Executive ghosts use LLM cognition to decompose projects into staff-suitable tasks — Phase 3
+- ✓ Executives delegate and assign tasks to staff via CREATE_TASK parser — Phase 3
+- ✓ Task creation API supports ghost-originated tasks with auto-generated task_id — Phase 3
+
 ### Active
-- [ ] Executive ghosts use LLM cognition to break projects into team-suitable phases
-- [ ] Executives delegate and assign tasks to their staff ghosts
 - [ ] Staff ghosts pick up assigned tasks and execute using tools
 - [ ] Tool socket system expanded: code tools (Claude Code CLI), DB tools (direct queries), API tools (dpn-api calls), external tools (web, embeddings)
 - [ ] Task completion reported to conversations table
@@ -116,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 2 completion*
+*Last updated: 2026-03-26 after Phase 3 completion*
