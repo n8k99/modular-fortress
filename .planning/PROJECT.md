@@ -33,9 +33,12 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Executives delegate and assign tasks to staff via CREATE_TASK parser — Phase 3
 - ✓ Task creation API supports ghost-originated tasks with auto-generated task_id — Phase 3
 
+- ✓ Staff ghosts execute work via tool socket (DB, task, code, memory tools) — Phase 4
+- ✓ Claude Code CLI registered as ghost tool with scope enforcement — Phase 4
+- ✓ Tool results persisted in stage_notes for executive audit — Phase 4
+- ✓ Agent tool_scope values audited and corrected (64 agents) — Phase 4
+
 ### Active
-- [ ] Staff ghosts pick up assigned tasks and execute using tools
-- [ ] Tool socket system expanded: code tools (Claude Code CLI), DB tools (direct queries), API tools (dpn-api calls), external tools (web, embeddings)
 - [ ] Task completion reported to conversations table
 - [ ] Project/task status updates reflect execution progress
 - [ ] Pipeline stage advancement (spec→build→test→deploy) driven by task completion
@@ -118,4 +121,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 3 completion*
+*Last updated: 2026-03-26 after Phase 4 completion (TOOL-04 external tools deferred to v2)*
