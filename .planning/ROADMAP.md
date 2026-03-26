@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Fix dispatch_project with H1 extraction, owner column, department routing, and test scaffold
-- [ ] 01-02-PLAN.md — Fix dispatch_phase with hierarchical subtasks and enhanced show_status
+- [x] 01-02-PLAN.md — Fix dispatch_phase with hierarchical subtasks and enhanced show_status
 
 ### Phase 2: Perception Pipeline
 **Goal**: Ghosts perceive dispatched work through the perception API with correct urgency and filtering

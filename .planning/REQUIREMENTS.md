@@ -9,9 +9,9 @@
 
 - [x] **SCHM-01**: Tasks table has columns for project linkage (`project_id`), source tracking (`source`), and GSD context (`context`)
 - [x] **SCHM-02**: dispatch_to_db.py successfully writes project records to projects table with owner, goals, and status
-- [ ] **SCHM-03**: dispatch_to_db.py successfully writes task records to tasks table with project linkage and wave metadata
+- [x] **SCHM-03**: dispatch_to_db.py successfully writes task records to tasks table with project linkage and wave metadata
 - [x] **SCHM-04**: Dispatched tasks include department routing derived from project owner's domain
-- [ ] **SCHM-05**: dispatch_to_db.py `--status` shows accurate project and task status from DB
+- [x] **SCHM-05**: dispatch_to_db.py `--status` shows accurate project and task status from DB
 
 ### Perception
 
@@ -82,9 +82,9 @@
 |-------------|-------|--------|
 | SCHM-01 | Phase 1 | Complete |
 | SCHM-02 | Phase 1 | Complete |
-| SCHM-03 | Phase 1 | Pending |
+| SCHM-03 | Phase 1 | Complete |
 | SCHM-04 | Phase 1 | Complete |
-| SCHM-05 | Phase 1 | Pending |
+| SCHM-05 | Phase 1 | Complete |
 | PERC-01 | Phase 2 | Pending |
 | PERC-02 | Phase 2 | Pending |
 | PERC-03 | Phase 2 | Pending |
