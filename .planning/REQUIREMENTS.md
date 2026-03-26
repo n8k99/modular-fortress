@@ -26,7 +26,7 @@
 - [x] **EXEC-01**: Executive ghost receives dispatched project and uses LLM cognition to decompose into staff-suitable tasks
 - [x] **EXEC-02**: Executive task breakdown respects wave ordering from GSD dispatch context
 - [ ] **EXEC-03**: Executive assigns decomposed tasks to staff ghosts based on domain expertise and tool_scope
-- [ ] **EXEC-04**: Decomposed subtasks are written to tasks table via API with project_id linkage
+- [x] **EXEC-04**: Decomposed subtasks are written to tasks table via API with project_id linkage
 - [ ] **EXEC-05**: Executive monitors progress of delegated tasks across ticks and re-prioritizes as needed
 
 ### Tool Execution
@@ -93,7 +93,7 @@
 | EXEC-01 | Phase 3 | Complete |
 | EXEC-02 | Phase 3 | Complete |
 | EXEC-03 | Phase 3 | Pending |
-| EXEC-04 | Phase 3 | Pending |
+| EXEC-04 | Phase 3 | Complete |
 | EXEC-05 | Phase 3 | Pending |
 | TOOL-01 | Phase 4 | Pending |
 | TOOL-02 | Phase 4 | Pending |

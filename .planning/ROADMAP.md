@@ -62,7 +62,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Fix task creation API: add task_id auto-generation, parent_id, source fields to NewTask + project_id filter
+- [x] 03-01-PLAN.md — Fix task creation API: add task_id auto-generation, parent_id, source fields to NewTask + project_id filter
 - [x] 03-02-PLAN.md — Enrich executive project review prompt with GSD context (task details, waves, must_haves) and team roster
 - [ ] 03-03-PLAN.md — Implement CREATE_TASK parser in action-executor.lisp and wire into apply-task-mutations + E2E smoke test
 
