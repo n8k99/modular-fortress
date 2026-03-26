@@ -1,118 +1,77 @@
-# Requirements: Noosphere Dispatch Pipeline
+# Requirements: Noosphere Dispatch Pipeline v1.1
 
 **Defined:** 2026-03-26
-**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
+**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention — executives plan, staff execute, results report themselves.
 
-## v1 Requirements
+## v1.1 Requirements
 
-### Schema & Dispatch
+### Task Dependencies
 
-- [x] **SCHM-01**: Tasks table has columns for project linkage (`project_id`), source tracking (`source`), and GSD context (`context`)
-- [x] **SCHM-02**: dispatch_to_db.py successfully writes project records to projects table with owner, goals, and status
-- [x] **SCHM-03**: dispatch_to_db.py successfully writes task records to tasks table with project linkage and wave metadata
-- [x] **SCHM-04**: Dispatched tasks include department routing derived from project owner's domain
-- [x] **SCHM-05**: dispatch_to_db.py `--status` shows accurate project and task status from DB
+- [ ] **DEP-01**: Perception endpoint filters out tasks where blocked_by references an incomplete task
+- [ ] **DEP-02**: When a task completes, all tasks with blocked_by pointing to it are automatically unblocked
+- [ ] **DEP-03**: Executives can set blocked_by when creating tasks via CREATE_TASK (e.g., `CREATE_TASK: desc blocked_by=#123`)
+- [ ] **DEP-04**: dispatch_to_db.py sets blocked_by for subtasks based on wave ordering (wave 2 blocked by wave 1 parent)
 
-### Perception
+### Artifact Passing
 
-- [x] **PERC-01**: /api/perception/:agent_id returns dispatched project-linked tasks for the agent
-- [x] **PERC-02**: Executive agents perceive projects they own with current status and goals
-- [x] **PERC-03**: Staff agents perceive tasks assigned to them with project context and must_haves
-- [x] **PERC-04**: Project ownership triggers urgency boost (+15/project) in tick engine ranking
-- [x] **PERC-05**: Perception filters tasks by scheduled_at so ghosts only see ready work
+- [ ] **ART-01**: Pipeline stages have typed output schemas (spec, design, code, test, review) stored in stage_notes as structured JSON
+- [ ] **ART-02**: When a task advances to next pipeline stage, the output schema from current stage is passed as input context to next assignee
+- [ ] **ART-03**: Action executor validates that stage output matches expected schema before marking stage complete
 
-### Executive Planning
+### Decisions Brain
 
-- [x] **EXEC-01**: Executive ghost receives dispatched project and uses LLM cognition to decompose into staff-suitable tasks
-- [x] **EXEC-02**: Executive task breakdown respects wave ordering from GSD dispatch context
-- [x] **EXEC-03**: Executive assigns decomposed tasks to staff ghosts based on domain expertise and tool_scope
-- [x] **EXEC-04**: Decomposed subtasks are written to tasks table via API with project_id linkage
-- [x] **EXEC-05**: Executive monitors progress of delegated tasks across ticks and re-prioritizes as needed
+- [ ] **DEC-01**: Executive project review prompt includes recent decisions from decisions table for the project being reviewed
+- [ ] **DEC-02**: When an executive makes a decision during project review, it is logged to the decisions table with project_id and agent attribution
+- [ ] **DEC-03**: Decisions are queryable via /api/decisions with project_id filter
 
-### Tool Execution
+### Verification Levels
 
-- [x] **TOOL-01**: Staff ghosts execute code tools via Claude Code CLI (read/write files, run commands, git ops)
-- [x] **TOOL-02**: Staff ghosts execute DB tools (query/mutate master_chronicle via dpn-api)
-- [x] **TOOL-03**: Staff ghosts execute API tools (call dpn-api endpoints for doc creation, task updates, messages)
-- [ ] **TOOL-04**: Staff ghosts execute external tools (web search, URL fetch, embedding generation) — DEFERRED: no web_search/url_fetch implementations exist, deferred to v2
-- [x] **TOOL-05**: Tool execution respects agent tool_scope -- ghosts only use tools they're authorized for
-- [x] **TOOL-06**: Tool execution results are validated before task is marked complete (anti-hallucination)
+- [ ] **VER-01**: Task completion reports include severity classification (CRITICAL/WARNING/SUGGESTION) for quality issues found
+- [ ] **VER-02**: Executive perceives tasks with CRITICAL verification issues at elevated urgency
+- [ ] **VER-03**: Staff ghost outputs structured quality assessment alongside COMPLETE: command
 
-### Reporting & Feedback
+### Lifecycle Signals
 
-- [x] **REPT-01**: Task completion posts a report to conversations table (from staff, to executive)
-- [x] **REPT-02**: Project/task status in DB reflects actual execution state (open → in_progress → done)
-- [x] **REPT-03**: Wave advancement: when all tasks in wave N complete, wave N+1 tasks become perceivable
-- [x] **REPT-04**: Blocker escalation: staff ghost posts blocker to conversations, executive perceives with high urgency
-- [x] **REPT-05**: /gsd:progress (or dispatch --status) shows real execution state of dispatched projects
-- [x] **REPT-06**: Nathan only receives conversation notifications for blockers and strategic decisions
+- [ ] **LIFE-01**: Staff ghost signals IDLE after completing assigned work (no more tasks in queue)
+- [ ] **LIFE-02**: Executive perceives staff availability (idle agents listed in project review context)
+- [ ] **LIFE-03**: Energy system reflects lifecycle state (idle agents have energy available for new work)
 
-## v2 Requirements
+## Future Requirements
 
-### Advanced Autonomy
+### From v1.0 Deferred
 
-- **AUTO-01**: Cross-department task handoffs (e.g., Eliana's engineering task needs Vincent's visual assets)
-- **AUTO-02**: Ghost-initiated subtask creation (staff can break their own tasks further)
-- **AUTO-03**: Automatic wave dependency graph construction from task metadata
-- **AUTO-04**: Cost tracking per project (aggregate LLM token spend by project_id)
+- **TOOL-04**: External tools (web search, URL fetch, embedding generation) — no implementations exist yet
 
-### Hardening
+### Potential v2.0
 
-- **HARD-01**: File write sandboxing beyond path allowlists
-- **HARD-02**: Dollar-denominated budget cap per project in cognition broker
-- **HARD-03**: Automatic rollback on failed tool execution sequences
-- **HARD-04**: Semantic coherence checks between pipeline stages (not just format validation)
+- **AUTO-01**: Cross-department task handoffs
+- **AUTO-02**: Ghost-initiated subtask creation (staff break own tasks)
+- **AUTO-03**: Automatic wave dependency graph construction
+- **AUTO-04**: Cost tracking per project (aggregate LLM spend by project_id)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Ghost-to-ghost negotiation | Deadlock risk; ghosts execute dispatched work, don't create projects |
-| Real-time activity streaming | Async DB reporting sufficient for 30s-10m tick intervals |
-| Frontend/UI changes (dpn-kb, org graph) | Backend pipeline only; existing frontends read same DB |
-| Tick engine rewrite | Extend existing architecture, don't replace it |
-| Multi-droplet distribution | Single node constraint; all services on one droplet |
-| Complex DAG workflow engine | Simple wave numbers (1, 2, 3) sufficient for v1 |
-| Dynamic agent spawning | Destroys persistent identity model; fixed roster of 64 ghosts |
-| Retry/backoff systems | Tick engine + cognitive winter + energy gating = natural backoff |
+| Ghost-to-ghost negotiation | Deadlock risk; executives mediate |
+| Real-time activity streaming | Async DB reporting sufficient |
+| Frontend/UI changes | Backend coordination only |
+| Tick engine rewrite | Extend, don't replace |
+| Dynamic agent spawning | Fixed roster of 64 ghosts |
+| ClawTeam-style worktree isolation | Single SBCL process model |
+| Squad-style file-based state | DB is the OS — master_chronicle |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHM-01 | Phase 1 | Complete |
-| SCHM-02 | Phase 1 | Complete |
-| SCHM-03 | Phase 1 | Complete |
-| SCHM-04 | Phase 1 | Complete |
-| SCHM-05 | Phase 1 | Complete |
-| PERC-01 | Phase 2 | Complete |
-| PERC-02 | Phase 2 | Complete |
-| PERC-03 | Phase 2 | Complete |
-| PERC-04 | Phase 2 | Complete |
-| PERC-05 | Phase 2 | Complete |
-| EXEC-01 | Phase 3 | Complete |
-| EXEC-02 | Phase 3 | Complete |
-| EXEC-03 | Phase 3 | Complete |
-| EXEC-04 | Phase 3 | Complete |
-| EXEC-05 | Phase 3 | Complete |
-| TOOL-01 | Phase 4 | Complete |
-| TOOL-02 | Phase 4 | Complete |
-| TOOL-03 | Phase 4 | Complete |
-| TOOL-04 | Phase 4 | Complete |
-| TOOL-05 | Phase 4 | Complete |
-| TOOL-06 | Phase 4 | Complete |
-| REPT-01 | Phase 5 | Complete |
-| REPT-02 | Phase 5 | Complete |
-| REPT-03 | Phase 5 | Complete |
-| REPT-04 | Phase 5 | Complete |
-| REPT-05 | Phase 5 | Complete |
-| REPT-06 | Phase 5 | Complete |
+| (populated by roadmapper) | | |
 
 **Coverage:**
-- v1 requirements: 27 total
-- Mapped to phases: 27
-- Unmapped: 0
+- v1.1 requirements: 15 total
+- Mapped to phases: 0
+- Unmapped: 15
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after roadmap creation*
+*Last updated: 2026-03-26 after initial definition*
