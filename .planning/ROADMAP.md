@@ -71,7 +71,11 @@ Plans:
   1. When an executive reviews a project, the LLM prompt includes recent decisions from the decisions table for that project
   2. When an executive makes a decision during project review, it appears in the decisions table with the correct project_id and agent attribution
   3. Calling GET /api/decisions?project_id=X returns all decisions for that project in chronological order
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md -- Decisions REST API (Rust handler + DB migration) and smoke tests
+- [ ] 08-02-PLAN.md -- Lisp integration (decision capture in action-executor + context injection in action-planner)
 
 ### Phase 9: Verification Levels
 **Goal**: Task completion quality is assessed with severity levels so executives can prioritize rework on critical issues
@@ -109,6 +113,6 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 5. Feedback & Reporting | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 6. Task Dependency Chains | v1.1 | 0/3 | Planning | - |
 | 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
-| 8. Decisions Brain | v1.1 | 0/0 | Not started | - |
+| 8. Decisions Brain | v1.1 | 0/2 | Planning | - |
 | 9. Verification Levels | v1.1 | 0/0 | Not started | - |
 | 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |
