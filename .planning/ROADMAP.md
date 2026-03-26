@@ -95,9 +95,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md — DB trigger wave advancement + Lisp completion reporting, blocker escalation, ESCALATE parser
+- [ ] 05-02-PLAN.md — Wave-level progress in dispatch --status + E2E verification of all REPT requirements
 
 ## Progress
 
@@ -110,4 +109,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Perception Pipeline | 0/2 | Planned | - |
 | 3. Executive Cognition | 0/3 | Not started | - |
 | 4. Tool Execution | 0/2 | Planned | - |
-| 5. Feedback & Reporting | 0/3 | Not started | - |
+| 5. Feedback & Reporting | 0/2 | Planned | - |
