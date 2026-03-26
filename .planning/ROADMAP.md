@@ -41,7 +41,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. When a blocking task is marked complete, all tasks referencing it in blocked_by become perceivable within the next tick
   3. An executive ghost creating subtasks via CREATE_TASK can specify blocked_by references and the dependency is persisted
   4. dispatch_to_db.py automatically sets blocked_by for wave 2+ subtasks based on wave ordering from GSD plans
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md -- Schema migration (INTEGER to INTEGER[]) and trigger extension for auto-unblocking
+- [ ] 06-02-PLAN.md -- Perception filtering for blocked tasks and task API INTEGER[] support
+- [ ] 06-03-PLAN.md -- Lisp CREATE_TASK parser blocked_by= syntax and dispatch wave dependency population
 
 ### Phase 7: Structured Artifact Passing
 **Goal**: Pipeline stage outputs are typed and validated, so the next assignee receives structured context instead of freeform text
@@ -97,7 +102,7 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 3. Executive Cognition | v1.0 | 3/3 | Complete | 2026-03-26 |
 | 4. Tool Execution | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 5. Feedback & Reporting | v1.0 | 2/2 | Complete | 2026-03-26 |
-| 6. Task Dependency Chains | v1.1 | 0/0 | Not started | - |
+| 6. Task Dependency Chains | v1.1 | 0/3 | Planning | - |
 | 7. Structured Artifact Passing | v1.1 | 0/0 | Not started | - |
 | 8. Decisions Brain | v1.1 | 0/0 | Not started | - |
 | 9. Verification Levels | v1.1 | 0/0 | Not started | - |
