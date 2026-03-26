@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-26T04:01:49.880Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-26T04:28:59.442Z"
 last_activity: 2026-03-26
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 01 — schema-dispatch
+**Current focus:** Phase 02 — perception-pipeline
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 02 (perception-pipeline) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-03-26
 
 Progress: [░░░░░░░░░░] 0%
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01 P01 | 4min | 2 tasks | 3 files |
 | Phase 01 P02 | 4min | 2 tasks | 3 files |
+| Phase 02 P01 | 7min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Used psycopg2 native list-to-array adaptation for assigned_to text[] instead of ARRAY literal SQL
 - [Phase 01]: parse_must_haves() extracts from frontmatter YAML block rather than markdown body
 - [Phase 01]: show_status() filters by source='gsd' to count only GSD-dispatched tasks in hierarchy
+- [Phase 02]: Release build required: PM2 runs target/release/dpn-api, cargo build --release needed for deployment
+- [Phase 02]: Full context field returned without truncation for must_haves JSON ghost verification
+- [Phase 02]: assignee preserved in serialization alongside assigned_to for Lisp action-planner backward compatibility
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T04:01:49.875Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-perception-pipeline/02-CONTEXT.md
+Last session: 2026-03-26T04:28:59.436Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
