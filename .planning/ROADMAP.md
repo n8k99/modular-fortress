@@ -80,7 +80,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Fix wildcard scope bug for memory tools, register claude_code tool, create claude-code-tool.sh
-- [ ] 04-02-PLAN.md — E2E smoke test for all 4 tool categories + TOOL-04 deferral + scope/validation verification
+- [x] 04-02-PLAN.md — E2E smoke test for all 4 tool categories + TOOL-04 deferral + scope/validation verification
 
 ### Phase 5: Feedback & Reporting
 **Goal**: Execution results flow back through the system so Nathan sees real progress and only gets pulled in for blockers
