@@ -38,12 +38,15 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Tool results persisted in stage_notes for executive audit — Phase 4
 - ✓ Agent tool_scope values audited and corrected (64 agents) — Phase 4
 
+- ✓ Task completion reports to executive conversations with GSD context (project, must_haves, stage_notes) — Phase 5
+- ✓ Wave advancement: DB trigger auto-opens next wave when current wave completes — Phase 5
+- ✓ Project completion auto-notifies Nathan via conversations INSERT — Phase 5
+- ✓ Blocker escalation to executive + ESCALATE: @nathan parser — Phase 5
+- ✓ dispatch --status shows per-wave progress for all active projects — Phase 5
+
 ### Active
-- [ ] Task completion reported to conversations table
-- [ ] Project/task status updates reflect execution progress
-- [ ] Pipeline stage advancement (spec→build→test→deploy) driven by task completion
-- [ ] Feedback loop: ghost execution results visible via /gsd:progress and org graph
-- [ ] Nathan only pulled in for blockers and strategic decisions
+
+(All v1 requirements complete — see v2 Requirements below)
 
 ### Out of Scope
 
@@ -121,4 +124,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 4 completion (TOOL-04 external tools deferred to v2)*
+*Last updated: 2026-03-26 after Phase 5 completion — ALL PHASES COMPLETE (TOOL-04 external tools deferred to v2)*
