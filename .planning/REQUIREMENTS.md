@@ -40,12 +40,12 @@
 
 ### Reporting & Feedback
 
-- [ ] **REPT-01**: Task completion posts a report to conversations table (from staff, to executive)
-- [ ] **REPT-02**: Project/task status in DB reflects actual execution state (open → in_progress → done)
-- [ ] **REPT-03**: Wave advancement: when all tasks in wave N complete, wave N+1 tasks become perceivable
-- [ ] **REPT-04**: Blocker escalation: staff ghost posts blocker to conversations, executive perceives with high urgency
+- [x] **REPT-01**: Task completion posts a report to conversations table (from staff, to executive)
+- [x] **REPT-02**: Project/task status in DB reflects actual execution state (open → in_progress → done)
+- [x] **REPT-03**: Wave advancement: when all tasks in wave N complete, wave N+1 tasks become perceivable
+- [x] **REPT-04**: Blocker escalation: staff ghost posts blocker to conversations, executive perceives with high urgency
 - [ ] **REPT-05**: /gsd:progress (or dispatch --status) shows real execution state of dispatched projects
-- [ ] **REPT-06**: Nathan only receives conversation notifications for blockers and strategic decisions
+- [x] **REPT-06**: Nathan only receives conversation notifications for blockers and strategic decisions
 
 ## v2 Requirements
 
@@ -101,12 +101,12 @@
 | TOOL-04 | Phase 4 | Complete |
 | TOOL-05 | Phase 4 | Complete |
 | TOOL-06 | Phase 4 | Complete |
-| REPT-01 | Phase 5 | Pending |
-| REPT-02 | Phase 5 | Pending |
-| REPT-03 | Phase 5 | Pending |
-| REPT-04 | Phase 5 | Pending |
+| REPT-01 | Phase 5 | Complete |
+| REPT-02 | Phase 5 | Complete |
+| REPT-03 | Phase 5 | Complete |
+| REPT-04 | Phase 5 | Complete |
 | REPT-05 | Phase 5 | Pending |
-| REPT-06 | Phase 5 | Pending |
+| REPT-06 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
