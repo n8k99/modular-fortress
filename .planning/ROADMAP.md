@@ -79,9 +79,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — Fix wildcard scope bug for memory tools, register claude_code tool, create claude-code-tool.sh
+- [ ] 04-02-PLAN.md — E2E smoke test for all 4 tool categories + TOOL-04 deferral + scope/validation verification
 
 ### Phase 5: Feedback & Reporting
 **Goal**: Execution results flow back through the system so Nathan sees real progress and only gets pulled in for blockers
@@ -110,5 +109,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Schema & Dispatch | 2/2 | Complete | 2026-03-26 |
 | 2. Perception Pipeline | 0/2 | Planned | - |
 | 3. Executive Cognition | 0/3 | Not started | - |
-| 4. Tool Execution | 0/3 | Not started | - |
+| 4. Tool Execution | 0/2 | Planned | - |
 | 5. Feedback & Reporting | 0/3 | Not started | - |
