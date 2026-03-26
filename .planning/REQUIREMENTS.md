@@ -35,7 +35,7 @@
 - [ ] **TOOL-02**: Staff ghosts execute DB tools (query/mutate master_chronicle via dpn-api)
 - [ ] **TOOL-03**: Staff ghosts execute API tools (call dpn-api endpoints for doc creation, task updates, messages)
 - [ ] **TOOL-04**: Staff ghosts execute external tools (web search, URL fetch, embedding generation)
-- [ ] **TOOL-05**: Tool execution respects agent tool_scope — ghosts only use tools they're authorized for
+- [ ] **TOOL-05**: Tool execution respects agent tool_scope -- ghosts only use tools they're authorized for
 - [ ] **TOOL-06**: Tool execution results are validated before task is marked complete (anti-hallucination)
 
 ### Reporting & Feedback
@@ -78,17 +78,41 @@
 
 ## Traceability
 
-Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| SCHM-01 | Phase 1 | Pending |
+| SCHM-02 | Phase 1 | Pending |
+| SCHM-03 | Phase 1 | Pending |
+| SCHM-04 | Phase 1 | Pending |
+| SCHM-05 | Phase 1 | Pending |
+| PERC-01 | Phase 2 | Pending |
+| PERC-02 | Phase 2 | Pending |
+| PERC-03 | Phase 2 | Pending |
+| PERC-04 | Phase 2 | Pending |
+| PERC-05 | Phase 2 | Pending |
+| EXEC-01 | Phase 3 | Pending |
+| EXEC-02 | Phase 3 | Pending |
+| EXEC-03 | Phase 3 | Pending |
+| EXEC-04 | Phase 3 | Pending |
+| EXEC-05 | Phase 3 | Pending |
+| TOOL-01 | Phase 4 | Pending |
+| TOOL-02 | Phase 4 | Pending |
+| TOOL-03 | Phase 4 | Pending |
+| TOOL-04 | Phase 4 | Pending |
+| TOOL-05 | Phase 4 | Pending |
+| TOOL-06 | Phase 4 | Pending |
+| REPT-01 | Phase 5 | Pending |
+| REPT-02 | Phase 5 | Pending |
+| REPT-03 | Phase 5 | Pending |
+| REPT-04 | Phase 5 | Pending |
+| REPT-05 | Phase 5 | Pending |
+| REPT-06 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22
+- v1 requirements: 27 total
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
