@@ -16,9 +16,9 @@
 ### Perception
 
 - [x] **PERC-01**: /api/perception/:agent_id returns dispatched project-linked tasks for the agent
-- [ ] **PERC-02**: Executive agents perceive projects they own with current status and goals
+- [x] **PERC-02**: Executive agents perceive projects they own with current status and goals
 - [x] **PERC-03**: Staff agents perceive tasks assigned to them with project context and must_haves
-- [ ] **PERC-04**: Project ownership triggers urgency boost (+15/project) in tick engine ranking
+- [x] **PERC-04**: Project ownership triggers urgency boost (+15/project) in tick engine ranking
 - [x] **PERC-05**: Perception filters tasks by scheduled_at so ghosts only see ready work
 
 ### Executive Planning
@@ -86,9 +86,9 @@
 | SCHM-04 | Phase 1 | Complete |
 | SCHM-05 | Phase 1 | Complete |
 | PERC-01 | Phase 2 | Complete |
-| PERC-02 | Phase 2 | Pending |
+| PERC-02 | Phase 2 | Complete |
 | PERC-03 | Phase 2 | Complete |
-| PERC-04 | Phase 2 | Pending |
+| PERC-04 | Phase 2 | Complete |
 | PERC-05 | Phase 2 | Complete |
 | EXEC-01 | Phase 3 | Pending |
 | EXEC-02 | Phase 3 | Pending |
