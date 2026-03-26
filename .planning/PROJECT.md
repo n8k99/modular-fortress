@@ -47,7 +47,7 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 ### Active
 
 - ✓ Task dependency chains: blocked_by migrated to INTEGER[], perception filters blocked tasks, auto-unblock via trigger, CREATE_TASK blocked_by= syntax, dispatch wave dependencies — Phase 6
-- [ ] Structured artifact passing: typed output schemas per pipeline stage (spec, design, code, test) replacing untyped stage_notes
+- ✓ Structured artifact passing: stage_notes migrated to JSONB, JSON schema validation, structured artifacts via build-stage-artifact, predecessor context from DB, final deliverables persisted to documents table — Phase 7
 - [ ] Shared decisions brain: executives read recent project decisions from decisions table before acting in project review
 - [ ] Verification severity levels: CRITICAL/WARNING/SUGGESTION classification for task completion quality assessment
 - [ ] Lifecycle signals: staff ghosts signal idle/ready-for-next after task completion, executives perceive availability
@@ -140,4 +140,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 6 completion*
+*Last updated: 2026-03-26 after Phase 7 completion*
