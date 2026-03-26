@@ -46,7 +46,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 06-01-PLAN.md -- Schema migration (INTEGER to INTEGER[]) and trigger extension for auto-unblocking
 - [x] 06-02-PLAN.md -- Perception filtering for blocked tasks and task API INTEGER[] support
-- [ ] 06-03-PLAN.md -- Lisp CREATE_TASK parser blocked_by= syntax and dispatch wave dependency population
+- [x] 06-03-PLAN.md -- Lisp CREATE_TASK parser blocked_by= syntax and dispatch wave dependency population
 
 ### Phase 7: Structured Artifact Passing
 **Goal**: Pipeline stage outputs are typed and validated, so the next assignee receives structured context instead of freeform text

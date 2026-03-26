@@ -10,7 +10,7 @@
 - [x] **DEP-01**: Perception endpoint filters out tasks where blocked_by references an incomplete task
 - [x] **DEP-02**: When a task completes, all tasks with blocked_by pointing to it are automatically unblocked
 - [x] **DEP-03**: Executives can set blocked_by when creating tasks via CREATE_TASK (e.g., `CREATE_TASK: desc blocked_by=#123`)
-- [ ] **DEP-04**: dispatch_to_db.py sets blocked_by for subtasks based on wave ordering (wave 2 blocked by wave 1 parent)
+- [x] **DEP-04**: dispatch_to_db.py sets blocked_by for subtasks based on wave ordering (wave 2 blocked by wave 1 parent)
 
 ### Artifact Passing
 
@@ -68,7 +68,7 @@
 | DEP-01 | Phase 6 | Complete |
 | DEP-02 | Phase 6 | Complete |
 | DEP-03 | Phase 6 | Complete |
-| DEP-04 | Phase 6 | Pending |
+| DEP-04 | Phase 6 | Complete |
 | ART-01 | Phase 7 | Pending |
 | ART-02 | Phase 7 | Pending |
 | ART-03 | Phase 7 | Pending |
