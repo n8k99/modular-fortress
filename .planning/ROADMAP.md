@@ -75,7 +75,7 @@ Plans:
 
 Plans:
 - [x] 08-01-PLAN.md -- Decisions REST API (Rust handler + DB migration) and smoke tests
-- [ ] 08-02-PLAN.md -- Lisp integration (decision capture in action-executor + context injection in action-planner)
+- [x] 08-02-PLAN.md -- Lisp integration (decision capture in action-executor + context injection in action-planner)
 
 ### Phase 9: Verification Levels
 **Goal**: Task completion quality is assessed with severity levels so executives can prioritize rework on critical issues

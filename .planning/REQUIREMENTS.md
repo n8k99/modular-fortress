@@ -20,8 +20,8 @@
 
 ### Decisions Brain
 
-- [ ] **DEC-01**: Executive project review prompt includes recent decisions from decisions table for the project being reviewed
-- [ ] **DEC-02**: When an executive makes a decision during project review, it is logged to the decisions table with project_id and agent attribution
+- [x] **DEC-01**: Executive project review prompt includes recent decisions from decisions table for the project being reviewed
+- [x] **DEC-02**: When an executive makes a decision during project review, it is logged to the decisions table with project_id and agent attribution
 - [x] **DEC-03**: Decisions are queryable via /api/decisions with project_id filter
 
 ### Verification Levels
@@ -72,8 +72,8 @@
 | ART-01 | Phase 7 | Complete |
 | ART-02 | Phase 7 | Complete |
 | ART-03 | Phase 7 | Complete |
-| DEC-01 | Phase 8 | Pending |
-| DEC-02 | Phase 8 | Pending |
+| DEC-01 | Phase 8 | Complete |
+| DEC-02 | Phase 8 | Complete |
 | DEC-03 | Phase 8 | Complete |
 | VER-01 | Phase 9 | Pending |
 | VER-02 | Phase 9 | Pending |
