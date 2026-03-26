@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: verifying
-stopped_at: Completed 05-02-PLAN.md
+milestone: v1.1
+milestone_name: Ghost Coordination Patterns
+status: planning
+stopped_at: Milestone v1.1 started
 last_updated: "2026-03-26T10:38:17.465Z"
 last_activity: 2026-03-26
 progress:
@@ -21,13 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 05 — feedback-reporting
+**Current focus:** Defining requirements for v1.1
 
 ## Current Position
 
-Phase: 05
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-26 — Milestone v1.1 started
 Last activity: 2026-03-26
 
 Progress: [░░░░░░░░░░] 0%

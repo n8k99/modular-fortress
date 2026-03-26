@@ -46,7 +46,22 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ### Active
 
-(All v1 requirements complete — see v2 Requirements below)
+- [ ] Task dependency chains: wire blocked_by column into perception filtering + auto-unblock on task completion
+- [ ] Structured artifact passing: typed output schemas per pipeline stage (spec, design, code, test) replacing untyped stage_notes
+- [ ] Shared decisions brain: executives read recent project decisions from decisions table before acting in project review
+- [ ] Verification severity levels: CRITICAL/WARNING/SUGGESTION classification for task completion quality assessment
+- [ ] Lifecycle signals: staff ghosts signal idle/ready-for-next after task completion, executives perceive availability
+
+## Current Milestone: v1.1 Ghost Coordination Patterns
+
+**Goal:** Strengthen executive orchestration and ghost team coordination by incorporating proven patterns from Squad, Agent-Teams-Lite, and ClawTeam into the Noosphere tick engine.
+
+**Target features:**
+- Task dependency chains (blocked_by → perception + auto-unblock)
+- Structured artifact passing (typed outputs per pipeline stage)
+- Shared decisions brain (executives consult decisions before acting)
+- Verification severity levels (quality assessment on completion)
+- Lifecycle signals (idle/ready-for-next from staff)
 
 ### Out of Scope
 
@@ -58,14 +73,14 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ## Context
 
-**Current state:** The GSD→Ghost pipeline is architecturally defined but broken at every junction:
-- `dispatch_to_db.py` tries to INSERT into columns that don't exist (`project_id`, `source`, `context`, `department`)
-- `/api/perception/:agent_id` is called by ghosts but doesn't exist in dpn-api
-- Project ownership boost (+15/project) in tick engine is dead code (perception returns empty)
-- Ghost action-executor has hardcoded pipelines disconnected from GSD planning
-- No feedback loop from execution back to project status
+**Current state (post v1.0):** The full GSD→Ghost pipeline works end-to-end:
+- dispatch_to_db.py writes hierarchical tasks with owner, department, wave context
+- Perception returns all GSD fields (project_id, source, context, assigned_to)
+- Executives decompose projects via LLM and CREATE_TASK with delegation
+- Staff execute using 67+ tools (DB, API, code via Claude CLI, memory)
+- Wave advancement, completion reporting, blocker escalation all wired
 
-**What works:** The tick engine runs, cognition broker manages LLM calls, agents have energy/tiers, conversations flow, the DB schema is mostly there. The plumbing exists — the connections are missing.
+**v1.1 focus:** Coordination quality. Patterns from Squad (shared decisions), Agent-Teams-Lite (typed artifacts, verification levels), and ClawTeam (dependency chains, lifecycle signals) strengthen how executives orchestrate and ghosts collaborate.
 
 **Key files involved:**
 - `gotcha-workspace/tools/gsd/dispatch_to_db.py` — broken bridge script
@@ -100,11 +115,12 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| LLM cognition for executive planning | Executives should think like managers, not follow rules | — Pending |
-| All tool types for staff ghosts | Autonomy requires real capabilities (code, DB, API, external) | — Pending |
-| Nathan only for blockers + strategy | The whole point is autonomous execution | — Pending |
-| Dispatch→perceive as first milestone | Prove the pipeline before building on it | — Pending |
-| Dual feedback (status + conversations) | Status for tracking, conversations for notable events | — Pending |
+| LLM cognition for executive planning | Executives should think like managers, not follow rules | ✓ Good — v1.0 |
+| All tool types for staff ghosts | Autonomy requires real capabilities (code, DB, API, external) | ✓ Good — v1.0 (external deferred) |
+| Nathan only for blockers + strategy | The whole point is autonomous execution | ✓ Good — v1.0 |
+| Dispatch→perceive as first milestone | Prove the pipeline before building on it | ✓ Good — v1.0 |
+| Dual feedback (status + conversations) | Status for tracking, conversations for notable events | ✓ Good — v1.0 |
+| Incorporate patterns from Squad/ATL/ClawTeam | Proven coordination patterns strengthen existing concepts | — Pending (v1.1) |
 
 ## Evolution
 
@@ -124,4 +140,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 5 completion — ALL PHASES COMPLETE (TOOL-04 external tools deferred to v2)*
+*Last updated: 2026-03-26 after v1.1 milestone start*
