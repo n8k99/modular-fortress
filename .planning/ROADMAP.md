@@ -85,7 +85,11 @@ Plans:
   1. When a staff ghost completes a task, the completion report in conversations includes a severity classification (CRITICAL, WARNING, or SUGGESTION) for any quality issues found
   2. An executive perceives tasks with CRITICAL verification issues at higher urgency than normal task updates
   3. Staff ghost output includes a structured quality assessment block alongside the COMPLETE command that the action executor parses and persists
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 09-01-PLAN.md -- Issue extraction from artifacts and enriched completion reports with severity classification
+- [ ] 09-02-PLAN.md -- Urgency boost in tick engine and critical issues visibility in perception endpoint
 
 ### Phase 10: Lifecycle Signals
 **Goal**: Executives know which staff are available for new work so they can delegate immediately instead of waiting for the next tick cycle
@@ -114,5 +118,5 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 6. Task Dependency Chains | v1.1 | 0/3 | Planning | - |
 | 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
 | 8. Decisions Brain | v1.1 | 0/2 | Planning | - |
-| 9. Verification Levels | v1.1 | 0/0 | Not started | - |
+| 9. Verification Levels | v1.1 | 0/2 | Planning | - |
 | 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |
