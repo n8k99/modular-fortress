@@ -34,7 +34,7 @@
 - [x] **TOOL-01**: Staff ghosts execute code tools via Claude Code CLI (read/write files, run commands, git ops)
 - [x] **TOOL-02**: Staff ghosts execute DB tools (query/mutate master_chronicle via dpn-api)
 - [x] **TOOL-03**: Staff ghosts execute API tools (call dpn-api endpoints for doc creation, task updates, messages)
-- [x] **TOOL-04**: Staff ghosts execute external tools (web search, URL fetch, embedding generation)
+- [ ] **TOOL-04**: Staff ghosts execute external tools (web search, URL fetch, embedding generation) — DEFERRED: no web_search/url_fetch implementations exist, deferred to v2
 - [x] **TOOL-05**: Tool execution respects agent tool_scope -- ghosts only use tools they're authorized for
 - [x] **TOOL-06**: Tool execution results are validated before task is marked complete (anti-hallucination)
 
