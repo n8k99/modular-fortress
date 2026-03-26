@@ -79,7 +79,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Fix wildcard scope bug for memory tools, register claude_code tool, create claude-code-tool.sh
+- [x] 04-01-PLAN.md — Fix wildcard scope bug for memory tools, register claude_code tool, create claude-code-tool.sh
 - [ ] 04-02-PLAN.md — E2E smoke test for all 4 tool categories + TOOL-04 deferral + scope/validation verification
 
 ### Phase 5: Feedback & Reporting
