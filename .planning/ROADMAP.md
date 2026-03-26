@@ -44,7 +44,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Schema migration (INTEGER to INTEGER[]) and trigger extension for auto-unblocking
+- [x] 06-01-PLAN.md -- Schema migration (INTEGER to INTEGER[]) and trigger extension for auto-unblocking
 - [ ] 06-02-PLAN.md -- Perception filtering for blocked tasks and task API INTEGER[] support
 - [ ] 06-03-PLAN.md -- Lisp CREATE_TASK parser blocked_by= syntax and dispatch wave dependency population
 
