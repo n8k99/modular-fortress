@@ -23,8 +23,8 @@
 
 ### Executive Planning
 
-- [ ] **EXEC-01**: Executive ghost receives dispatched project and uses LLM cognition to decompose into staff-suitable tasks
-- [ ] **EXEC-02**: Executive task breakdown respects wave ordering from GSD dispatch context
+- [x] **EXEC-01**: Executive ghost receives dispatched project and uses LLM cognition to decompose into staff-suitable tasks
+- [x] **EXEC-02**: Executive task breakdown respects wave ordering from GSD dispatch context
 - [ ] **EXEC-03**: Executive assigns decomposed tasks to staff ghosts based on domain expertise and tool_scope
 - [ ] **EXEC-04**: Decomposed subtasks are written to tasks table via API with project_id linkage
 - [ ] **EXEC-05**: Executive monitors progress of delegated tasks across ticks and re-prioritizes as needed
@@ -90,8 +90,8 @@
 | PERC-03 | Phase 2 | Complete |
 | PERC-04 | Phase 2 | Complete |
 | PERC-05 | Phase 2 | Complete |
-| EXEC-01 | Phase 3 | Pending |
-| EXEC-02 | Phase 3 | Pending |
+| EXEC-01 | Phase 3 | Complete |
+| EXEC-02 | Phase 3 | Complete |
 | EXEC-03 | Phase 3 | Pending |
 | EXEC-04 | Phase 3 | Pending |
 | EXEC-05 | Phase 3 | Pending |

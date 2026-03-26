@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-26T04:53:42.117Z"
+status: executing
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-03-26T05:14:11.512Z"
 last_activity: 2026-03-26
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 02 — perception-pipeline
+**Current focus:** Phase 03 — executive-cognition
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 03 (executive-cognition) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-03-26
 
 Progress: [░░░░░░░░░░] 0%
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P02 | 4min | 2 tasks | 3 files |
 | Phase 02 P01 | 7min | 2 tasks | 1 files |
 | Phase 02 P02 | 4min | 2 tasks | 1 files |
+| Phase 03 P02 | 2min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Full context field returned without truncation for must_haves JSON ghost verification
 - [Phase 02]: assignee preserved in serialization alongside assigned_to for Lisp action-planner backward compatibility
 - [Phase 02]: PERC-04 verified via dual check: API projects array non-empty + Lisp boost code confirmed
+- [Phase 03]: Client-side open-status filtering because /api/af64/tasks ignores status param on project_id queries
+- [Phase 03]: Used full-name from agents list API instead of tool-scope (not in list endpoint) for team roster
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T04:53:42.106Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-executive-cognition/03-CONTEXT.md
+Last session: 2026-03-26T05:14:11.506Z
+Stopped at: Completed 03-02-PLAN.md
+Resume file: None
