@@ -96,7 +96,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — DB trigger wave advancement + Lisp completion reporting, blocker escalation, ESCALATE parser
-- [ ] 05-02-PLAN.md — Wave-level progress in dispatch --status + E2E verification of all REPT requirements
+- [x] 05-02-PLAN.md — Wave-level progress in dispatch --status + E2E verification of all REPT requirements
 
 ## Progress
 
