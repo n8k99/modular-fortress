@@ -25,7 +25,7 @@
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 6: Task Dependency Chains** - Wire blocked_by into perception filtering, auto-unblock on completion, and dependency-aware task creation
-- [ ] **Phase 7: Structured Artifact Passing** - Typed output schemas per pipeline stage replace untyped stage_notes with validated structured JSON
+- [x] **Phase 7: Structured Artifact Passing** - Typed output schemas per pipeline stage replace untyped stage_notes with validated structured JSON (completed 2026-03-26)
 - [ ] **Phase 8: Decisions Brain** - Executives consult and log project decisions before acting, queryable via API
 - [ ] **Phase 9: Verification Levels** - Quality severity classification on task completion with urgency escalation for critical issues
 - [ ] **Phase 10: Lifecycle Signals** - Staff signal availability after task completion, executives perceive idle agents for delegation
@@ -56,11 +56,11 @@ Plans:
   1. Each pipeline stage (spec, design, code, test, review) has a defined JSON schema, and stage_notes for completed tasks contain structured output matching that schema
   2. When a task advances to the next pipeline stage, the new assignee's perception context includes the structured output from the previous stage as input
   3. The action executor rejects a COMPLETE command if the stage output does not match the expected schema for that pipeline stage
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 07-01-PLAN.md -- DB migration (stage_notes TEXT to JSONB) and Rust API type changes
-- [ ] 07-02-PLAN.md -- Lisp validation rewrite (JSON schema) and structured artifact construction
+- [x] 07-02-PLAN.md -- Lisp validation rewrite (JSON schema) and structured artifact construction
 - [x] 07-03-PLAN.md -- Action-planner predecessor context injection from DB
 
 ### Phase 8: Decisions Brain
@@ -108,7 +108,7 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 4. Tool Execution | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 5. Feedback & Reporting | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 6. Task Dependency Chains | v1.1 | 0/3 | Planning | - |
-| 7. Structured Artifact Passing | v1.1 | 0/3 | Planning | - |
+| 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
 | 8. Decisions Brain | v1.1 | 0/0 | Not started | - |
 | 9. Verification Levels | v1.1 | 0/0 | Not started | - |
 | 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |
