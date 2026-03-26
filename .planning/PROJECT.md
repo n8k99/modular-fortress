@@ -22,11 +22,10 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ dpn-api REST gateway on port 8080 — existing
 - ✓ GSD planning workflow (project→discuss→plan→execute) — existing
 - ✓ Executive agent roster with domain routing — existing
+- ✓ Tasks table schema supports project linkage, source tracking, and GSD context — Phase 1
+- ✓ dispatch_to_db.py writes valid hierarchical records (parent+subtask) with owner, department, and context — Phase 1
 
 ### Active
-
-- [ ] Fix tasks table schema to support project linkage, source tracking, and GSD context
-- [ ] Fix dispatch_to_db.py to match actual schema and write valid records
 - [ ] Implement /api/perception/:agent_id endpoint in dpn-api
 - [ ] Ghosts perceive dispatched projects and assigned tasks through perception API
 - [ ] Project ownership gives executives urgency boost (currently dead code, +15/project)
@@ -116,4 +115,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after initialization*
+*Last updated: 2026-03-26 after Phase 1 completion*
