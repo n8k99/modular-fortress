@@ -29,11 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Tasks in the DB have project_id linking them to their parent project, source field showing GSD origin, and context field with plan must_haves
   3. Dispatched tasks carry department routing derived from the project owner's executive domain
   4. Running `dispatch_to_db.py --status` returns accurate project and task counts and statuses from the live DB
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Fix dispatch_project with H1 extraction, owner column, department routing, and test scaffold
+- [ ] 01-02-PLAN.md — Fix dispatch_phase with hierarchical subtasks and enhanced show_status
 
 ### Phase 2: Perception Pipeline
 **Goal**: Ghosts perceive dispatched work through the perception API with correct urgency and filtering
@@ -44,7 +44,7 @@ Plans:
   2. Calling /api/perception/:agent_id for a staff agent returns tasks assigned to them with project context and must_haves
   3. Project ownership triggers the +15/project urgency boost in tick engine ranking (no longer dead code)
   4. Tasks with future scheduled_at dates are filtered out -- ghosts only see work that is ready now
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 02-01: TBD
@@ -59,7 +59,7 @@ Plans:
   2. The task breakdown respects wave ordering from GSD dispatch context (wave 1 tasks before wave 2)
   3. Decomposed subtasks appear in the tasks table with correct project_id, assigned agent, and wave metadata
   4. Across multiple ticks, the executive monitors delegated task progress and adjusts priorities as staff complete or block on work
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 03-01: TBD
@@ -76,7 +76,7 @@ Plans:
   3. Tool execution respects agent tool_scope -- a ghost without code tool authorization cannot invoke Claude Code CLI
   4. Tool execution results are validated (output checked, not just "I did it") before the task status moves to done
   5. External tools (web search, URL fetch) are available to authorized ghosts for research-type tasks
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 04-01: TBD
@@ -93,7 +93,7 @@ Plans:
   3. When all tasks in wave N are done, wave N+1 tasks become perceivable to assigned ghosts (wave advancement works)
   4. A staff ghost that hits a blocker posts it to conversations, and the executive perceives it with elevated urgency
   5. Running /gsd:progress or dispatch --status shows real execution state including per-wave completion and blocker count
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 05-01: TBD
