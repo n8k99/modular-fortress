@@ -56,7 +56,12 @@ Plans:
   1. Each pipeline stage (spec, design, code, test, review) has a defined JSON schema, and stage_notes for completed tasks contain structured output matching that schema
   2. When a task advances to the next pipeline stage, the new assignee's perception context includes the structured output from the previous stage as input
   3. The action executor rejects a COMPLETE command if the stage output does not match the expected schema for that pipeline stage
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md -- DB migration (stage_notes TEXT to JSONB) and Rust API type changes
+- [ ] 07-02-PLAN.md -- Lisp validation rewrite (JSON schema) and structured artifact construction
+- [ ] 07-03-PLAN.md -- Action-planner predecessor context injection from DB
 
 ### Phase 8: Decisions Brain
 **Goal**: Executives have shared memory of project decisions so they act consistently and don't contradict prior choices
@@ -103,7 +108,7 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 4. Tool Execution | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 5. Feedback & Reporting | v1.0 | 2/2 | Complete | 2026-03-26 |
 | 6. Task Dependency Chains | v1.1 | 0/3 | Planning | - |
-| 7. Structured Artifact Passing | v1.1 | 0/0 | Not started | - |
+| 7. Structured Artifact Passing | v1.1 | 0/3 | Planning | - |
 | 8. Decisions Brain | v1.1 | 0/0 | Not started | - |
 | 9. Verification Levels | v1.1 | 0/0 | Not started | - |
 | 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |
