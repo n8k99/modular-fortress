@@ -1,11 +1,13 @@
--- Migration: Add wave advancement + project completion to on_task_completed_after trigger
+-- Migration: Add wave advancement + project completion + dependency unblock to on_task_completed_after trigger
 -- Applied: 2026-03-26
--- Phase: 05-feedback-reporting, Plan 01, Task 1
+-- Updated: 2026-03-26 (Phase 06-01: add dependency unblocking via array_remove)
+-- Phase: 05-feedback-reporting, Plan 01, Task 1 + Phase 06-01
 --
 -- This replaces the existing trigger function, preserving all original logic
 -- (vault_notes daily note update, pg_notify task_completed) and adding:
---   1. Wave advancement: when all wave-N tasks complete, open wave N+1
---   2. Project completion: when all project tasks complete, mark project 'completed' + notify Nathan
+--   1. Dependency unblock: remove completed task ID from all blocked_by arrays
+--   2. Wave advancement: when all wave-N tasks complete, open wave N+1
+--   3. Project completion: when all project tasks complete, mark project 'completed' + notify Nathan
 
 CREATE OR REPLACE FUNCTION on_task_completed_after()
 RETURNS trigger AS $$
@@ -49,6 +51,12 @@ BEGIN
         'agent_id', agent_name,
         'text', NEW.text
     )::text);
+
+    -- Dependency unblock: remove completed task ID from all blocked_by arrays (per D-05)
+    UPDATE tasks
+    SET blocked_by = array_remove(blocked_by, NEW.id),
+        updated_at = NOW()
+    WHERE NEW.id = ANY(blocked_by);
 
     -- Wave advancement: when all tasks in wave N complete, open wave N+1
     IF NEW.context IS NOT NULL AND NEW.project_id IS NOT NULL THEN
