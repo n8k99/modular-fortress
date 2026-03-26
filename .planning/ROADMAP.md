@@ -1,112 +1,104 @@
 # Roadmap: Noosphere Dispatch Pipeline
 
-## Overview
+## Milestones
 
-This project repairs the broken connections between GSD planning and Noosphere Ghost execution. The pipeline already exists architecturally -- the tick engine runs, the perception endpoint is coded (401 lines), the dispatch script exists, the DB schema is mostly there. The work is fixing broken INSERT statements, verifying data flows, then building the executive cognition and tool execution layers that turn ghosts from passive observers into autonomous workers. Five phases progress from schema repair through to a closed feedback loop where Nathan only intervenes for blockers.
+- v1.0 Noosphere Dispatch Pipeline (Phases 1-5) -- shipped 2026-03-26
+- v1.1 Ghost Coordination Patterns (Phases 6-10) -- in progress
 
 ## Phases
 
+<details>
+<summary>v1.0 Noosphere Dispatch Pipeline (Phases 1-5) - SHIPPED 2026-03-26</summary>
+
+- [x] **Phase 1: Schema & Dispatch** - Fix tasks table schema and dispatch_to_db.py so GSD plans persist correctly to master_chronicle
+- [x] **Phase 2: Perception Pipeline** - Verify and fix perception endpoint so ghosts see dispatched projects and tasks
+- [x] **Phase 3: Executive Cognition** - Executives perceive projects, decompose into staff tasks, and delegate via LLM cognition
+- [x] **Phase 4: Tool Execution** - Staff ghosts execute real work using code, DB, API, and external tools
+- [x] **Phase 5: Feedback & Reporting** - Close the loop with task completion reporting, wave advancement, and blocker escalation
+
+</details>
+
 **Phase Numbering:**
 - Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+- Decimal phases (6.1, 6.2): Urgent insertions (marked with INSERTED)
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Schema & Dispatch** - Fix tasks table schema and dispatch_to_db.py so GSD plans persist correctly to master_chronicle
-- [ ] **Phase 2: Perception Pipeline** - Verify and fix perception endpoint so ghosts see dispatched projects and tasks
-- [ ] **Phase 3: Executive Cognition** - Executives perceive projects, decompose into staff tasks, and delegate via LLM cognition
-- [ ] **Phase 4: Tool Execution** - Staff ghosts execute real work using code, DB, API, and external tools
-- [ ] **Phase 5: Feedback & Reporting** - Close the loop with task completion reporting, wave advancement, and blocker escalation
+- [ ] **Phase 6: Task Dependency Chains** - Wire blocked_by into perception filtering, auto-unblock on completion, and dependency-aware task creation
+- [ ] **Phase 7: Structured Artifact Passing** - Typed output schemas per pipeline stage replace untyped stage_notes with validated structured JSON
+- [ ] **Phase 8: Decisions Brain** - Executives consult and log project decisions before acting, queryable via API
+- [ ] **Phase 9: Verification Levels** - Quality severity classification on task completion with urgency escalation for critical issues
+- [ ] **Phase 10: Lifecycle Signals** - Staff signal availability after task completion, executives perceive idle agents for delegation
 
 ## Phase Details
 
-### Phase 1: Schema & Dispatch
-**Goal**: GSD-planned projects and tasks persist correctly to master_chronicle with all required metadata
-**Depends on**: Nothing (first phase)
-**Requirements**: SCHM-01, SCHM-02, SCHM-03, SCHM-04, SCHM-05
+### Phase 6: Task Dependency Chains
+**Goal**: Ghosts only see tasks whose dependencies are satisfied, and completing a task automatically unblocks downstream work
+**Depends on**: Phase 5 (v1.0 completion reporting and wave advancement)
+**Requirements**: DEP-01, DEP-02, DEP-03, DEP-04
 **Success Criteria** (what must be TRUE):
-  1. Running `dispatch_to_db.py` against a GSD-planned project writes project and task records without errors
-  2. Tasks in the DB have project_id linking them to their parent project, source field showing GSD origin, and context field with plan must_haves
-  3. Dispatched tasks carry department routing derived from the project owner's executive domain
-  4. Running `dispatch_to_db.py --status` returns accurate project and task counts and statuses from the live DB
-**Plans**: 2 plans
+  1. A task with blocked_by pointing to an incomplete task does NOT appear in the perception response for its assigned agent
+  2. When a blocking task is marked complete, all tasks referencing it in blocked_by become perceivable within the next tick
+  3. An executive ghost creating subtasks via CREATE_TASK can specify blocked_by references and the dependency is persisted
+  4. dispatch_to_db.py automatically sets blocked_by for wave 2+ subtasks based on wave ordering from GSD plans
+**Plans**: TBD
 
-Plans:
-- [x] 01-01-PLAN.md — Fix dispatch_project with H1 extraction, owner column, department routing, and test scaffold
-- [x] 01-02-PLAN.md — Fix dispatch_phase with hierarchical subtasks and enhanced show_status
-
-### Phase 2: Perception Pipeline
-**Goal**: Ghosts perceive dispatched work through the perception API with correct urgency and filtering
-**Depends on**: Phase 1
-**Requirements**: PERC-01, PERC-02, PERC-03, PERC-04, PERC-05
+### Phase 7: Structured Artifact Passing
+**Goal**: Pipeline stage outputs are typed and validated, so the next assignee receives structured context instead of freeform text
+**Depends on**: Phase 6 (dependency chains enable ordered pipeline progression)
+**Requirements**: ART-01, ART-02, ART-03
 **Success Criteria** (what must be TRUE):
-  1. Calling /api/perception/:agent_id for an executive returns their owned projects with status and goals
-  2. Calling /api/perception/:agent_id for a staff agent returns tasks assigned to them with project context and must_haves
-  3. Project ownership triggers the +15/project urgency boost in tick engine ranking (no longer dead code)
-  4. Tasks with future scheduled_at dates are filtered out -- ghosts only see work that is ready now
-**Plans**: 2 plans
+  1. Each pipeline stage (spec, design, code, test, review) has a defined JSON schema, and stage_notes for completed tasks contain structured output matching that schema
+  2. When a task advances to the next pipeline stage, the new assignee's perception context includes the structured output from the previous stage as input
+  3. The action executor rejects a COMPLETE command if the stage output does not match the expected schema for that pipeline stage
+**Plans**: TBD
 
-Plans:
-- [x] 02-01-PLAN.md — Enhance perception SQL queries and serialization with GSD fields (assigned_to, project_id, source, context, scheduled_at)
-- [x] 02-02-PLAN.md — E2E test script verifying all PERC requirements + human urgency boost verification
-
-### Phase 3: Executive Cognition
-**Goal**: Executive ghosts autonomously decompose dispatched projects into staff-suitable tasks and delegate them
-**Depends on**: Phase 2
-**Requirements**: EXEC-01, EXEC-02, EXEC-03, EXEC-04, EXEC-05
+### Phase 8: Decisions Brain
+**Goal**: Executives have shared memory of project decisions so they act consistently and don't contradict prior choices
+**Depends on**: Phase 5 (v1.0 executive cognition and project review)
+**Requirements**: DEC-01, DEC-02, DEC-03
 **Success Criteria** (what must be TRUE):
-  1. An executive ghost that perceives a dispatched project produces a structured task breakdown via LLM cognition
-  2. The task breakdown respects wave ordering from GSD dispatch context (wave 1 tasks before wave 2)
-  3. Decomposed subtasks appear in the tasks table with correct project_id, assigned agent, and wave metadata
-  4. Across multiple ticks, the executive monitors delegated task progress and adjusts priorities as staff complete or block on work
-**Plans**: 3 plans
+  1. When an executive reviews a project, the LLM prompt includes recent decisions from the decisions table for that project
+  2. When an executive makes a decision during project review, it appears in the decisions table with the correct project_id and agent attribution
+  3. Calling GET /api/decisions?project_id=X returns all decisions for that project in chronological order
+**Plans**: TBD
 
-Plans:
-- [x] 03-01-PLAN.md — Fix task creation API: add task_id auto-generation, parent_id, source fields to NewTask + project_id filter
-- [x] 03-02-PLAN.md — Enrich executive project review prompt with GSD context (task details, waves, must_haves) and team roster
-- [x] 03-03-PLAN.md — Implement CREATE_TASK parser in action-executor.lisp and wire into apply-task-mutations + E2E smoke test
-
-### Phase 4: Tool Execution
-**Goal**: Staff ghosts execute real work using authorized tools and validate results before marking tasks complete
-**Depends on**: Phase 3
-**Requirements**: TOOL-01, TOOL-02, TOOL-03, TOOL-04, TOOL-05, TOOL-06
+### Phase 9: Verification Levels
+**Goal**: Task completion quality is assessed with severity levels so executives can prioritize rework on critical issues
+**Depends on**: Phase 5 (v1.0 completion reporting flow)
+**Requirements**: VER-01, VER-02, VER-03
 **Success Criteria** (what must be TRUE):
-  1. A staff ghost assigned a code task invokes Claude Code CLI to read/write files or run commands, and the result is persisted
-  2. A staff ghost can query or mutate master_chronicle via dpn-api DB tools and API tools
-  3. Tool execution respects agent tool_scope -- a ghost without code tool authorization cannot invoke Claude Code CLI
-  4. Tool execution results are validated (output checked, not just "I did it") before the task status moves to done
-  5. External tools (web search, URL fetch) are available to authorized ghosts for research-type tasks
-**Plans**: 2 plans
+  1. When a staff ghost completes a task, the completion report in conversations includes a severity classification (CRITICAL, WARNING, or SUGGESTION) for any quality issues found
+  2. An executive perceives tasks with CRITICAL verification issues at higher urgency than normal task updates
+  3. Staff ghost output includes a structured quality assessment block alongside the COMPLETE command that the action executor parses and persists
+**Plans**: TBD
 
-Plans:
-- [x] 04-01-PLAN.md — Fix wildcard scope bug for memory tools, register claude_code tool, create claude-code-tool.sh
-- [x] 04-02-PLAN.md — E2E smoke test for all 4 tool categories + TOOL-04 deferral + scope/validation verification
-
-### Phase 5: Feedback & Reporting
-**Goal**: Execution results flow back through the system so Nathan sees real progress and only gets pulled in for blockers
-**Depends on**: Phase 4
-**Requirements**: REPT-01, REPT-02, REPT-03, REPT-04, REPT-05, REPT-06
+### Phase 10: Lifecycle Signals
+**Goal**: Executives know which staff are available for new work so they can delegate immediately instead of waiting for the next tick cycle
+**Depends on**: Phase 5 (v1.0 energy system and tick engine)
+**Requirements**: LIFE-01, LIFE-02, LIFE-03
 **Success Criteria** (what must be TRUE):
-  1. When a staff ghost completes a task, a completion report appears in the conversations table addressed to the supervising executive
-  2. Project and task status fields in the DB reflect actual execution state (open to in_progress to done) without manual updates
-  3. When all tasks in wave N are done, wave N+1 tasks become perceivable to assigned ghosts (wave advancement works)
-  4. A staff ghost that hits a blocker posts it to conversations, and the executive perceives it with elevated urgency
-  5. Running /gsd:progress or dispatch --status shows real execution state including per-wave completion and blocker count
-**Plans**: 2 plans
-
-Plans:
-- [x] 05-01-PLAN.md — DB trigger wave advancement + Lisp completion reporting, blocker escalation, ESCALATE parser
-- [x] 05-02-PLAN.md — Wave-level progress in dispatch --status + E2E verification of all REPT requirements
+  1. After a staff ghost completes its last assigned task, it signals IDLE and this state is visible in the system
+  2. When an executive reviews a project, the context includes a list of idle staff agents available for delegation
+  3. An idle agent's energy level reflects availability (not drained from recent work) so the tick engine correctly prioritizes it for new assignments
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Schema & Dispatch | 2/2 | Complete | 2026-03-26 |
-| 2. Perception Pipeline | 0/2 | Planned | - |
-| 3. Executive Cognition | 0/3 | Not started | - |
-| 4. Tool Execution | 0/2 | Planned | - |
-| 5. Feedback & Reporting | 0/2 | Planned | - |
+Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They are sequenced for orderly execution but could theoretically parallelize.
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1. Schema & Dispatch | v1.0 | 2/2 | Complete | 2026-03-26 |
+| 2. Perception Pipeline | v1.0 | 2/2 | Complete | 2026-03-26 |
+| 3. Executive Cognition | v1.0 | 3/3 | Complete | 2026-03-26 |
+| 4. Tool Execution | v1.0 | 2/2 | Complete | 2026-03-26 |
+| 5. Feedback & Reporting | v1.0 | 2/2 | Complete | 2026-03-26 |
+| 6. Task Dependency Chains | v1.1 | 0/0 | Not started | - |
+| 7. Structured Artifact Passing | v1.1 | 0/0 | Not started | - |
+| 8. Decisions Brain | v1.1 | 0/0 | Not started | - |
+| 9. Verification Levels | v1.1 | 0/0 | Not started | - |
+| 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |

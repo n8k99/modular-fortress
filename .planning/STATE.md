@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Ghost Coordination Patterns
-status: planning
-stopped_at: Milestone v1.1 started
-last_updated: "2026-03-26T10:38:17.465Z"
+status: ready_to_plan
+stopped_at: Roadmap created for v1.1
+last_updated: "2026-03-26"
 last_activity: 2026-03-26
 progress:
-  total_phases: 5
+  total_phases: 10
   completed_phases: 5
   total_plans: 11
   completed_plans: 11
@@ -21,49 +21,37 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Defining requirements for v1.1
+**Current focus:** v1.1 Phase 6 - Task Dependency Chains
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-26 — Milestone v1.1 started
-Last activity: 2026-03-26
+Phase: 6 of 10 (Task Dependency Chains)
+Plan: Ready to plan
+Status: Ready to plan
+Last activity: 2026-03-26 -- Roadmap created for v1.1
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [##########░░░░░░░░░░] 0% (v1.1)
 
 ## Performance Metrics
 
-**Velocity:**
+**Velocity (from v1.0):**
+- Total plans completed: 11
+- Average duration: 4 min
+- Total execution time: ~44 min
 
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
-
-**By Phase:**
+**By Phase (v1.0):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| Phase 01 | 2 | 8min | 4min |
+| Phase 02 | 2 | 11min | 5.5min |
+| Phase 03 | 3 | 9min | 3min |
+| Phase 04 | 2 | 6min | 3min |
+| Phase 05 | 2 | 10min | 5min |
 
 **Recent Trend:**
-
-- Last 5 plans: -
-- Trend: -
-
-*Updated after each plan completion*
-| Phase 01 P01 | 4min | 2 tasks | 3 files |
-| Phase 01 P02 | 4min | 2 tasks | 3 files |
-| Phase 02 P01 | 7min | 2 tasks | 1 files |
-| Phase 02 P02 | 4min | 2 tasks | 1 files |
-| Phase 03 P02 | 2min | 1 tasks | 1 files |
-| Phase 03 P01 | 3min | 2 tasks | 1 files |
-| Phase 03 P03 | 4min | 2 tasks | 2 files |
-| Phase 04 P01 | 2min | 2 tasks | 3 files |
-| Phase 04 P02 | 4min | 2 tasks | 1 files |
-| Phase 05 P01 | 5min | 2 tasks | 2 files |
-| Phase 05 P02 | 5min | 2 tasks | 2 files |
+- Last 5 plans: 4min, 2min, 4min, 5min, 5min
+- Trend: Stable
 
 ## Accumulated Context
 
@@ -72,30 +60,10 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Roadmap]: Perception endpoint already exists (af64_perception.rs, 401 lines) -- Phase 2 is verification/fixing, not building from scratch
-- [Roadmap]: Schema + dispatch split from perception into separate phases despite research grouping them -- different codebases (Python/SQL vs Rust)
-- [Roadmap]: Standard granularity produced 5 phases matching the natural delivery boundaries
-- [Phase 01]: Used DB lookup for department routing instead of hardcoded mapping dict
-- [Phase 01]: H1 heading extraction for project name with ## exclusion guard
-- [Phase 01]: Used psycopg2 native list-to-array adaptation for assigned_to text[] instead of ARRAY literal SQL
-- [Phase 01]: parse_must_haves() extracts from frontmatter YAML block rather than markdown body
-- [Phase 01]: show_status() filters by source='gsd' to count only GSD-dispatched tasks in hierarchy
-- [Phase 02]: Release build required: PM2 runs target/release/dpn-api, cargo build --release needed for deployment
-- [Phase 02]: Full context field returned without truncation for must_haves JSON ghost verification
-- [Phase 02]: assignee preserved in serialization alongside assigned_to for Lisp action-planner backward compatibility
-- [Phase 02]: PERC-04 verified via dual check: API projects array non-empty + Lisp boost code confirmed
-- [Phase 03]: Client-side open-status filtering because /api/af64/tasks ignores status param on project_id queries
-- [Phase 03]: Used full-name from agents list API instead of tool-scope (not in list endpoint) for team roster
-- [Phase 03]: Default source is 'ghost' not 'api' for API-created tasks -- matches primary consumer
-- [Phase 03]: task_id auto-generates with ghost-UUID format for traceability
-- [Phase 03]: Optional metadata parameter on apply-task-mutations for backward compatibility with all existing callers
-- [Phase 03]: Project context flows from build-project-review-job input-context through execute-project-review to CREATE_TASK handler
-- [Phase 04]: Used :wildcard keyword symbol for scope='*' detection to avoid string comparison in intersection
-- [Phase 04]: claude_code tool placed after build_tool in registry for logical grouping
-- [Phase 04]: Used modified_at (not updated_at) for documents table UPSERT
-- [Phase 04]: 4 agents corrected per D-11: nathan, sarah, jmax, nova tool_scope updated
-- [Phase 05]: Nested BEGIN/EXCEPTION for safe jsonb cast in wave trigger; blocker escalation in execute-work-task for metadata access
-- [Phase 05]: Used helper functions (query/exec_sql/query_multi) in bash E2E to avoid eval/quoting issues with psql
+- [v1.0]: DB is the OS -- all state in master_chronicle, no file-based state for ghost work
+- [v1.0]: LLM cognition for executive planning -- executives think like managers
+- [v1.0]: Dual feedback (status + conversations) for tracking and notable events
+- [v1.1]: Incorporate patterns from Squad/ATL/ClawTeam into existing tick engine
 
 ### Pending Todos
 
@@ -103,12 +71,12 @@ None yet.
 
 ### Blockers/Concerns
 
-- Research gap: Need to run `\d tasks` against live DB to see exact missing columns before Phase 1 planning
-- Research gap: Cognition prompt engineering for structured task breakdown (Phase 3 concern)
-- Research gap: Tool scope audit -- which agents have which tool_scope values (Phase 4 concern)
+- Research needed: Current blocked_by column state in tasks table (does it exist? what type?)
+- Research needed: Existing decisions table schema and API endpoints
+- Research needed: Pipeline stage definitions -- are spec/design/code/test/review the right set?
 
 ## Session Continuity
 
-Last session: 2026-03-26T10:30:36.622Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-26
+Stopped at: Roadmap created for v1.1 milestone
 Resume file: None

@@ -1,7 +1,7 @@
 # Requirements: Noosphere Dispatch Pipeline v1.1
 
 **Defined:** 2026-03-26
-**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention — executives plan, staff execute, results report themselves.
+**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention -- executives plan, staff execute, results report themselves.
 
 ## v1.1 Requirements
 
@@ -40,7 +40,7 @@
 
 ### From v1.0 Deferred
 
-- **TOOL-04**: External tools (web search, URL fetch, embedding generation) — no implementations exist yet
+- **TOOL-04**: External tools (web search, URL fetch, embedding generation) -- no implementations exist yet
 
 ### Potential v2.0
 
@@ -59,19 +59,34 @@
 | Tick engine rewrite | Extend, don't replace |
 | Dynamic agent spawning | Fixed roster of 64 ghosts |
 | ClawTeam-style worktree isolation | Single SBCL process model |
-| Squad-style file-based state | DB is the OS — master_chronicle |
+| Squad-style file-based state | DB is the OS -- master_chronicle |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| DEP-01 | Phase 6 | Pending |
+| DEP-02 | Phase 6 | Pending |
+| DEP-03 | Phase 6 | Pending |
+| DEP-04 | Phase 6 | Pending |
+| ART-01 | Phase 7 | Pending |
+| ART-02 | Phase 7 | Pending |
+| ART-03 | Phase 7 | Pending |
+| DEC-01 | Phase 8 | Pending |
+| DEC-02 | Phase 8 | Pending |
+| DEC-03 | Phase 8 | Pending |
+| VER-01 | Phase 9 | Pending |
+| VER-02 | Phase 9 | Pending |
+| VER-03 | Phase 9 | Pending |
+| LIFE-01 | Phase 10 | Pending |
+| LIFE-02 | Phase 10 | Pending |
+| LIFE-03 | Phase 10 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- v1.1 requirements: 16 total
+- Mapped to phases: 16
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
