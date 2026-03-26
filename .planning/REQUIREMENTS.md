@@ -15,7 +15,7 @@
 ### Artifact Passing
 
 - [x] **ART-01**: Pipeline stages have typed output schemas (spec, design, code, test, review) stored in stage_notes as structured JSON
-- [ ] **ART-02**: When a task advances to next pipeline stage, the output schema from current stage is passed as input context to next assignee
+- [x] **ART-02**: When a task advances to next pipeline stage, the output schema from current stage is passed as input context to next assignee
 - [ ] **ART-03**: Action executor validates that stage output matches expected schema before marking stage complete
 
 ### Decisions Brain
@@ -70,7 +70,7 @@
 | DEP-03 | Phase 6 | Complete |
 | DEP-04 | Phase 6 | Complete |
 | ART-01 | Phase 7 | Complete |
-| ART-02 | Phase 7 | Pending |
+| ART-02 | Phase 7 | Complete |
 | ART-03 | Phase 7 | Pending |
 | DEC-01 | Phase 8 | Pending |
 | DEC-02 | Phase 8 | Pending |

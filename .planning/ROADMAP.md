@@ -61,7 +61,7 @@ Plans:
 Plans:
 - [x] 07-01-PLAN.md -- DB migration (stage_notes TEXT to JSONB) and Rust API type changes
 - [ ] 07-02-PLAN.md -- Lisp validation rewrite (JSON schema) and structured artifact construction
-- [ ] 07-03-PLAN.md -- Action-planner predecessor context injection from DB
+- [x] 07-03-PLAN.md -- Action-planner predecessor context injection from DB
 
 ### Phase 8: Decisions Brain
 **Goal**: Executives have shared memory of project decisions so they act consistently and don't contradict prior choices
