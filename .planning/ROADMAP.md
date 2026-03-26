@@ -47,8 +47,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Enhance perception SQL queries and serialization with GSD fields (assigned_to, project_id, source, context, scheduled_at)
+- [ ] 02-02-PLAN.md — E2E test script verifying all PERC requirements + human urgency boost verification
 
 ### Phase 3: Executive Cognition
 **Goal**: Executive ghosts autonomously decompose dispatched projects into staff-suitable tasks and delegate them
@@ -107,8 +107,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema & Dispatch | 0/2 | Not started | - |
-| 2. Perception Pipeline | 0/2 | Not started | - |
+| 1. Schema & Dispatch | 2/2 | Complete | 2026-03-26 |
+| 2. Perception Pipeline | 0/2 | Planned | - |
 | 3. Executive Cognition | 0/3 | Not started | - |
 | 4. Tool Execution | 0/3 | Not started | - |
 | 5. Feedback & Reporting | 0/3 | Not started | - |
