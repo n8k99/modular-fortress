@@ -59,12 +59,12 @@ Plans:
   2. The task breakdown respects wave ordering from GSD dispatch context (wave 1 tasks before wave 2)
   3. Decomposed subtasks appear in the tasks table with correct project_id, assigned agent, and wave metadata
   4. Across multiple ticks, the executive monitors delegated task progress and adjusts priorities as staff complete or block on work
-**Plans**: 2 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — Fix task creation API: add task_id auto-generation, parent_id, source fields to NewTask + project_id filter
+- [ ] 03-02-PLAN.md — Enrich executive project review prompt with GSD context (task details, waves, must_haves) and team roster
+- [ ] 03-03-PLAN.md — Implement CREATE_TASK parser in action-executor.lisp and wire into apply-task-mutations + E2E smoke test
 
 ### Phase 4: Tool Execution
 **Goal**: Staff ghosts execute real work using authorized tools and validate results before marking tasks complete
