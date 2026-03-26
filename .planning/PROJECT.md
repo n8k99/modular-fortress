@@ -25,10 +25,11 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Tasks table schema supports project linkage, source tracking, and GSD context — Phase 1
 - ✓ dispatch_to_db.py writes valid hierarchical records (parent+subtask) with owner, department, and context — Phase 1
 
+- ✓ Perception endpoint returns GSD fields (project_id, source, context, assigned_to, scheduled_at) for all agent types — Phase 2
+- ✓ Ghosts perceive dispatched projects and assigned tasks through perception API — Phase 2
+- ✓ Project ownership urgency boost (+15/project) code path verified end-to-end — Phase 2
+
 ### Active
-- [ ] Implement /api/perception/:agent_id endpoint in dpn-api
-- [ ] Ghosts perceive dispatched projects and assigned tasks through perception API
-- [ ] Project ownership gives executives urgency boost (currently dead code, +15/project)
 - [ ] Executive ghosts use LLM cognition to break projects into team-suitable phases
 - [ ] Executives delegate and assign tasks to their staff ghosts
 - [ ] Staff ghosts pick up assigned tasks and execute using tools
@@ -115,4 +116,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 1 completion*
+*Last updated: 2026-03-26 after Phase 2 completion*
