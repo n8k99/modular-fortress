@@ -74,7 +74,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md -- Decisions REST API (Rust handler + DB migration) and smoke tests
+- [x] 08-01-PLAN.md -- Decisions REST API (Rust handler + DB migration) and smoke tests
 - [ ] 08-02-PLAN.md -- Lisp integration (decision capture in action-executor + context injection in action-planner)
 
 ### Phase 9: Verification Levels

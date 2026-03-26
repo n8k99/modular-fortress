@@ -22,7 +22,7 @@
 
 - [ ] **DEC-01**: Executive project review prompt includes recent decisions from decisions table for the project being reviewed
 - [ ] **DEC-02**: When an executive makes a decision during project review, it is logged to the decisions table with project_id and agent attribution
-- [ ] **DEC-03**: Decisions are queryable via /api/decisions with project_id filter
+- [x] **DEC-03**: Decisions are queryable via /api/decisions with project_id filter
 
 ### Verification Levels
 
@@ -74,7 +74,7 @@
 | ART-03 | Phase 7 | Complete |
 | DEC-01 | Phase 8 | Pending |
 | DEC-02 | Phase 8 | Pending |
-| DEC-03 | Phase 8 | Pending |
+| DEC-03 | Phase 8 | Complete |
 | VER-01 | Phase 9 | Pending |
 | VER-02 | Phase 9 | Pending |
 | VER-03 | Phase 9 | Pending |

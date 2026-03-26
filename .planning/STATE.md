@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-26T23:05:43.492Z"
+status: executing
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-26T23:28:00.436Z"
 last_activity: 2026-03-26
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 07 — structured-artifact-passing
+**Current focus:** Phase 08 — decisions-brain
 
 ## Current Position
 
-Phase: 8
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 08 (decisions-brain) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-03-26
 
 Progress: [##########░░░░░░░░░░] 0% (v1.1)
@@ -61,6 +61,7 @@ Progress: [##########░░░░░░░░░░] 0% (v1.1)
 | Phase 07 P01 | 16min | 2 tasks | 3 files |
 | Phase 07 P03 | 2min | 1 tasks | 1 files |
 | Phase 07 P02 | 4min | 2 tasks | 1 files |
+| Phase 08 P01 | 5min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 07]: Renamed load-previous-stage-output to load-predecessor-stage-output; prev-stage-map as flat alist covering 4 pipelines
 - [Phase 07]: POST /documents endpoint used for all pipeline deliverable types (D-07)
 - [Phase 07]: validate-artifact-base uses uppercase hyphenated keywords (:SUMMARY, :KEY-OUTPUTS) per Lisp JSON parser quirk
+- [Phase 08]: Append-only decisions API: no PUT/DELETE per D-07
+- [Phase 08]: Dynamic ORDER BY via format!() with validated ASC/DESC input
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T23:05:43.477Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-decisions-brain/08-CONTEXT.md
+Last session: 2026-03-26T23:28:00.425Z
+Stopped at: Completed 08-01-PLAN.md
+Resume file: None
