@@ -99,7 +99,11 @@ Plans:
   1. After a staff ghost completes its last assigned task, it signals IDLE and this state is visible in the system
   2. When an executive reviews a project, the context includes a list of idle staff agents available for delegation
   3. An idle agent's energy level reflects availability (not drained from recent work) so the tick engine correctly prioritizes it for new assignments
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 10-01-PLAN.md -- API metadata exposure (list_agents + PATCH merge) and idle-transition energy reward
+- [ ] 10-02-PLAN.md -- Tick engine lifecycle detection (Phase 5) and enriched format-team-roster
 
 ## Progress
 
@@ -119,4 +123,4 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
 | 8. Decisions Brain | v1.1 | 0/2 | Planning | - |
 | 9. Verification Levels | v1.1 | 0/2 | Planning | - |
-| 10. Lifecycle Signals | v1.1 | 0/0 | Not started | - |
+| 10. Lifecycle Signals | v1.1 | 0/2 | Planning | - |
