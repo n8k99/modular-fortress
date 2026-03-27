@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Operational Readiness
-status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-03-27T10:44:27.562Z"
+status: verifying
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-03-27T10:59:44.834Z"
 last_activity: 2026-03-27
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 Phase: 11 (message-hygiene) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-27
 
 Progress: [--------------------] 0% (v1.2: 0/5 phases)
@@ -46,6 +46,7 @@ Recent decisions affecting current work:
 - [v1.2]: Phases 13/14/15 all depend on Phase 12 but are independent of each other
 - [Phase 11]: array_append with NOT ANY guard for idempotent read-marking
 - [Phase 11]: GIN index on conversations.read_by for perception query performance
+- [Phase 11]: Mark-read fires outside action-detail guard to cover cached broker results
 
 ### Pending Todos
 
@@ -59,6 +60,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T10:44:27.555Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-03-27T10:59:44.808Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None

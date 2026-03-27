@@ -8,8 +8,8 @@
 ### Message Hygiene
 
 - [x] **SPAM-01**: Perception endpoint filters out messages already in the agent's read_by array
-- [ ] **SPAM-02**: Action executor marks processed messages as read (appends agent_id to read_by) after cognition completes
-- [ ] **SPAM-03**: Agent with zero actionable items after read_by filtering is classified as idle (no cognition job, no token spend)
+- [x] **SPAM-02**: Action executor marks processed messages as read (appends agent_id to read_by) after cognition completes
+- [x] **SPAM-03**: Agent with zero actionable items after read_by filtering is classified as idle (no cognition job, no token spend)
 
 ### Infrastructure Fixes
 

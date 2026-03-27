@@ -32,7 +32,7 @@
 
 ### v1.2 Operational Readiness (In Progress)
 
-- [ ] **Phase 11: Message Hygiene** - Stop token bleed from stale messages by filtering read messages and marking them processed
+- [x] **Phase 11: Message Hygiene** - Stop token bleed from stale messages by filtering read messages and marking them processed (completed 2026-03-27)
 - [ ] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis
 - [ ] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14
 - [ ] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia
@@ -56,10 +56,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. An agent with zero unread messages after filtering gets no cognition job and burns no tokens
   4. dpn-api can read and write JSONB metadata fields without sqlx errors
   5. A mark-as-read API endpoint exists and correctly appends agent IDs to the read_by array
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 11-01-PLAN.md -- Mark-read API endpoint, perception filter, sqlx verify, historical cleanup
-- [ ] 11-02-PLAN.md -- Lisp tick-engine mark-read integration and end-to-end verification
+- [x] 11-02-PLAN.md -- Lisp tick-engine mark-read integration and end-to-end verification
 
 ### Phase 12: Standing Orders
 **Goal**: Ghosts execute recurring project work on a cron schedule without manual dispatch
@@ -115,7 +115,7 @@ Plans:
 | 8. Decisions Brain | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 9. Verification Levels | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
-| 11. Message Hygiene | v1.2 | 1/2 | In Progress|  |
+| 11. Message Hygiene | v1.2 | 2/2 | Complete   | 2026-03-27 |
 | 12. Standing Orders | v1.2 | 0/? | Not started | - |
 | 13. Operations Pipeline | v1.2 | 0/? | Not started | - |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
