@@ -123,4 +123,4 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
 | 8. Decisions Brain | v1.1 | 0/2 | Planning | - |
 | 9. Verification Levels | v1.1 | 0/2 | Planning | - |
-| 10. Lifecycle Signals | v1.1 | 2/2 | Complete   | 2026-03-27 |
+| 10. Lifecycle Signals | v1.1 | 2/2 | Complete    | 2026-03-27 |
