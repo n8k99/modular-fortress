@@ -89,7 +89,7 @@ Plans:
 
 Plans:
 - [x] 09-01-PLAN.md -- Issue extraction from artifacts and enriched completion reports with severity classification
-- [ ] 09-02-PLAN.md -- Urgency boost in tick engine and critical issues visibility in perception endpoint
+- [x] 09-02-PLAN.md -- Urgency boost in tick engine and critical issues visibility in perception endpoint
 
 ### Phase 10: Lifecycle Signals
 **Goal**: Executives know which staff are available for new work so they can delegate immediately instead of waiting for the next tick cycle

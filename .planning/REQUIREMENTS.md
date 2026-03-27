@@ -27,7 +27,7 @@
 ### Verification Levels
 
 - [x] **VER-01**: Task completion reports include severity classification (CRITICAL/WARNING/SUGGESTION) for quality issues found
-- [ ] **VER-02**: Executive perceives tasks with CRITICAL verification issues at elevated urgency
+- [x] **VER-02**: Executive perceives tasks with CRITICAL verification issues at elevated urgency
 - [x] **VER-03**: Staff ghost outputs structured quality assessment alongside COMPLETE: command
 
 ### Lifecycle Signals
@@ -76,7 +76,7 @@
 | DEC-02 | Phase 8 | Complete |
 | DEC-03 | Phase 8 | Complete |
 | VER-01 | Phase 9 | Complete |
-| VER-02 | Phase 9 | Pending |
+| VER-02 | Phase 9 | Complete |
 | VER-03 | Phase 9 | Complete |
 | LIFE-01 | Phase 10 | Pending |
 | LIFE-02 | Phase 10 | Pending |
