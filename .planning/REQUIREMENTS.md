@@ -32,9 +32,9 @@
 
 ### Lifecycle Signals
 
-- [ ] **LIFE-01**: Staff ghost signals IDLE after completing assigned work (no more tasks in queue)
+- [x] **LIFE-01**: Staff ghost signals IDLE after completing assigned work (no more tasks in queue)
 - [ ] **LIFE-02**: Executive perceives staff availability (idle agents listed in project review context)
-- [ ] **LIFE-03**: Energy system reflects lifecycle state (idle agents have energy available for new work)
+- [x] **LIFE-03**: Energy system reflects lifecycle state (idle agents have energy available for new work)
 
 ## Future Requirements
 
@@ -78,9 +78,9 @@
 | VER-01 | Phase 9 | Complete |
 | VER-02 | Phase 9 | Complete |
 | VER-03 | Phase 9 | Complete |
-| LIFE-01 | Phase 10 | Pending |
+| LIFE-01 | Phase 10 | Complete |
 | LIFE-02 | Phase 10 | Pending |
-| LIFE-03 | Phase 10 | Pending |
+| LIFE-03 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 16 total
