@@ -71,28 +71,28 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPAM-01 | - | Planned |
-| SPAM-02 | - | Planned |
-| SPAM-03 | - | Planned |
-| FIX-01 | - | Planned |
-| FIX-02 | - | Planned |
-| STAND-01 | - | Planned |
-| STAND-02 | - | Planned |
-| STAND-03 | - | Planned |
-| FIN-01 | - | Planned |
-| FIN-02 | - | Planned |
-| EDIT-01 | - | Planned |
-| EDIT-02 | - | Planned |
-| OPS-01 | - | Planned |
-| OPS-02 | - | Planned |
-| OPS-03 | - | Planned |
-| OPS-04 | - | Planned |
-| OPS-05 | - | Planned |
+| SPAM-01 | Phase 11 | Planned |
+| SPAM-02 | Phase 11 | Planned |
+| SPAM-03 | Phase 11 | Planned |
+| FIX-01 | Phase 11 | Planned |
+| FIX-02 | Phase 11 | Planned |
+| STAND-01 | Phase 12 | Planned |
+| STAND-02 | Phase 12 | Planned |
+| STAND-03 | Phase 12 | Planned |
+| OPS-01 | Phase 13 | Planned |
+| OPS-02 | Phase 13 | Planned |
+| OPS-03 | Phase 13 | Planned |
+| OPS-04 | Phase 13 | Planned |
+| EDIT-01 | Phase 14 | Planned |
+| EDIT-02 | Phase 14 | Planned |
+| FIN-01 | Phase 15 | Planned |
+| FIN-02 | Phase 15 | Planned |
+| OPS-05 | Phase 15 | Planned |
 
 **Coverage:**
 - v1.2 requirements: 17 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 17
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-27*

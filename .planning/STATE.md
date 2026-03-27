@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Operational Readiness
-status: defining_requirements
+status: ready_to_plan
 stopped_at: null
 last_updated: "2026-03-27"
 last_activity: 2026-03-27
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,23 +21,29 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** v1.2 Operational Readiness — fix ghost spam, migrate OpenClaw crons to ghost pipelines
+**Current focus:** Phase 11 - Message Hygiene (stop token bleed from stale messages)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: --
-Status: Defining requirements
-Last activity: 2026-03-27 -- Milestone v1.2 started
+Phase: 11 of 15 (Message Hygiene) -- first of 5 v1.2 phases
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-27 -- v1.2 roadmap created
 
-Progress: [--------------------] 0% (v1.2)
+Progress: [--------------------] 0% (v1.2: 0/5 phases)
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Previous milestone decisions preserved for reference.
+Recent decisions affecting current work:
+
+- [v1.2]: Message spam fix is critical blocker -- must ship before any pipeline work
+- [v1.2]: Standing orders framework is the scheduling mechanism all pipelines depend on
+- [v1.2]: Pipeline migrations map to existing DB projects (#10 financial, #12 editorial, #14 ops)
+- [v1.2]: OPS-05 (calendar sync) assigned to Phase 15 (financial) since it serves trading session scheduling
+- [v1.2]: Phases 13/14/15 all depend on Phase 12 but are independent of each other
 
 ### Pending Todos
 
@@ -52,5 +58,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-27
-Stopped at: Milestone v1.2 started
+Stopped at: v1.2 roadmap created, ready to plan Phase 11
 Resume file: None
