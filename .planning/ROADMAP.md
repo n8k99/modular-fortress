@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Structured Artifact Passing** - Typed output schemas per pipeline stage replace untyped stage_notes with validated structured JSON (completed 2026-03-26)
 - [ ] **Phase 8: Decisions Brain** - Executives consult and log project decisions before acting, queryable via API
 - [ ] **Phase 9: Verification Levels** - Quality severity classification on task completion with urgency escalation for critical issues
-- [ ] **Phase 10: Lifecycle Signals** - Staff signal availability after task completion, executives perceive idle agents for delegation
+- [x] **Phase 10: Lifecycle Signals** - Staff signal availability after task completion, executives perceive idle agents for delegation (completed 2026-03-27)
 
 ## Phase Details
 
@@ -99,11 +99,11 @@ Plans:
   1. After a staff ghost completes its last assigned task, it signals IDLE and this state is visible in the system
   2. When an executive reviews a project, the context includes a list of idle staff agents available for delegation
   3. An idle agent's energy level reflects availability (not drained from recent work) so the tick engine correctly prioritizes it for new assignments
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 10-01-PLAN.md -- API metadata exposure (list_agents + PATCH merge) and idle-transition energy reward
-- [ ] 10-02-PLAN.md -- Tick engine lifecycle detection (Phase 5) and enriched format-team-roster
+- [x] 10-02-PLAN.md -- Tick engine lifecycle detection (Phase 5) and enriched format-team-roster
 
 ## Progress
 
@@ -123,4 +123,4 @@ Note: Phases 8, 9, and 10 depend only on v1.0 (Phase 5), not on each other. They
 | 7. Structured Artifact Passing | v1.1 | 3/3 | Complete   | 2026-03-26 |
 | 8. Decisions Brain | v1.1 | 0/2 | Planning | - |
 | 9. Verification Levels | v1.1 | 0/2 | Planning | - |
-| 10. Lifecycle Signals | v1.1 | 1/2 | In Progress|  |
+| 10. Lifecycle Signals | v1.1 | 2/2 | Complete   | 2026-03-27 |
