@@ -1,5 +1,26 @@
 # Milestones
 
+## v1.1 Ghost Coordination Patterns (Shipped: 2026-03-27)
+
+**Phases completed:** 5 phases, 12 plans, 22 tasks
+
+**Key accomplishments:**
+
+- Migrated tasks.blocked_by from INTEGER to INTEGER[] with GIN index and auto-unblock trigger via array_remove
+- SQL-level blocked_by filtering in all perception queries with executive blocked task visibility and INTEGER[] task API support
+- CREATE_TASK parser extended with blocked_by=#id,#id syntax and dispatch_to_db.py auto-populates blocked_by from wave ordering via two-pass approach
+- Migrated stage_notes from TEXT to JSONB with legacy data wrapping, updated Rust API to serve/accept JSON objects
+- JSON schema validation replacing keyword matching in validate-stage-output, structured artifact storage in stage_notes, and final deliverable persistence to documents table per D-07
+- Replaced disk-file predecessor loading with DB-sourced stage_notes query, formatting schema v0/v1 artifacts into LLM prompts
+- Append-only decisions CRUD API (GET/POST /api/decisions) with project_id, department, and owner filters following af64_tasks.rs pattern
+- Decision capture from DECISION: prefix lines via API POST, and prior-decisions context injection into executive project review prompts
+- Quality issue extraction from structured artifacts into executive completion reports with CRITICAL/WARNING/SUGGESTION severity classification
+- +40 urgency boost for CRITICAL quality issues in tick engine and critical_issues array in executive perception endpoint
+- list_agents metadata exposure, PATCH merge with COALESCE semantics, and +12 idle-transition energy reward
+- Idle transition detection in tick engine Phase 5 with one-time energy boost and enriched team roster showing agent availability
+
+---
+
 ## v1.0 Noosphere Dispatch Pipeline (Shipped: 2026-03-26)
 
 **Phases completed:** 5 phases, 11 plans, 21 tasks

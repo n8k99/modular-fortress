@@ -46,22 +46,15 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ### Active
 
-- ✓ Task dependency chains: blocked_by migrated to INTEGER[], perception filters blocked tasks, auto-unblock via trigger, CREATE_TASK blocked_by= syntax, dispatch wave dependencies — Phase 6
-- ✓ Structured artifact passing: stage_notes migrated to JSONB, JSON schema validation, structured artifacts via build-stage-artifact, predecessor context from DB, final deliverables persisted to documents table — Phase 7
-- ✓ Shared decisions brain: GET/POST /api/decisions, DECISION: capture from LLM output, last 10 decisions injected into executive review prompts, department scope support — Phase 8
-- ✓ Verification severity levels: issues extracted from Phase 7 artifacts, severity in completion reports, quality_issue_boost (+40) in urgency formula, critical_issues in executive perception — Phase 9
-- ✓ Lifecycle signals: automatic idle detection in tick engine, lifecycle_state in agent metadata, +12 energy boost on idle transition, enriched team roster with status/energy/task count — Phase 10
+(None — planning next milestone)
 
-## Current Milestone: v1.1 Ghost Coordination Patterns
+## Shipped Milestones
 
-**Goal:** Strengthen executive orchestration and ghost team coordination by incorporating proven patterns from Squad, Agent-Teams-Lite, and ClawTeam into the Noosphere tick engine.
+### v1.1 Ghost Coordination Patterns (shipped 2026-03-27)
+- Task dependency chains, structured artifact passing, decisions brain, verification levels, lifecycle signals
 
-**Target features:**
-- Task dependency chains (blocked_by → perception + auto-unblock)
-- Structured artifact passing (typed outputs per pipeline stage)
-- Shared decisions brain (executives consult decisions before acting)
-- Verification severity levels (quality assessment on completion)
-- Lifecycle signals (idle/ready-for-next from staff)
+### v1.0 Noosphere Dispatch Pipeline (shipped 2026-03-26)
+- Schema & dispatch, perception pipeline, executive cognition, tool execution, feedback & reporting
 
 ### Out of Scope
 
@@ -73,24 +66,24 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ## Context
 
-**Current state (post Phase 6):** The full GSD→Ghost pipeline works end-to-end with dependency awareness:
+**Current state (post v1.1):** The full GSD→Ghost pipeline works end-to-end with coordination patterns:
 - dispatch_to_db.py writes hierarchical tasks with owner, department, wave context, and blocked_by dependencies
-- Perception returns all GSD fields and filters out blocked tasks (ghosts only see actionable work)
-- Executives decompose projects via LLM and CREATE_TASK with delegation + blocked_by= syntax
-- Staff execute using 67+ tools (DB, API, code via Claude CLI, memory)
-- Wave advancement, completion reporting, blocker escalation, and auto-unblock all wired via DB triggers
+- Perception returns all GSD fields, filters blocked tasks, and includes structured artifacts from predecessors
+- Executives decompose projects via LLM, consult shared decision history, delegate with dependency chains
+- Staff execute using 67+ tools (DB, API, code via Claude CLI, memory) with typed artifact outputs
+- Quality verification with severity levels, lifecycle signals for staff availability, auto-unblock triggers
+- Wave advancement, completion reporting, blocker escalation all wired via DB triggers
 
-**v1.1 focus:** Coordination quality. Patterns from Squad (shared decisions), Agent-Teams-Lite (typed artifacts, verification levels), and ClawTeam (dependency chains, lifecycle signals) strengthen how executives orchestrate and ghosts collaborate.
+**Known operational issues:**
+- Ghost message spam: agents with stale unread messages get cognition jobs every tick, burning tokens with repetitive "nothing to report" messages. Root cause: `read_by` column never updated, perception returns same messages indefinitely.
+- Phase 10 sqlx fix: missing `"json"` feature in dpn-api Cargo.toml prevents metadata JSONB persistence for lifecycle state.
 
-**Key files involved:**
-- `gotcha-workspace/tools/gsd/dispatch_to_db.py` — broken bridge script
-- `dpn-core/src/db/projects.rs` — project CRUD
-- `dpn-core/src/db/tasks.rs` — task CRUD (Obsidian-focused, needs GSD columns)
-- `dpn-api/src/main.rs` — needs perception route
-- `project-noosphere-ghosts/lisp/runtime/perception.lisp` — expects /api/perception/:agent_id
-- `project-noosphere-ghosts/lisp/runtime/action-planner.lisp` — needs project-aware planning
-- `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` — needs tool expansion
-- `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp` — project boost already coded
+**Key files:**
+- `gotcha-workspace/tools/gsd/dispatch_to_db.py` — GSD-to-DB bridge
+- `dpn-api/src/handlers/af64_perception.rs` — perception endpoint
+- `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp` — tick cycle
+- `project-noosphere-ghosts/lisp/runtime/action-planner.lisp` — cognition job construction
+- `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` — tool execution + message posting
 
 **Executive roster and domains:**
 - Nova (COO): Operations, automation, droplet
@@ -120,7 +113,7 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 | Nathan only for blockers + strategy | The whole point is autonomous execution | ✓ Good — v1.0 |
 | Dispatch→perceive as first milestone | Prove the pipeline before building on it | ✓ Good — v1.0 |
 | Dual feedback (status + conversations) | Status for tracking, conversations for notable events | ✓ Good — v1.0 |
-| Incorporate patterns from Squad/ATL/ClawTeam | Proven coordination patterns strengthen existing concepts | — Pending (v1.1) |
+| Incorporate patterns from Squad/ATL/ClawTeam | Proven coordination patterns strengthen existing concepts | ✓ Good — v1.1 |
 
 ## Evolution
 
@@ -140,4 +133,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-27 after Phase 10 completion — v1.1 milestone complete*
+*Last updated: 2026-03-27 after v1.1 milestone completion*
