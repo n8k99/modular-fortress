@@ -88,7 +88,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 09-01-PLAN.md -- Issue extraction from artifacts and enriched completion reports with severity classification
+- [x] 09-01-PLAN.md -- Issue extraction from artifacts and enriched completion reports with severity classification
 - [ ] 09-02-PLAN.md -- Urgency boost in tick engine and critical issues visibility in perception endpoint
 
 ### Phase 10: Lifecycle Signals
