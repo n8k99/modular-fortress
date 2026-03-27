@@ -115,7 +115,7 @@ Plans:
 | 8. Decisions Brain | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 9. Verification Levels | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
-| 11. Message Hygiene | v1.2 | 2/2 | Complete   | 2026-03-27 |
+| 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
 | 12. Standing Orders | v1.2 | 0/? | Not started | - |
 | 13. Operations Pipeline | v1.2 | 0/? | Not started | - |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
