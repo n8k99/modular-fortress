@@ -7,14 +7,14 @@
 
 ### Message Hygiene
 
-- [ ] **SPAM-01**: Perception endpoint filters out messages already in the agent's read_by array
+- [x] **SPAM-01**: Perception endpoint filters out messages already in the agent's read_by array
 - [ ] **SPAM-02**: Action executor marks processed messages as read (appends agent_id to read_by) after cognition completes
 - [ ] **SPAM-03**: Agent with zero actionable items after read_by filtering is classified as idle (no cognition job, no token spend)
 
 ### Infrastructure Fixes
 
-- [ ] **FIX-01**: dpn-api Cargo.toml includes sqlx "json" feature so JSONB metadata reads/writes work correctly
-- [ ] **FIX-02**: Mark-as-read API endpoint exists to update read_by array on conversations
+- [x] **FIX-01**: dpn-api Cargo.toml includes sqlx "json" feature so JSONB metadata reads/writes work correctly
+- [x] **FIX-02**: Mark-as-read API endpoint exists to update read_by array on conversations
 
 ### Standing Orders Framework
 

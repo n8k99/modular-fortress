@@ -56,9 +56,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. An agent with zero unread messages after filtering gets no cognition job and burns no tokens
   4. dpn-api can read and write JSONB metadata fields without sqlx errors
   5. A mark-as-read API endpoint exists and correctly appends agent IDs to the read_by array
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
-- [ ] 11-01-PLAN.md -- Mark-read API endpoint, perception filter, sqlx verify, historical cleanup
+- [x] 11-01-PLAN.md -- Mark-read API endpoint, perception filter, sqlx verify, historical cleanup
 - [ ] 11-02-PLAN.md -- Lisp tick-engine mark-read integration and end-to-end verification
 
 ### Phase 12: Standing Orders
@@ -115,7 +115,7 @@ Plans:
 | 8. Decisions Brain | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 9. Verification Levels | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
-| 11. Message Hygiene | v1.2 | 0/2 | Planning | - |
+| 11. Message Hygiene | v1.2 | 1/2 | In Progress|  |
 | 12. Standing Orders | v1.2 | 0/? | Not started | - |
 | 13. Operations Pipeline | v1.2 | 0/? | Not started | - |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
