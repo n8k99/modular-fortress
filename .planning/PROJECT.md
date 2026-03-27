@@ -50,7 +50,7 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Structured artifact passing: stage_notes migrated to JSONB, JSON schema validation, structured artifacts via build-stage-artifact, predecessor context from DB, final deliverables persisted to documents table — Phase 7
 - ✓ Shared decisions brain: GET/POST /api/decisions, DECISION: capture from LLM output, last 10 decisions injected into executive review prompts, department scope support — Phase 8
 - ✓ Verification severity levels: issues extracted from Phase 7 artifacts, severity in completion reports, quality_issue_boost (+40) in urgency formula, critical_issues in executive perception — Phase 9
-- [ ] Lifecycle signals: staff ghosts signal idle/ready-for-next after task completion, executives perceive availability
+- ✓ Lifecycle signals: automatic idle detection in tick engine, lifecycle_state in agent metadata, +12 energy boost on idle transition, enriched team roster with status/energy/task count — Phase 10
 
 ## Current Milestone: v1.1 Ghost Coordination Patterns
 
@@ -140,4 +140,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-27 after Phase 9 completion*
+*Last updated: 2026-03-27 after Phase 10 completion — v1.1 milestone complete*
