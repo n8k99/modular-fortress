@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: PARAT Noosphere Schema
-status: defining_requirements
+status: ready_to_plan
 stopped_at: null
 last_updated: "2026-03-28"
 last_activity: 2026-03-28
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,27 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Defining requirements for v1.3 PARAT Noosphere Schema
+**Current focus:** Phase 16 - Foundation Tables & API
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-28 — Milestone v1.3 started
+Phase: 16 of 20 (Foundation Tables & API)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-28 -- Roadmap created for v1.3 PARAT Noosphere Schema
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 30 (across v1.0-v1.2)
+- Average duration: ~25 min
+- Total execution time: ~12.5 hours
+
+**Recent Trend:**
+- v1.2 phases averaged 1.6 plans/phase
+- Trend: Stable
 
 ## Accumulated Context
 
@@ -37,14 +50,11 @@ Last activity: 2026-03-28 — Milestone v1.3 started
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [v1.3]: PARAT five-pillar restructuring of master_chronicle (Projects, Areas, Resources, Archives, Templates)
-- [v1.3]: vault_notes renamed to memories with ghost memory columns
-- [v1.3]: ghosts table includes EM organizational structure (teams/departments, org charts, executive blogs)
-- [v1.3]: @Projects pillar includes @Goals (sub-table, proper FK) and @Tasks (atomic units)
-- [v1.3]: Nexus Chat AI Import serves as test corpus for temporal compression and ghost memory injection
-- [v1.3]: Frontend/em-site restructuring deferred to v1.4
-- [v1.3]: Ghost direct PostgreSQL deferred to v1.5
-- [v1.3]: Scope is PostgreSQL schema + dpn-api (Rust) only
+- [v1.3]: PARAT five-pillar restructuring of master_chronicle
+- [v1.3]: vault_notes renamed to memories with view bridge for Lisp/Python compat
+- [v1.3]: API endpoints folded into schema phases (not standalone API phase)
+- [v1.3]: Nexus import uses deterministic compression, LLM only for final synthesis
+- [v1.3]: agents table NOT renamed to ghosts (8 FK refs, too much blast radius)
 
 ### Pending Todos
 
@@ -52,9 +62,12 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- sqlx compile-time checking vs. view RULES needs empirical test before Phase 18
+- Nexus document count discrepancy (993 vs 2179) needs live query before Phase 20
+- trigger function sync_task_checkbox may reference vault_notes internally -- inspect before Phase 18
 
 ## Session Continuity
 
 Last session: 2026-03-28
-Stopped at: Defining requirements
+Stopped at: Roadmap created, ready to plan Phase 16
+Resume file: None

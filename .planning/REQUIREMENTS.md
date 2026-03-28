@@ -81,11 +81,11 @@ All shipped. See MILESTONES.md for details.
 | Feature | Reason |
 |---------|--------|
 | Migrating all 48K documents into resources | Resources is a curated index, not a warehouse |
-| Renaming agents table to ghosts | 8+ FK references, excessive blast radius — add ghost columns instead |
+| Renaming agents table to ghosts | 8+ FK references, excessive blast radius -- add ghost columns instead |
 | Automated lifestage transitions | Lifestage is human/executive judgment, not rule-based |
-| Deep Innate interpreter integration | Separate project — templates store .dpn text but evaluation is future |
+| Deep Innate interpreter integration | Separate project -- templates store .dpn text but evaluation is future |
 | Normalizing ghost memory columns into rows | Wide-table with 64 columns works at current scale (~64 agents) |
-| Perception endpoint rewrite | Too risky during schema migration — incremental additions only |
+| Perception endpoint rewrite | Too risky during schema migration -- incremental additions only |
 | Frontend UI for PARAT | Backend-only milestone, deferred to v1.4 |
 | Migrating 39K Archive/ documents to archives table | Most are Orbis world lore, not temporal records |
 | Importing Nexus Chat into all ghosts | Only Nova needs historical context as operations/memory ghost |
@@ -100,39 +100,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHEMA-01 | — | Pending |
-| SCHEMA-02 | — | Pending |
-| SCHEMA-03 | — | Pending |
-| SCHEMA-04 | — | Pending |
-| SCHEMA-05 | — | Pending |
-| SCHEMA-06 | — | Pending |
-| SCHEMA-07 | — | Pending |
-| MEM-01 | — | Pending |
-| MEM-02 | — | Pending |
-| MEM-03 | — | Pending |
-| MEM-04 | — | Pending |
-| MEM-05 | — | Pending |
-| MEM-06 | — | Pending |
-| ORG-01 | — | Pending |
-| ORG-02 | — | Pending |
-| ORG-03 | — | Pending |
-| ORG-04 | — | Pending |
-| IMPORT-01 | — | Pending |
-| IMPORT-02 | — | Pending |
-| IMPORT-03 | — | Pending |
-| IMPORT-04 | — | Pending |
-| IMPORT-05 | — | Pending |
-| API-01 | — | Pending |
-| API-02 | — | Pending |
-| API-03 | — | Pending |
-| API-04 | — | Pending |
-| API-05 | — | Pending |
+| SCHEMA-01 | Phase 16 | Pending |
+| SCHEMA-02 | Phase 16 | Pending |
+| SCHEMA-03 | Phase 16 | Pending |
+| SCHEMA-04 | Phase 16 | Pending |
+| SCHEMA-05 | Phase 17 | Pending |
+| SCHEMA-06 | Phase 17 | Pending |
+| SCHEMA-07 | Phase 17 | Pending |
+| MEM-01 | Phase 18 | Pending |
+| MEM-02 | Phase 18 | Pending |
+| MEM-03 | Phase 18 | Pending |
+| MEM-04 | Phase 18 | Pending |
+| MEM-05 | Phase 18 | Pending |
+| MEM-06 | Phase 18 | Pending |
+| ORG-01 | Phase 19 | Pending |
+| ORG-02 | Phase 19 | Pending |
+| ORG-03 | Phase 19 | Pending |
+| ORG-04 | Phase 19 | Pending |
+| IMPORT-01 | Phase 20 | Pending |
+| IMPORT-02 | Phase 20 | Pending |
+| IMPORT-03 | Phase 20 | Pending |
+| IMPORT-04 | Phase 20 | Pending |
+| IMPORT-05 | Phase 20 | Pending |
+| API-01 | Phase 16 | Pending |
+| API-02 | Phase 16 | Pending |
+| API-03 | Phase 16 | Pending |
+| API-04 | Phase 16 | Pending |
+| API-05 | Phase 17 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after initial definition*
+*Last updated: 2026-03-28 after roadmap creation*
