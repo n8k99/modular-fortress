@@ -24,8 +24,8 @@
 
 ### Pipeline Migration -- Financial
 
-- [ ] **FIN-01**: Trading briefings (Tokyo/London/NYC) execute as ghost pipeline under Project #10, owned by Kathryn
-- [ ] **FIN-02**: Each briefing session produces structured output posted to the appropriate channel
+- [x] **FIN-01**: Trading briefings (Tokyo/London/NYC) execute as ghost pipeline under Project #10, owned by Kathryn
+- [x] **FIN-02**: Each briefing session produces structured output posted to the appropriate channel
 
 ### Pipeline Migration -- Editorial
 
@@ -38,7 +38,7 @@
 - [x] **OPS-02**: Daily note population and nightly synthesis execute as ghost work attributed to Nova
 - [x] **OPS-03**: Podcast watcher runs on schedule, checks feeds, posts new episodes
 - [x] **OPS-04**: Weekly and monthly finalization (temporal compression) execute as ghost work with specific agent attribution
-- [ ] **OPS-05**: Wave calendar sync executes as ghost work under the financial project
+- [x] **OPS-05**: Wave calendar sync executes as ghost work under the financial project
 
 ## Future Requirements
 

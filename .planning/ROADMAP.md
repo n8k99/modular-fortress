@@ -36,7 +36,7 @@
 - [x] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis (completed 2026-03-28)
 - [x] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14 (completed 2026-03-28)
 - [x] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia (completed 2026-03-28)
-- [ ] **Phase 15: Financial Pipeline** - Trading briefings across three sessions plus calendar sync under Project #10 owned by Kathryn
+- [x] **Phase 15: Financial Pipeline** - Trading briefings across three sessions plus calendar sync under Project #10 owned by Kathryn (completed 2026-03-28)
 
 **Phase Numbering:**
 - Integer phases (1, 2, 3): Planned milestone work
@@ -107,9 +107,9 @@ Plans:
   1. Trading briefings for Tokyo, London, and NYC sessions execute on their respective schedules under Project #10
   2. Each briefing session produces structured output posted to the appropriate channel
   3. Wave calendar sync executes as scheduled ghost work under the financial project
-**Plans:** 1/1 plans
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 15-01-PLAN.md -- Tool registry updates, label-to-tool mappings, Calendar Sync schedule
+- [x] 15-01-PLAN.md -- Tool registry updates, label-to-tool mappings, Calendar Sync schedule
 
 ## Progress
 
@@ -129,4 +129,4 @@ Plans:
 | 12. Standing Orders | v1.2 | 2/2 | Complete    | 2026-03-28 |
 | 13. Operations Pipeline | v1.2 | 2/2 | Complete    | 2026-03-28 |
 | 14. Editorial Pipeline | v1.2 | 1/1 | Complete    | 2026-03-28 |
-| 15. Financial Pipeline | v1.2 | 0/1 | Planning complete | - |
+| 15. Financial Pipeline | v1.2 | 1/1 | Complete   | 2026-03-28 |
