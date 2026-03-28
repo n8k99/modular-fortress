@@ -2,6 +2,48 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v1.2 -- Operational Readiness
+
+**Shipped:** 2026-03-28
+**Phases:** 5 | **Plans:** 8
+
+### What Was Built
+- Mark-as-read API endpoint with read_by perception filtering, eliminating ghost message spam (2229 stale messages cleaned)
+- Standing orders framework: JSONB schedule on projects, Lisp cron matcher, +50 urgency boost on schedule fire
+- 9 operational tools registered: 6 for Nova (ops), 1 for Sylvia (editorial), 2 for Kathryn (financial)
+- Dynamic label-to-tool mapping generalized for any executive/project (11 mappings total)
+- execute-project-review wired to process-tool-calls so standing orders can execute real tools
+
+### What Worked
+- Auto-advance pipeline (discuss -> plan -> execute per phase) completed 4 phases in a single session
+- Phase 13/14/15 followed identical patterns -- tool registration + label mapping became formulaic
+- Worktree isolation for executor agents prevented merge conflicts on source code
+- Dynamic mapping generalization in Phase 14 paid off immediately in Phase 15
+
+### What Was Inefficient
+- STATE.md merge conflicts on every worktree merge (orchestrator and agent both update it)
+- Researcher agents sometimes found issues (auth blocker, env vars) that didn't fully propagate into plans
+- Checker warnings about env vars and Discord creds were noted but not acted on in auto mode
+
+### Patterns Established
+- Tool registration pattern: JSON entry in tool-registry.json + label mapping in action-planner.lisp
+- Per-project standing orders: schedule JSONB array on projects table, tick engine evaluates each tick
+- Dynamic tool-mapping-for-label: cond-based dispatch, extensible without modifying existing entries
+- Ghost tool execution: existing Python scripts triggered via tool invocation, no rewrites needed
+
+### Key Lessons
+- **Formulaic phases are fast.** Phases 13-15 were structurally identical -- once the pattern was established, execution was near-mechanical.
+- **Standing orders are identity.** Nova IS T.A.S.K.S. -- the schedules aren't jobs assigned to her, they're her operational rhythm.
+- **Noosphere-native output.** Conversations table, not Discord. Ghosts live in the substrate; external delivery is a separate concern.
+- **Auto mode works for well-understood patterns.** The discuss->plan->execute auto chain was effective because each phase followed a known template.
+
+### Cost Observations
+- Model mix: opus (executor, planner, researcher), sonnet (checker, verifier)
+- Sessions: 1 session for all 5 phases (auto-advance chain)
+- Notable: 8 plans executed in ~30 min total. Phases 14-15 were under 10 min each.
+
+---
+
 ## Milestone: v1.1 -- Ghost Coordination Patterns
 
 **Shipped:** 2026-03-27
@@ -72,11 +114,11 @@
 
 ## Cross-Milestone Trends
 
-| Metric | v1.0 | v1.1 |
-|--------|------|------|
-| Phases | 5 | 5 |
-| Plans | 11 | 12 |
-| Avg plan duration | 4 min | 4 min |
-| Total execution | ~44 min | ~48 min |
-| Requirements | 12 | 16 |
-| Model | opus | opus |
+| Metric | v1.0 | v1.1 | v1.2 |
+|--------|------|------|------|
+| Phases | 5 | 5 | 5 |
+| Plans | 11 | 12 | 8 |
+| Avg plan duration | 4 min | 4 min | 4 min |
+| Total execution | ~44 min | ~48 min | ~30 min |
+| Requirements | 12 | 16 | 17 |
+| Model | opus | opus | opus+sonnet |
