@@ -1,119 +1,79 @@
 # Domain Pitfalls
 
-**Domain:** Agentic dispatch and execution pipeline
-**Researched:** 2026-03-26
+**Domain:** PARAT Noosphere Schema restructuring
+**Researched:** 2026-03-28
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites or major issues.
+Mistakes that cause downtime or data loss.
 
-### Pitfall 1: Ghost Hallucination of Progress
+### Pitfall 1: Breaking Ghost Perception During Rename
+**What goes wrong:** Renaming `vault_notes` to `memories` without backward compatibility breaks the perception endpoint. The Lisp tick engine calls `/api/perception/:agent_id` which queries `vault_notes` for ghost memory columns. If the table doesn't exist, all ghosts lose their memory context.
+**Why it happens:** The perception endpoint in `af64_perception.rs` (line 476) builds dynamic SQL: `SELECT note_date::text, {agent}_memories FROM vault_notes WHERE...`. This is string interpolation, not an ORM query. Renaming the table kills it.
+**Consequences:** All ghost cognition degrades. Ghosts act without memory context. Standing orders fail.
+**Prevention:** Use view-based rename: `ALTER TABLE vault_notes RENAME TO memories; CREATE VIEW vault_notes AS SELECT * FROM memories;` -- existing queries continue working via the view.
+**Detection:** Monitor `pm2 logs noosphere-ghosts` for perception errors immediately after migration.
 
-**What goes wrong:** Ghosts mark tasks "done" without actually doing real work. They produce conversation messages that DESCRIBE work instead of DOING work. The task status says "completed" but nothing actually changed in the codebase or database.
+### Pitfall 2: sqlx Compile-Time Query Checking vs. View Rules
+**What goes wrong:** sqlx's `query!()` macro validates queries at compile time against the database schema. If `vault_notes` becomes a view with RULES, sqlx may reject INSERT/UPDATE operations that worked against the real table.
+**Why it happens:** PostgreSQL views with RULES have different behavior than tables for RETURNING clauses, triggers, and constraint checking. sqlx may detect the object is a view and refuse certain operations.
+**Consequences:** dpn-core fails to compile after the rename, blocking all dpn-api changes.
+**Prevention:** (1) Use `sqlx::query()` (runtime, not compile-time checked) for vault_notes queries during transition. (2) Test the view + rules combination with actual sqlx parameterized queries before committing. (3) Best approach: update all Rust code to use `memories` table name directly and skip the view for Rust code (view only needed for Lisp/Python backward compat).
+**Detection:** `cargo build` in dpn-core/dpn-api will fail immediately if there's a problem.
 
-**Why it happens:** The current action-executor only has `respond-message` and `advance-pipeline` actions. When a ghost receives a task, its only tool is talking. So it talks about doing the work and calls it done.
-
-**Consequences:** Project status shows 100% complete but nothing was built. Nathan discovers this and loses trust in the entire system.
-
-**Prevention:**
-1. The `validate-stage-output` function already exists and checks for minimum quality. Extend it to verify that tool execution actually occurred (check `tools-executed` count > 0 for execution tasks).
-2. Only allow `complete-task` action after tool execution has produced verifiable output.
-3. Agents without `tool_scope` should not receive execution tasks (af64_perception.rs already checks this).
-
-**Detection:** Tasks marked "done" with no corresponding tool execution entries. Conversations saying "I have completed X" without any PATCH to task status or tool output logged.
-
-### Pitfall 2: Schema Mismatch Cascade
-
-**What goes wrong:** dispatch_to_db.py writes to columns that don't exist (`source`, `context`, `department` on tasks). The INSERT silently fails or throws, and no tasks are created. Ghosts see nothing to do. Nathan thinks dispatch worked because the script exited 0.
-
-**Why it happens:** The script was written against a planned schema, not the actual schema. Nobody verified the columns exist.
-
-**Consequences:** The entire pipeline is dead from step one. No tasks dispatched = nothing to perceive = ghosts idle.
-
-**Prevention:**
-1. Run the dispatch script against the actual DB and check for errors FIRST, before building anything else.
-2. Add a `--dry-run` flag that validates the schema without inserting.
-3. Wrap INSERTs in try/except and report clear errors about missing columns.
-
-**Detection:** `dispatch_to_db.py --status` shows no tasks for a project that was "dispatched."
-
-### Pitfall 3: Cognition Budget Exhaustion
-
-**What goes wrong:** Executive decomposition + staff tool execution both require LLM calls via Claude Code CLI at $0.50/request. With 6 jobs/tick and a tick every 60 seconds, that is $3/minute = $180/hour if the system runs hot.
-
-**Why it happens:** Every dispatched project triggers executive cognition (decompose) + multiple staff cognitions (execute tools). A project with 10 tasks means 10+ LLM calls just for execution.
-
-**Consequences:** Unexpected bill, or cognitive winter kicks in and everything stalls.
-
-**Prevention:**
-1. Use deterministic (non-LLM) execution for simple, well-defined tasks. Not every task needs an LLM call.
-2. Batch related tasks into a single cognition request where possible.
-3. Executive decomposition should produce tasks that can be executed deterministically (e.g., "run this specific command" not "figure out how to do X").
-4. Set hard budget caps in the cognition broker config.
-
-**Detection:** Cognitive winter triggering frequently. `pending >= 18` in cognition_jobs table.
+### Pitfall 3: Goals Backfill Data Loss
+**What goes wrong:** The `goals.project` column is TEXT containing project slugs. When adding `goals.project_id` INTEGER FK, the backfill UPDATE must match slugs to project IDs correctly. If slugs don't match (typos, renamed projects), goals lose their project association.
+**Why it happens:** 44 goals all have `project` set. If any slug doesn't match a `projects.slug`, the FK column stays NULL.
+**Consequences:** Goals disconnected from projects. Queries using the new FK miss these goals.
+**Prevention:** Before backfill: `SELECT g.project, p.id FROM goals g LEFT JOIN projects p ON g.project = p.slug WHERE p.id IS NULL;` -- if any rows returned, fix manually. Keep the old TEXT column until verified.
+**Detection:** Count goals with project_id IS NULL after backfill. Should be 0.
 
 ## Moderate Pitfalls
 
-### Pitfall 4: Underscore-Hyphen JSON Quirk
+### Pitfall 4: Trigger Orphaning on Table Rename
+**What goes wrong:** `vault_notes` has a trigger `trg_sync_task_checkbox AFTER UPDATE ON vault_notes`. When the table is renamed to `memories`, the trigger follows the table (PostgreSQL moves triggers with renames). But the trigger function `sync_task_checkbox()` may reference `vault_notes` internally.
+**Prevention:** Inspect trigger function body: `SELECT prosrc FROM pg_proc WHERE proname = 'sync_task_checkbox';`. If it references `vault_notes`, update the function after rename.
 
-**What goes wrong:** The Lisp JSON parser converts underscores to hyphens. So `project_id` in PostgreSQL becomes `:project-id` in Lisp. If code on the Lisp side references `:project_id`, it gets nil.
+### Pitfall 5: Nexus Chat Dedup Before Import
+**What goes wrong:** Nexus Chat imports exist in both `Archive/Retired Nebulab/04 Archives/01 Nexus AI Chat Imports/` and `Archive/backup-Nebulab/Eckenrode Muziekopname/Engineering/Nexus AI Chat Imports/`. Importing both creates duplicate archive entries.
+**Prevention:** Before import, identify duplicates by title+date. Only import from one path prefix (likely `Archive/Retired Nebulab/` as canonical). Query: `SELECT title, count(*) FROM documents WHERE path LIKE 'Archive/%Nexus AI Chat Imports%' GROUP BY title HAVING count(*) > 1;`
 
-**Prevention:** Always use hyphenated keys in Lisp code (`:project-id`, `:from-agent`). Test JSON round-trips when adding new fields. Document this quirk prominently.
+### Pitfall 6: Temporal Compression LLM Cost Explosion
+**What goes wrong:** Compressing 2199 daily notes into weekly summaries requires ~314 LLM calls (one per week). At $0.50/request (ghost budget), that's ~$157 for one compression pass. Monthly/quarterly/yearly add more.
+**Prevention:** (1) Use deterministic merge first (concatenate + truncate), not LLM. (2) If LLM needed, batch multiple days into single call. (3) Set a compression budget and stop when exhausted. (4) Compress incrementally (only new uncompressed days), not full historical reprocess.
 
-### Pitfall 5: Perception Since Filter Masking Old Messages
-
-**What goes wrong:** The `since` parameter in perception filters out messages older than the timestamp. But if an agent was dormant for hours and then wakes up, it misses all messages from the dormant period.
-
-**Prevention:** Already partially mitigated -- perception.lisp hardcodes `since` to "2026-01-01T00:00:00Z" (ignoring `last-tick-at`). The handoff detection also ignores `since` for unresponded handoffs. GSD-dispatched tasks are inherently safe because the perception query uses status-based filtering (WHERE status IN ('open', 'pending', 'in-progress')), not time-based filtering.
-
-### Pitfall 6: Wave Ordering Ignored
-
-**What goes wrong:** Executive decomposes a project and assigns all tasks simultaneously, ignoring wave ordering. Wave 2 tasks start before wave 1 completes. Dependencies break.
-
-**Prevention:** When perception returns tasks for a project, include wave information from the `context` JSONB. The executive cognition prompt must explicitly state: "Only assign wave N+1 tasks after all wave N tasks are complete." Alternatively, filter wave 2 tasks out of perception until wave 1 is done.
-
-### Pitfall 7: Orphaned Subtasks
-
-**What goes wrong:** Executive creates subtasks via POST /api/af64/tasks but doesn't set `project_id`. The subtasks exist in the tasks table but are disconnected from the project. Progress queries miss them. Nobody perceives them correctly.
-
-**Prevention:** The create_task endpoint should require `project_id` for any task where `source='ghost'`. Validate on the API side.
+### Pitfall 7: Foreign Key Cascade on agents Table
+**What goes wrong:** Adding `area_id` to agents is safe. But if someone later tries `ALTER TABLE agents RENAME TO ghosts`, the 8 FK references (agent_state, agent_drives, agent_fitness, agent_daily_memory, tick_log, metamorphosis_log, persona_mutations, agent_document_links) all need CASCADE updates.
+**Prevention:** Do NOT rename agents table. Use `CREATE VIEW ghosts AS SELECT * FROM agents`. Document this decision as permanent for v1.3.
 
 ## Minor Pitfalls
 
-### Pitfall 8: UTF-8 Boundary Errors
+### Pitfall 8: Index Name Collisions After Rename
+**What goes wrong:** `ALTER TABLE vault_notes RENAME TO memories` renames the table but not the indexes (`vault_notes_pkey`, `vault_notes_path_key`, `idx_vault_notes_date`, `idx_vault_notes_type`, `idx_vault_notes_embedding`). Code that references index names breaks.
+**Prevention:** Rename indexes too: `ALTER INDEX vault_notes_pkey RENAME TO memories_pkey;` etc. Most code doesn't reference index names directly, but maintenance scripts might.
 
-**What goes wrong:** Rust code uses byte slicing `[..N]` on strings with emoji or non-ASCII characters. Panics with "byte index is not a char boundary."
+### Pitfall 9: Resources Overlay Getting Stale
+**What goes wrong:** The `resources` table is an overlay pointing to `documents`, `media`, etc. via source_table/source_id. If documents are added/deleted, resources entries become stale (orphaned or missing).
+**Prevention:** Either (1) don't populate resources automatically -- treat it as a curated catalog, or (2) add a periodic sync job. For v1.3, option 1 is simpler.
 
-**Prevention:** Already documented in CLAUDE.md guardrails. af64_perception.rs correctly uses `.chars().take(N).collect()`. Continue this pattern everywhere.
-
-### Pitfall 9: Pipeline Advancement for Non-Pipeline Tasks
-
-**What goes wrong:** The action executor tries to advance a GSD-dispatched task through the hardcoded `*pipeline-advancement*` stages, but GSD tasks don't have matching stage names.
-
-**Prevention:** Check `source` column: if source='gsd', use GSD-specific logic (wave-based advancement from `context` JSONB); otherwise use existing hardcoded pipelines.
-
-### Pitfall 10: Dispatch Without Owner Assignment
-
-**What goes wrong:** `dispatch_to_db.py --phase N` creates tasks but no `--owner` is specified. Tasks have no assignee. Only triage agents (sarah, lara) see them. No executive picks them up for decomposition.
-
-**Prevention:** Auto-route to correct executive based on project domain. If `--owner` not provided, look up project domain and assign to matching executive (engineering -> eliana, content -> sylvia, ops -> nova, etc.).
+### Pitfall 10: Template .dpn Expressions vs Plain Text
+**What goes wrong:** Templates store .dpn expressions in the body field. If code tries to evaluate them before the Innate interpreter exists, it crashes or returns raw expression text to users.
+**Prevention:** All template reads in v1.3 return body as-is (plain text). No evaluation. Add a `format` column to distinguish `text` from `dpn` for future use.
 
 ## Phase-Specific Warnings
 
 | Phase Topic | Likely Pitfall | Mitigation |
 |-------------|---------------|------------|
-| Schema fix + dispatch repair | Schema mismatch cascade (#2) | Run dispatch against real DB first, verify columns exist |
-| Perception verification | Wave ordering ignored (#6) | Test with multi-wave project, verify wave 2 tasks hidden until wave 1 done |
-| Executive decomposition | Hallucination of progress (#1) | Validate decomposition output contains structured task specs, not prose |
-| Staff tool execution | Budget exhaustion (#3) | Start with deterministic tools only, add LLM tools carefully |
-| Feedback loop | Orphaned subtasks (#7) | Require project_id on all ghost-created tasks |
-| Owner assignment | Dispatch without owner (#10) | Add domain-to-executive routing in dispatch script |
+| Foundation tables (Wave 1) | Minimal risk -- pure additive | Test dpn-core compile, dpn-api startup |
+| Projects/Goals (Wave 2) | Goals backfill mismatches (Pitfall 3) | LEFT JOIN verification query before backfill |
+| Memories rename (Wave 3) | Perception breakage (Pitfall 1), sqlx view issues (Pitfall 2), trigger orphaning (Pitfall 4) | View-based rename, update Rust code to use `memories` directly, test with running ghosts |
+| Agents org (Wave 4) | Accidental FK cascade if someone renames (Pitfall 7) | Document as VIEW-only, never rename table |
+| Nexus import (Wave 5) | Dedup needed (Pitfall 5), LLM cost (Pitfall 6) | Dedup query first, deterministic compression |
 
 ## Sources
 
-- Direct inspection of action-executor.lisp (validate-stage-output, pipeline advancement table)
-- Direct inspection of af64_perception.rs (tool_scope checks, since filtering, task routing by tier)
-- Direct inspection of dispatch_to_db.py (column mismatch with actual schema)
-- CLAUDE.md guardrails (UTF-8 rule, DB-is-the-OS principle)
-- PROJECT.md constraints ($0.50/request budget, single droplet, no tick engine rewrite)
+- Direct inspection of vault_notes trigger: `trg_sync_task_checkbox`
+- dpn-api perception handler: `/opt/dpn-api/src/handlers/af64_perception.rs` line 476
+- agents FK analysis: `\d agents` showing 8 referenced-by constraints
+- Nexus Chat document paths: `SELECT path FROM documents WHERE path LIKE '%Nexus%'`
+- sqlx documentation on compile-time checking behavior with views
