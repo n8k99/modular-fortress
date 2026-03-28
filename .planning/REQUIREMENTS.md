@@ -34,10 +34,10 @@
 
 ### Pipeline Migration -- Operations
 
-- [ ] **OPS-01**: Daily system health check executes as ghost work under Project #14, owned by Nova
-- [ ] **OPS-02**: Daily note population and nightly synthesis execute as ghost work attributed to Nova
-- [ ] **OPS-03**: Podcast watcher runs on schedule, checks feeds, posts new episodes
-- [ ] **OPS-04**: Weekly and monthly finalization (temporal compression) execute as ghost work with specific agent attribution
+- [x] **OPS-01**: Daily system health check executes as ghost work under Project #14, owned by Nova
+- [x] **OPS-02**: Daily note population and nightly synthesis execute as ghost work attributed to Nova
+- [x] **OPS-03**: Podcast watcher runs on schedule, checks feeds, posts new episodes
+- [x] **OPS-04**: Weekly and monthly finalization (temporal compression) execute as ghost work with specific agent attribution
 - [ ] **OPS-05**: Wave calendar sync executes as ghost work under the financial project
 
 ## Future Requirements

@@ -83,9 +83,9 @@ Plans:
   2. Daily notes are populated and nightly synthesis completes as ghost work under Project #14
   3. Podcast watcher checks feeds on schedule and posts new episodes to the appropriate destination
   4. Weekly and monthly finalization (temporal compression) executes with specific agent attribution
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
-- [ ] 13-01-PLAN.md -- Tool registry registration, project review tool execution, podcast schedule
+- [x] 13-01-PLAN.md -- Tool registry registration, project review tool execution, podcast schedule
 - [ ] 13-02-PLAN.md -- Action planner label-to-tool mapping, end-to-end verification
 
 ### Phase 14: Editorial Pipeline
@@ -123,6 +123,6 @@ Plans:
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
 | 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
 | 12. Standing Orders | v1.2 | 2/2 | Complete    | 2026-03-28 |
-| 13. Operations Pipeline | v1.2 | 0/2 | Planning | - |
+| 13. Operations Pipeline | v1.2 | 1/2 | In Progress|  |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
 | 15. Financial Pipeline | v1.2 | 0/? | Not started | - |
