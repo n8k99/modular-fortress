@@ -259,7 +259,10 @@ Plans:
   2. All 44 existing goals have integer project_id FK referencing projects table with zero orphaned goals (verified by LEFT JOIN query returning no NULLs)
   3. Projects table has area_id FK to areas, and projects can be queried by area
   4. Perception endpoint includes project lifestage and area context in ghost perception responses
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
+- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
 
 ### Phase 18: Memories Rename
 **Goal**: The ghost memory substrate operates under its PARAT-native name with compression metadata and zero disruption to live ghost operations
@@ -270,7 +273,10 @@ Plans:
   2. Every memory row has a compression_tier value (daily/weekly/monthly/quarterly/yearly) backfilled from existing note_type, and compressed_from INTEGER[] tracks source entries for compressed records
   3. Departments are normalized via lookup table with proper FK from agents, consolidating the 19 inconsistent values into canonical entries
   4. All dpn-api handlers and dpn-core queries reference memories directly (not the view), and dpn-api compiles and starts cleanly
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
+- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
 
 ### Phase 19: Ghost Organizational Structure
 **Goal**: Ghosts have formal team membership, typed relationships, multi-area assignments, and identity aliases within the noosphere
@@ -281,7 +287,10 @@ Plans:
   2. ghost_relationships table formalizes reports_to/mentor/mentee/collaborators/liaises_with as typed from_agent/to_agent rows replacing text arrays
   3. agent_areas junction table allows multi-area ghost assignment (e.g., Nova assigned to Operations AND cross-functional areas)
   4. Agents table has aliases text[] column and Nova's record includes T.A.S.K.S. as an alias
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
+- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
 
 ### Phase 20: Nexus Import & Temporal Compression
 **Goal**: Historical ChatGPT conversations are archived, temporally compressed, and injected into Nova's ghost memory as operational context
@@ -293,7 +302,10 @@ Plans:
   3. Monthly, quarterly, and yearly summary memories exist in the memories table generated from grouped imported conversations via deterministic compression
   4. Nova/T.A.S.K.S. ghost memory columns contain synthesized perspectives on imported content at each temporal tier
   5. Relevant daily/weekly notes contain markdown links to imported archive content without corruption of existing note data
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
+- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
 
 ## Progress
 
