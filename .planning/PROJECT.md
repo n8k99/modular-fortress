@@ -51,6 +51,10 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Project lifestage lifecycle (Seed/Sapling/Tree/Harvest) with forward-only DB trigger — Phase 17
 - ✓ Goals FK migration from wikilink text to integer project_id — Phase 17
 - ✓ Projects linked to areas via area_id FK, perception enriched with lifestage + area_name — Phase 17
+- ✓ vault_notes renamed to memories with backward-compatible view bridge (INSTEAD OF triggers) — Phase 18
+- ✓ Compression metadata (tier + compressed_from) on all 2831 memories — Phase 18
+- ✓ Departments normalized: 8 canonical entries, all 64 agents linked via FK — Phase 18
+- ✓ All Rust code (dpn-core + dpn-api) migrated from vault_notes to memories — Phase 18
 
 ## Current Milestone: v1.3 PARAT Noosphere Schema
 
@@ -166,4 +170,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after Phase 17 (Projects & Goals Restructuring) complete*
+*Last updated: 2026-03-28 after Phase 18 (Memories Rename) complete*
