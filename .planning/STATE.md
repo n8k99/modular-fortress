@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: PARAT Noosphere Schema
-status: verifying
-stopped_at: Phase 18 planned — 3 plans in 3 waves, verification passed
-last_updated: "2026-03-28T22:26:23.699Z"
+status: executing
+stopped_at: Completed 18-01-PLAN.md
+last_updated: "2026-03-28T22:34:03.375Z"
 last_activity: 2026-03-28
 progress:
   total_phases: 20
   completed_phases: 12
   total_plans: 27
-  completed_plans: 24
+  completed_plans: 25
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 17 — projects-goals-restructuring
+**Current focus:** Phase 18 — memories-rename
 
 ## Current Position
 
-Phase: 18
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 18 (memories-rename) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-03-28
 
 Progress: [░░░░░░░░░░] 0%
@@ -62,6 +62,8 @@ Recent decisions affecting current work:
 - [Phase 17]: Used postgres user for migration (projects table owned by postgres)
 - [Phase 17]: Forward-only lifestage trigger allows non-sequential forward transitions
 - [Phase 17]: Release build required for PM2 deployment (PM2 runs release binary)
+- [Phase 18-memories-rename]: Fixed INSERT trigger to use RETURNING INTO for id propagation through vault_notes view
+- [Phase 18-memories-rename]: Trigger trg_sync_task_checkbox survives table rename (no drop/recreate needed)
 
 ### Pending Todos
 
@@ -75,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T22:26:23.690Z
-Stopped at: Phase 18 planned — 3 plans in 3 waves, verification passed
-Resume file: .planning/phases/18-memories-rename/18-01-PLAN.md
+Last session: 2026-03-28T22:34:03.365Z
+Stopped at: Completed 18-01-PLAN.md
+Resume file: None

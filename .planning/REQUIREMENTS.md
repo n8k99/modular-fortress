@@ -19,10 +19,10 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 
 ### Memory Migration
 
-- [ ] **MEM-01**: vault_notes table renamed to memories with VIEW bridge (vault_notes view) preserving backward compatibility for Lisp and Python code
-- [ ] **MEM-02**: memories table has compression_tier enum (daily/weekly/monthly/quarterly/yearly) backfilled from existing note_type values
-- [ ] **MEM-03**: memories table has compressed_from INTEGER[] column tracking which source entries each compressed entry summarizes
-- [ ] **MEM-04**: Departments normalized via lookup table with proper FK from agents, consolidating 19 inconsistent values
+- [x] **MEM-01**: vault_notes table renamed to memories with VIEW bridge (vault_notes view) preserving backward compatibility for Lisp and Python code
+- [x] **MEM-02**: memories table has compression_tier enum (daily/weekly/monthly/quarterly/yearly) backfilled from existing note_type values
+- [x] **MEM-03**: memories table has compressed_from INTEGER[] column tracking which source entries each compressed entry summarizes
+- [x] **MEM-04**: Departments normalized via lookup table with proper FK from agents, consolidating 19 inconsistent values
 - [ ] **MEM-05**: All dpn-api Rust endpoints updated from vault_notes to memories (structs, queries, handlers)
 - [ ] **MEM-06**: All dpn-core Rust queries updated from vault_notes to memories
 
@@ -107,10 +107,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHEMA-05 | Phase 17 | Complete |
 | SCHEMA-06 | Phase 17 | Complete |
 | SCHEMA-07 | Phase 17 | Complete |
-| MEM-01 | Phase 18 | Pending |
-| MEM-02 | Phase 18 | Pending |
-| MEM-03 | Phase 18 | Pending |
-| MEM-04 | Phase 18 | Pending |
+| MEM-01 | Phase 18 | Complete |
+| MEM-02 | Phase 18 | Complete |
+| MEM-03 | Phase 18 | Complete |
+| MEM-04 | Phase 18 | Complete |
 | MEM-05 | Phase 18 | Pending |
 | MEM-06 | Phase 18 | Pending |
 | ORG-01 | Phase 19 | Pending |
