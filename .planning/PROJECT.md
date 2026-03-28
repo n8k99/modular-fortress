@@ -55,6 +55,9 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Compression metadata (tier + compressed_from) on all 2831 memories — Phase 18
 - ✓ Departments normalized: 8 canonical entries, all 64 agents linked via FK — Phase 18
 - ✓ All Rust code (dpn-core + dpn-api) migrated from vault_notes to memories — Phase 18
+- ✓ Ghost org structure: 13 teams, 500 typed relationships, 67 area assignments, 11 routines — Phase 19
+- ✓ 64 EM Staff documents enriched with YAML frontmatter (agent_id, memory_column, dept, team, area) — Phase 19
+- ✓ Nova aliases: {T.A.S.K.S.}, routines table backing Innate (agent){action} expressions — Phase 19
 
 ## Current Milestone: v1.3 PARAT Noosphere Schema
 
@@ -170,4 +173,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after Phase 18 (Memories Rename) complete*
+*Last updated: 2026-03-28 after Phase 19 (Ghost Organizational Structure) complete*
