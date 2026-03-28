@@ -48,6 +48,9 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 - ✓ PARAT foundation tables (areas, archives, resources, templates) with DB-level integrity enforcement — Phase 16
 - ✓ CRUD API endpoints for all 4 PARAT tables with frozen/immutable 409 enforcement — Phase 16
+- ✓ Project lifestage lifecycle (Seed/Sapling/Tree/Harvest) with forward-only DB trigger — Phase 17
+- ✓ Goals FK migration from wikilink text to integer project_id — Phase 17
+- ✓ Projects linked to areas via area_id FK, perception enriched with lifestage + area_name — Phase 17
 
 ## Current Milestone: v1.3 PARAT Noosphere Schema
 
@@ -163,4 +166,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after Phase 16 (Foundation Tables & API) complete*
+*Last updated: 2026-03-28 after Phase 17 (Projects & Goals Restructuring) complete*
