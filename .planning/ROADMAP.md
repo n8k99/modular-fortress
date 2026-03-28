@@ -34,7 +34,7 @@
 
 - [x] **Phase 11: Message Hygiene** - Stop token bleed from stale messages by filtering read messages and marking them processed (completed 2026-03-27)
 - [x] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis (completed 2026-03-28)
-- [ ] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14
+- [x] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14 (completed 2026-03-28)
 - [ ] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia
 - [ ] **Phase 15: Financial Pipeline** - Trading briefings across three sessions plus calendar sync under Project #10 owned by Kathryn
 
@@ -83,10 +83,10 @@ Plans:
   2. Daily notes are populated and nightly synthesis completes as ghost work under Project #14
   3. Podcast watcher checks feeds on schedule and posts new episodes to the appropriate destination
   4. Weekly and monthly finalization (temporal compression) executes with specific agent attribution
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 13-01-PLAN.md -- Tool registry registration, project review tool execution, podcast schedule
-- [ ] 13-02-PLAN.md -- Action planner label-to-tool mapping, end-to-end verification
+- [x] 13-02-PLAN.md -- Action planner label-to-tool mapping, end-to-end verification
 
 ### Phase 14: Editorial Pipeline
 **Goal**: Sylvia's nightly editorial pipeline runs autonomously as ghost work under Project #12
@@ -123,6 +123,6 @@ Plans:
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
 | 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
 | 12. Standing Orders | v1.2 | 2/2 | Complete    | 2026-03-28 |
-| 13. Operations Pipeline | v1.2 | 1/2 | In Progress|  |
+| 13. Operations Pipeline | v1.2 | 2/2 | Complete   | 2026-03-28 |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
 | 15. Financial Pipeline | v1.2 | 0/? | Not started | - |
