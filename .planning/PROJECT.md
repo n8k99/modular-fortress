@@ -44,6 +44,11 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 (Defined in REQUIREMENTS.md for v1.3)
 
+### Recently Validated (v1.3)
+
+- ✓ PARAT foundation tables (areas, archives, resources, templates) with DB-level integrity enforcement — Phase 16
+- ✓ CRUD API endpoints for all 4 PARAT tables with frozen/immutable 409 enforcement — Phase 16
+
 ## Current Milestone: v1.3 PARAT Noosphere Schema
 
 **Goal:** Restructure master_chronicle into the PARAT five-pillar architecture with organizational structure, temporal compression, and validated ghost memory injection.
@@ -158,4 +163,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after v1.3 PARAT Noosphere Schema milestone started*
+*Last updated: 2026-03-28 after Phase 16 (Foundation Tables & API) complete*
