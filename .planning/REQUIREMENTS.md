@@ -29,8 +29,8 @@
 
 ### Pipeline Migration -- Editorial
 
-- [ ] **EDIT-01**: Nightly editorial pipeline executes as ghost pipeline under Project #12, owned by Sylvia
-- [ ] **EDIT-02**: Editorial output follows the existing Thought Police format and posts to the correct destination
+- [x] **EDIT-01**: Nightly editorial pipeline executes as ghost pipeline under Project #12, owned by Sylvia
+- [x] **EDIT-02**: Editorial output follows the existing Thought Police format and posts to the correct destination
 
 ### Pipeline Migration -- Operations
 

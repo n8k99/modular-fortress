@@ -35,7 +35,7 @@
 - [x] **Phase 11: Message Hygiene** - Stop token bleed from stale messages by filtering read messages and marking them processed (completed 2026-03-27)
 - [x] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis (completed 2026-03-28)
 - [x] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14 (completed 2026-03-28)
-- [ ] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia
+- [x] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia (completed 2026-03-28)
 - [ ] **Phase 15: Financial Pipeline** - Trading briefings across three sessions plus calendar sync under Project #10 owned by Kathryn
 
 **Phase Numbering:**
@@ -95,9 +95,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Nightly editorial pipeline fires on schedule under Project #12 with Sylvia as the owning executive
   2. Editorial output follows the existing Thought Police format and posts to the correct destination
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 14-01-PLAN.md -- Tool registration, script auth patch, dynamic label-to-tool mapping generalization
+- [x] 14-01-PLAN.md -- Tool registration, script auth patch, dynamic label-to-tool mapping generalization
 
 ### Phase 15: Financial Pipeline
 **Goal**: Kathryn's trading briefings and calendar sync run autonomously as ghost work under Project #10
@@ -126,5 +126,5 @@ Plans:
 | 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
 | 12. Standing Orders | v1.2 | 2/2 | Complete    | 2026-03-28 |
 | 13. Operations Pipeline | v1.2 | 2/2 | Complete    | 2026-03-28 |
-| 14. Editorial Pipeline | v1.2 | 0/1 | Not started | - |
+| 14. Editorial Pipeline | v1.2 | 1/1 | Complete   | 2026-03-28 |
 | 15. Financial Pipeline | v1.2 | 0/? | Not started | - |
