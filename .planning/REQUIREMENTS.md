@@ -47,7 +47,7 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 - [x] **API-02**: dpn-api has CRUD endpoints for archives table (GET list, GET by id, POST create — no UPDATE on content fields, respecting immutability)
 - [x] **API-03**: dpn-api has CRUD endpoints for resources table (GET list, GET by id, POST create, PATCH update, frozen enforcement)
 - [x] **API-04**: dpn-api has CRUD endpoints for templates table (GET list, GET by id, POST create, PATCH update) with version history on body changes
-- [ ] **API-05**: Perception endpoint includes area context and project lifestage in ghost perception responses
+- [x] **API-05**: Perception endpoint includes area context and project lifestage in ghost perception responses
 
 ## Previous Milestone Requirements (v1.0-v1.2)
 
@@ -126,7 +126,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-02 | Phase 16 | Complete |
 | API-03 | Phase 16 | Complete |
 | API-04 | Phase 16 | Complete |
-| API-05 | Phase 17 | Pending |
+| API-05 | Phase 17 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 27 total
