@@ -317,7 +317,7 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 13. Operations Pipeline | v1.2 | 2/2 | Complete | 2026-03-28 |
 | 14. Editorial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 15. Financial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
-| 16. Foundation Tables & API | v1.3 | 3/3 | Complete   | 2026-03-28 |
+| 16. Foundation Tables & API | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 17. Projects & Goals Restructuring | v1.3 | 0/? | Not started | - |
 | 18. Memories Rename | v1.3 | 0/? | Not started | - |
 | 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
