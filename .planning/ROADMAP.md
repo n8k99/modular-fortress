@@ -275,7 +275,7 @@ Plans:
 Plans:
 - [x] 18-01-PLAN.md -- SQL migration (table rename, view bridge, INSTEAD OF triggers, compression columns, departments)
 - [x] 18-02-PLAN.md -- dpn-core Rust module rename (vault_notes.rs to memories.rs, 15 consumer files)
-- [ ] 18-03-PLAN.md -- dpn-api handler updates, dpn-core sync, release build, PM2 restart
+- [x] 18-03-PLAN.md -- dpn-api handler updates, dpn-core sync, release build, PM2 restart
 
 ### Phase 19: Ghost Organizational Structure
 **Goal**: Ghosts have formal team membership, typed relationships, multi-area assignments, and identity aliases within the noosphere
@@ -330,6 +330,6 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 15. Financial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 16. Foundation Tables & API | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 17. Projects & Goals Restructuring | v1.3 | 2/2 | Complete    | 2026-03-28 |
-| 18. Memories Rename | v1.3 | 2/3 | In Progress|  |
+| 18. Memories Rename | v1.3 | 3/3 | Complete   | 2026-03-28 |
 | 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
 | 20. Nexus Import & Temporal Compression | v1.3 | 0/? | Not started | - |
