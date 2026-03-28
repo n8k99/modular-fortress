@@ -24,7 +24,7 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 - [x] **MEM-03**: memories table has compressed_from INTEGER[] column tracking which source entries each compressed entry summarizes
 - [x] **MEM-04**: Departments normalized via lookup table with proper FK from agents, consolidating 19 inconsistent values
 - [ ] **MEM-05**: All dpn-api Rust endpoints updated from vault_notes to memories (structs, queries, handlers)
-- [ ] **MEM-06**: All dpn-core Rust queries updated from vault_notes to memories
+- [x] **MEM-06**: All dpn-core Rust queries updated from vault_notes to memories
 
 ### Ghost Organization
 
@@ -112,7 +112,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MEM-03 | Phase 18 | Complete |
 | MEM-04 | Phase 18 | Complete |
 | MEM-05 | Phase 18 | Pending |
-| MEM-06 | Phase 18 | Pending |
+| MEM-06 | Phase 18 | Complete |
 | ORG-01 | Phase 19 | Pending |
 | ORG-02 | Phase 19 | Pending |
 | ORG-03 | Phase 19 | Pending |
