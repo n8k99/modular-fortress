@@ -69,9 +69,9 @@ Plans:
   1. A project with a cron schedule field triggers ghost perception at the scheduled time
   2. The tick engine creates a cognition job for the owning executive when a scheduled project fires
   3. Standing order execution produces conversation output attributed to the responsible ghost, not a system account
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
-- [ ] 12-01-PLAN.md -- DB migration, API PATCH endpoint, perception schedule metadata, Lisp cron matcher
+- [x] 12-01-PLAN.md -- DB migration, API PATCH endpoint, perception schedule metadata, Lisp cron matcher
 - [ ] 12-02-PLAN.md -- Tick engine schedule integration, action planner prompt enrichment, E2E verification
 
 ### Phase 13: Operations Pipeline
@@ -119,7 +119,7 @@ Plans:
 | 9. Verification Levels | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
 | 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
-| 12. Standing Orders | v1.2 | 0/2 | Planning | - |
+| 12. Standing Orders | v1.2 | 1/2 | In Progress|  |
 | 13. Operations Pipeline | v1.2 | 0/? | Not started | - |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
 | 15. Financial Pipeline | v1.2 | 0/? | Not started | - |

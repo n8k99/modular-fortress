@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Operational Readiness
-status: verifying
-stopped_at: Phase 12 context gathered
-last_updated: "2026-03-28T02:14:41.590Z"
-last_activity: 2026-03-27
+status: executing
+stopped_at: Completed 12-01-PLAN.md
+last_updated: "2026-03-28T03:11:08Z"
+last_activity: 2026-03-28
 progress:
   total_phases: 5
   completed_phases: 1
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 11 — message-hygiene
+**Current focus:** Phase 12 — standing-orders
 
 ## Current Position
 
 Phase: 12
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-03-27
+Plan: 1 of 2 complete
+Status: Executing phase 12
+Last activity: 2026-03-28
 
 Progress: [--------------------] 0% (v1.2: 0/5 phases)
 
@@ -47,6 +47,9 @@ Recent decisions affecting current work:
 - [Phase 11]: array_append with NOT ANY guard for idempotent read-marking
 - [Phase 11]: GIN index on conversations.read_by for perception query performance
 - [Phase 11]: Mark-read fires outside action-detail guard to cover cached broker results
+- [Phase 12]: Used axum method chaining for combined GET/PATCH on same route path
+- [Phase 12]: Applied dpn-core changes to both /root/dpn-core and /opt/dpn-core for deployment consistency
+- [Phase 12]: JSONB schedule array format: [{expr, label}] on projects table
 
 ### Pending Todos
 
@@ -60,6 +63,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T02:14:41.585Z
-Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/12-standing-orders/12-CONTEXT.md
+Last session: 2026-03-28T03:11:08Z
+Stopped at: Completed 12-01-PLAN.md
+Resume file: .planning/phases/12-standing-orders/12-01-SUMMARY.md
