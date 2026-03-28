@@ -286,10 +286,11 @@ Plans:
   2. ghost_relationships table formalizes reports_to/mentor/mentee/collaborators/liaises_with as typed from_agent/to_agent rows replacing text arrays
   3. agent_areas junction table allows multi-area ghost assignment (e.g., Nova assigned to Operations AND cross-functional areas)
   4. Agents table has aliases text[] column and Nova's record includes T.A.S.K.S. as an alias
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
-- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
-- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
+- [ ] 19-01-PLAN.md -- DDL migration (teams, team_members, ghost_relationships, agent_areas, routines tables + agents.aliases column)
+- [ ] 19-02-PLAN.md -- Data migration (team seeding, relationship migration, area mapping, routines, aliases backfill)
+- [ ] 19-03-PLAN.md -- EM Staff document enrichment (YAML frontmatter + document_path backfill)
 
 ### Phase 20: Nexus Import & Temporal Compression
 **Goal**: Historical ChatGPT conversations are archived, temporally compressed, and injected into Nova's ghost memory as operational context
@@ -301,10 +302,9 @@ Plans:
   3. Monthly, quarterly, and yearly summary memories exist in the memories table generated from grouped imported conversations via deterministic compression
   4. Nova/T.A.S.K.S. ghost memory columns contain synthesized perspectives on imported content at each temporal tier
   5. Relevant daily/weekly notes contain markdown links to imported archive content without corruption of existing note data
-**Plans**: 2 plans
+**Plans**: TBD
 Plans:
-- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
-- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
+- [ ] TBD
 
 ## Progress
 
@@ -331,5 +331,5 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 16. Foundation Tables & API | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 17. Projects & Goals Restructuring | v1.3 | 2/2 | Complete    | 2026-03-28 |
 | 18. Memories Rename | v1.3 | 3/3 | Complete    | 2026-03-28 |
-| 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
+| 19. Ghost Organizational Structure | v1.3 | 0/3 | Planned | - |
 | 20. Nexus Import & Temporal Compression | v1.3 | 0/? | Not started | - |
