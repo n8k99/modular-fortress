@@ -51,9 +51,9 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - [x] Standing order framework — recurring project pipelines that ghosts perceive and execute on schedule — Phase 12
 - [ ] Trading briefings pipeline — Tokyo/London/NYC sessions via Project #10 "Complete Success" (Kathryn)
 - [ ] Editorial pipeline — nightly Thought Police generation via Project #12 "Cognitive Submission" (Sylvia)
-- [ ] Operational cadence — daily notes, health checks, synthesis, calendar sync via Project #14 "Operation Normality" (Nova)
-- [ ] Podcast watcher — check feeds, post new episodes to Discord
-- [ ] Weekly/monthly finalization — temporal compression attributed to specific ghosts
+- [x] Operational cadence — daily notes, health checks, synthesis, calendar sync via Project #14 "Operation Normality" (Nova) — Phase 13
+- [x] Podcast watcher — check feeds, post new episodes to Discord — Phase 13
+- [x] Weekly/monthly finalization — temporal compression attributed to specific ghosts — Phase 13
 
 ## Current Milestone: v1.2 Operational Readiness
 
@@ -150,4 +150,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after Phase 12 completion*
+*Last updated: 2026-03-28 after Phase 13 completion*
