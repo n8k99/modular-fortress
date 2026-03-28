@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Operational Readiness
-status: executing
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-28T05:47:54.843Z"
+milestone: v1.3
+milestone_name: PARAT Noosphere Schema
+status: defining_requirements
+stopped_at: null
+last_updated: "2026-03-28"
 last_activity: 2026-03-28
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 8
-  completed_plans: 8
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
   percent: 0
 ---
 
@@ -18,19 +18,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-27)
+See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 15 — financial-pipeline
+**Current focus:** Defining requirements for v1.3 PARAT Noosphere Schema
 
 ## Current Position
 
-Phase: 15
-Plan: Not started
-Status: Executing Phase 15
-Last activity: 2026-03-28
-
-Progress: [--------------------] 0% (v1.2: 0/5 phases)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-28 — Milestone v1.3 started
 
 ## Accumulated Context
 
@@ -39,21 +37,14 @@ Progress: [--------------------] 0% (v1.2: 0/5 phases)
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [v1.2]: Message spam fix is critical blocker -- must ship before any pipeline work
-- [v1.2]: Standing orders framework is the scheduling mechanism all pipelines depend on
-- [v1.2]: Pipeline migrations map to existing DB projects (#10 financial, #12 editorial, #14 ops)
-- [v1.2]: OPS-05 (calendar sync) assigned to Phase 15 (financial) since it serves trading session scheduling
-- [v1.2]: Phases 13/14/15 all depend on Phase 12 but are independent of each other
-- [Phase 11]: array_append with NOT ANY guard for idempotent read-marking
-- [Phase 11]: GIN index on conversations.read_by for perception query performance
-- [Phase 11]: Mark-read fires outside action-detail guard to cover cached broker results
-- [Phase 12]: Used axum method chaining for combined GET/PATCH on same route path
-- [Phase 12]: Applied dpn-core changes to both /root/dpn-core and /opt/dpn-core for deployment consistency
-- [Phase 12]: JSONB schedule array format: [{expr, label}] on projects table
-- [Phase 12]: Schedule boost uses +50 urgency ensuring executives enter acting set when standing orders fire
-- [Phase 12]: STAND-03 satisfied by existing conversation attribution flow - no code changes needed
-- [Phase 13]: Used ops_daily_note (matching tool-registry.json) not ops_daily_note_populate in prompt mapping
-- [Phase 13]: Tool mapping as markdown table in Lisp format string per D-12 (code, not data)
+- [v1.3]: PARAT five-pillar restructuring of master_chronicle (Projects, Areas, Resources, Archives, Templates)
+- [v1.3]: vault_notes renamed to memories with ghost memory columns
+- [v1.3]: ghosts table includes EM organizational structure (teams/departments, org charts, executive blogs)
+- [v1.3]: @Projects pillar includes @Goals (sub-table, proper FK) and @Tasks (atomic units)
+- [v1.3]: Nexus Chat AI Import serves as test corpus for temporal compression and ghost memory injection
+- [v1.3]: Frontend/em-site restructuring deferred to v1.4
+- [v1.3]: Ghost direct PostgreSQL deferred to v1.5
+- [v1.3]: Scope is PostgreSQL schema + dpn-api (Rust) only
 
 ### Pending Todos
 
@@ -61,12 +52,9 @@ None yet.
 
 ### Blockers/Concerns
 
-- Ghost message spam burning tokens every tick (~336+ duplicate messages/24h per agent)
-- sqlx missing "json" feature prevents lifecycle metadata persistence
-- OpenClaw has 14 active cron jobs that must migrate before it can be retired
+None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T05:31:20.757Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-financial-pipeline/15-CONTEXT.md
+Last session: 2026-03-28
+Stopped at: Defining requirements

@@ -42,7 +42,22 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ### Active
 
-(None — all v1.0-v1.2 requirements shipped. Next milestone will define new requirements.)
+(Defined in REQUIREMENTS.md for v1.3)
+
+## Current Milestone: v1.3 PARAT Noosphere Schema
+
+**Goal:** Restructure master_chronicle into the PARAT five-pillar architecture with organizational structure, temporal compression, and validated ghost memory injection.
+
+**Target features:**
+- @Projects pillar with Lifestage arc (Seed/Sapling/Tree/Harvest), @Goals sub-table (proper FK), @Tasks as atomic units
+- @Areas table for ongoing domains (EM Corp, Orbis, etc.), ghosts assigned to areas
+- @Resources table consolidating images/media/reference (read-optimized)
+- @Archives table for immutable historical content (temporal compression terminus)
+- @Templates table with live Innate .dpn expressions in body field (generative layer)
+- `vault_notes` → `memories` rename with ghost memory columns and formalized temporal compression (daily→weekly→monthly→quarterly→yearly)
+- `ghosts` table with EM organizational structure: teams/departments, org charts, executive blogs
+- dpn-api Rust endpoints for all PARAT tables
+- Nexus Chat AI Import injected into Nova/T.A.S.K.S. ghost memory, temporally cascaded, with links in daily/weekly notes (test corpus for temporal compression)
 
 ## Shipped Milestones
 
@@ -65,10 +80,14 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - Changing the tick engine architecture — extend it, don't rewrite it
 - Multi-droplet distribution — everything stays on single node for now
 - Discord output bridge — ghosts post to the noosphere; Discord is an external delivery concern
+- em-site restructuring / public-facing content publishing — deferred to v1.4
+- dpn-tui, dpn-api-client, other iron downstream effects — deferred to v1.4
+- Ghost direct PostgreSQL (replacing API layer) — deferred to v1.5
+- Innate interpreter implementation — separate project (innatescript repo), templates store .dpn expressions but evaluation is future
 
 ## Context
 
-**Current state (post v1.2):** The full pipeline works end-to-end with standing orders:
+**Current state (post v1.2, starting v1.3):** The full pipeline works end-to-end with standing orders. The noosphere (master_chronicle) has 77 tables but lacks the PARAT organizational scheme — documents, vault_notes, and projects exist but without the five-pillar structure. The Nexus Chat AI Import (ChatGPT conversation history) exists in Archives as a virtual directory and will serve as the test corpus for temporal compression and ghost memory injection.
 - dispatch_to_db.py writes hierarchical tasks with owner, department, wave context, and dependencies
 - Perception returns all GSD fields, filters read messages, includes schedule metadata
 - Cron schedules fire on projects, injecting owning executives into acting-set with +50 urgency boost
@@ -139,4 +158,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after v1.2 Operational Readiness milestone*
+*Last updated: 2026-03-28 after v1.3 PARAT Noosphere Schema milestone started*
