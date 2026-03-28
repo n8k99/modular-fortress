@@ -1,5 +1,22 @@
 # Milestones
 
+## v1.2 Operational Readiness (Shipped: 2026-03-28)
+
+**Phases completed:** 5 phases, 8 plans, 16 tasks
+
+**Key accomplishments:**
+
+- POST /api/conversations/mark-read endpoint with read_by perception filtering, GIN index, and historical cleanup of 2229 stale messages
+- Tick engine marks all perceived messages as read after cognition via api-post to /api/conversations/mark-read, closing the perception-cognition-mark-read loop
+- JSONB schedule column on projects, PATCH API endpoint, perception schedule metadata, and Lisp cron matcher for 5-field cron expressions
+- Cron schedule evaluation wired into tick engine ranking with +50 boost, double-fire prevention, and Standing Orders Fired prompt enrichment for executive project reviews
+- 6 operational Python scripts registered in ghost tool-registry with operations scope, process-tool-calls wired into execute-project-review, Podcast Watch schedule added to Project #14
+- 1. [Rule 1 - Bug] Corrected ops_daily_note tool name
+- editorial_nightly registered with dynamic per-label tool mapping so Sylvia executes nightly editorial via standing order, not OpenClaw cron
+- Trading briefing and calendar sync tools wired into ghost standing orders under Kathryn's Project #10 with 4 label-to-tool mappings
+
+---
+
 ## v1.1 Ghost Coordination Patterns (Shipped: 2026-03-27)
 
 **Phases completed:** 5 phases, 12 plans, 22 tasks
