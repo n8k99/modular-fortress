@@ -232,8 +232,6 @@ Plans:
 - [x] 15-01-PLAN.md -- Tool registry updates, label-to-tool mappings, Calendar Sync schedule
 
 </details>
-
-
 ### Phase 16: Foundation Tables & API
 **Goal**: The four new PARAT pillars exist as live tables with seed data and working API endpoints
 **Depends on**: Phase 15 (v1.2 complete)
@@ -273,10 +271,11 @@ Plans:
   2. Every memory row has a compression_tier value (daily/weekly/monthly/quarterly/yearly) backfilled from existing note_type, and compressed_from INTEGER[] tracks source entries for compressed records
   3. Departments are normalized via lookup table with proper FK from agents, consolidating the 19 inconsistent values into canonical entries
   4. All dpn-api handlers and dpn-core queries reference memories directly (not the view), and dpn-api compiles and starts cleanly
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
-- [x] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
-- [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
+- [ ] 18-01-PLAN.md -- SQL migration (table rename, view bridge, INSTEAD OF triggers, compression columns, departments)
+- [ ] 18-02-PLAN.md -- dpn-core Rust module rename (vault_notes.rs to memories.rs, 15 consumer files)
+- [ ] 18-03-PLAN.md -- dpn-api handler updates, dpn-core sync, release build, PM2 restart
 
 ### Phase 19: Ghost Organizational Structure
 **Goal**: Ghosts have formal team membership, typed relationships, multi-area assignments, and identity aliases within the noosphere
@@ -331,6 +330,6 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 15. Financial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 16. Foundation Tables & API | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 17. Projects & Goals Restructuring | v1.3 | 2/2 | Complete    | 2026-03-28 |
-| 18. Memories Rename | v1.3 | 0/? | Not started | - |
+| 18. Memories Rename | v1.3 | 0/3 | Planned | - |
 | 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
 | 20. Nexus Import & Temporal Compression | v1.3 | 0/? | Not started | - |
