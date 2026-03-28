@@ -19,8 +19,8 @@
 ### Standing Orders Framework
 
 - [x] **STAND-01**: Projects table supports a schedule field (cron expression) that triggers ghost perception at scheduled times
-- [ ] **STAND-02**: Tick engine recognizes scheduled projects and creates cognition jobs for the owning executive at the scheduled time
-- [ ] **STAND-03**: Standing order execution produces conversation output attributed to the responsible ghost
+- [x] **STAND-02**: Tick engine recognizes scheduled projects and creates cognition jobs for the owning executive at the scheduled time
+- [x] **STAND-03**: Standing order execution produces conversation output attributed to the responsible ghost
 
 ### Pipeline Migration -- Financial
 

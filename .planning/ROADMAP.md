@@ -33,7 +33,7 @@
 ### v1.2 Operational Readiness (In Progress)
 
 - [x] **Phase 11: Message Hygiene** - Stop token bleed from stale messages by filtering read messages and marking them processed (completed 2026-03-27)
-- [ ] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis
+- [x] **Phase 12: Standing Orders** - Cron-scheduled project pipelines that ghosts perceive and execute on a recurring basis (completed 2026-03-28)
 - [ ] **Phase 13: Operations Pipeline** - Daily health checks, notes, synthesis, podcast watching, and temporal compression under Project #14
 - [ ] **Phase 14: Editorial Pipeline** - Nightly Thought Police generation under Project #12 owned by Sylvia
 - [ ] **Phase 15: Financial Pipeline** - Trading briefings across three sessions plus calendar sync under Project #10 owned by Kathryn
@@ -69,10 +69,10 @@ Plans:
   1. A project with a cron schedule field triggers ghost perception at the scheduled time
   2. The tick engine creates a cognition job for the owning executive when a scheduled project fires
   3. Standing order execution produces conversation output attributed to the responsible ghost, not a system account
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 12-01-PLAN.md -- DB migration, API PATCH endpoint, perception schedule metadata, Lisp cron matcher
-- [ ] 12-02-PLAN.md -- Tick engine schedule integration, action planner prompt enrichment, E2E verification
+- [x] 12-02-PLAN.md -- Tick engine schedule integration, action planner prompt enrichment, E2E verification
 
 ### Phase 13: Operations Pipeline
 **Goal**: Nova's daily operational cadence runs autonomously as ghost work under Project #14
@@ -119,7 +119,7 @@ Plans:
 | 9. Verification Levels | v1.1 | 2/2 | Complete | 2026-03-26 |
 | 10. Lifecycle Signals | v1.1 | 2/2 | Complete | 2026-03-27 |
 | 11. Message Hygiene | v1.2 | 2/2 | Complete    | 2026-03-27 |
-| 12. Standing Orders | v1.2 | 1/2 | In Progress|  |
+| 12. Standing Orders | v1.2 | 2/2 | Complete   | 2026-03-28 |
 | 13. Operations Pipeline | v1.2 | 0/? | Not started | - |
 | 14. Editorial Pipeline | v1.2 | 0/? | Not started | - |
 | 15. Financial Pipeline | v1.2 | 0/? | Not started | - |
