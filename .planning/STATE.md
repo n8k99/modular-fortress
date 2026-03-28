@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: PARAT Noosphere Schema
 status: executing
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-03-28T19:38:18.146Z"
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-03-28T19:46:03.916Z"
 last_activity: 2026-03-28
 progress:
   total_phases: 20
   completed_phases: 10
   total_plans: 22
-  completed_plans: 20
+  completed_plans: 21
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 16 (foundation-tables-api) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-28
 
@@ -57,6 +57,7 @@ Recent decisions affecting current work:
 - [v1.3]: API endpoints folded into schema phases (not standalone API phase)
 - [v1.3]: Nexus import uses deterministic compression, LLM only for final synthesis
 - [v1.3]: agents table NOT renamed to ghosts (8 FK refs, too much blast radius)
+- [Phase 16]: PARAT modules follow projects.rs dynamic update builder pattern with explicit column selects
 
 ### Pending Todos
 
@@ -70,6 +71,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T19:38:18.128Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-03-28T19:46:03.910Z
+Stopped at: Completed 16-02-PLAN.md
 Resume file: None

@@ -43,10 +43,10 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 
 ### API Surface
 
-- [ ] **API-01**: dpn-api has CRUD endpoints for areas table (GET list, GET by id, POST create, PATCH update)
-- [ ] **API-02**: dpn-api has CRUD endpoints for archives table (GET list, GET by id, POST create — no UPDATE on content fields, respecting immutability)
-- [ ] **API-03**: dpn-api has CRUD endpoints for resources table (GET list, GET by id, POST create, PATCH update, frozen enforcement)
-- [ ] **API-04**: dpn-api has CRUD endpoints for templates table (GET list, GET by id, POST create, PATCH update) with version history on body changes
+- [x] **API-01**: dpn-api has CRUD endpoints for areas table (GET list, GET by id, POST create, PATCH update)
+- [x] **API-02**: dpn-api has CRUD endpoints for archives table (GET list, GET by id, POST create — no UPDATE on content fields, respecting immutability)
+- [x] **API-03**: dpn-api has CRUD endpoints for resources table (GET list, GET by id, POST create, PATCH update, frozen enforcement)
+- [x] **API-04**: dpn-api has CRUD endpoints for templates table (GET list, GET by id, POST create, PATCH update) with version history on body changes
 - [ ] **API-05**: Perception endpoint includes area context and project lifestage in ghost perception responses
 
 ## Previous Milestone Requirements (v1.0-v1.2)
@@ -122,10 +122,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPORT-03 | Phase 20 | Pending |
 | IMPORT-04 | Phase 20 | Pending |
 | IMPORT-05 | Phase 20 | Pending |
-| API-01 | Phase 16 | Pending |
-| API-02 | Phase 16 | Pending |
-| API-03 | Phase 16 | Pending |
-| API-04 | Phase 16 | Pending |
+| API-01 | Phase 16 | Complete |
+| API-02 | Phase 16 | Complete |
+| API-03 | Phase 16 | Complete |
+| API-04 | Phase 16 | Complete |
 | API-05 | Phase 17 | Pending |
 
 **Coverage:**
