@@ -28,10 +28,10 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 
 ### Ghost Organization
 
-- [ ] **ORG-01**: Teams table exists with name, department, lead_id (agent FK), area_id (area FK), plus team_members junction table with role_in_team
-- [ ] **ORG-02**: ghost_relationships table exists formalizing reports_to, mentor, mentee, collaborators, liaises_with from existing text arrays into typed from_agent/to_agent/relationship_type rows
-- [ ] **ORG-03**: agent_areas junction table exists for multi-area ghost assignment (Nova touches Operations AND cross-functional)
-- [ ] **ORG-04**: Agents table has aliases text[] column supporting dual identities (Nova IS T.A.S.K.S.)
+- [x] **ORG-01**: Teams table exists with name, department, lead_id (agent FK), area_id (area FK), plus team_members junction table with role_in_team
+- [x] **ORG-02**: ghost_relationships table exists formalizing reports_to, mentor, mentee, collaborators, liaises_with from existing text arrays into typed from_agent/to_agent/relationship_type rows
+- [x] **ORG-03**: agent_areas junction table exists for multi-area ghost assignment (Nova touches Operations AND cross-functional)
+- [x] **ORG-04**: Agents table has aliases text[] column supporting dual identities (Nova IS T.A.S.K.S.)
 
 ### Nexus Import + Temporal Compression
 
@@ -113,10 +113,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MEM-04 | Phase 18 | Complete |
 | MEM-05 | Phase 18 | Complete |
 | MEM-06 | Phase 18 | Complete |
-| ORG-01 | Phase 19 | Pending |
-| ORG-02 | Phase 19 | Pending |
-| ORG-03 | Phase 19 | Pending |
-| ORG-04 | Phase 19 | Pending |
+| ORG-01 | Phase 19 | Complete |
+| ORG-02 | Phase 19 | Complete |
+| ORG-03 | Phase 19 | Complete |
+| ORG-04 | Phase 19 | Complete |
 | IMPORT-01 | Phase 20 | Pending |
 | IMPORT-02 | Phase 20 | Pending |
 | IMPORT-03 | Phase 20 | Pending |
