@@ -244,9 +244,9 @@ Plans:
   3. Resources table exists as a curated index referencing documents/media via source_type/source_id without duplicating data, with frozen enforcement on API
   4. Templates table exists with .dpn body field, JSONB parameters, version history tracking on body changes, and full CRUD endpoints
   5. dpn-api starts cleanly with all new endpoints registered and dpn-core has module files for all four tables
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 Plans:
-- [ ] 16-01-PLAN.md -- SQL migration (4 tables, 3 triggers, seed data) + ApiError Conflict variant
+- [x] 16-01-PLAN.md -- SQL migration (4 tables, 3 triggers, seed data) + ApiError Conflict variant
 - [ ] 16-02-PLAN.md -- dpn-core modules for all 4 PARAT tables with structs and CRUD functions
 - [ ] 16-03-PLAN.md -- dpn-api handlers for all 4 tables + router wiring in main.rs
 
@@ -317,7 +317,7 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 13. Operations Pipeline | v1.2 | 2/2 | Complete | 2026-03-28 |
 | 14. Editorial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 15. Financial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
-| 16. Foundation Tables & API | v1.3 | 0/3 | Not started | - |
+| 16. Foundation Tables & API | v1.3 | 1/3 | In Progress|  |
 | 17. Projects & Goals Restructuring | v1.3 | 0/? | Not started | - |
 | 18. Memories Rename | v1.3 | 0/? | Not started | - |
 | 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
