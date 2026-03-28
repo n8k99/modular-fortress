@@ -261,7 +261,7 @@ Plans:
   4. Perception endpoint includes project lifestage and area context in ghost perception responses
 **Plans**: 2 plans
 Plans:
-- [ ] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
+- [x] 17-01-PLAN.md -- SQL migration (lifestage, area_id, project_id columns, trigger, backfill) + dpn-core struct updates
 - [ ] 17-02-PLAN.md -- dpn-api handler updates + perception endpoint enrichment
 
 ### Phase 18: Memories Rename
@@ -330,7 +330,7 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 14. Editorial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 15. Financial Pipeline | v1.2 | 1/1 | Complete | 2026-03-28 |
 | 16. Foundation Tables & API | v1.3 | 3/3 | Complete    | 2026-03-28 |
-| 17. Projects & Goals Restructuring | v1.3 | 0/? | Not started | - |
+| 17. Projects & Goals Restructuring | v1.3 | 1/2 | In Progress|  |
 | 18. Memories Rename | v1.3 | 0/? | Not started | - |
 | 19. Ghost Organizational Structure | v1.3 | 0/? | Not started | - |
 | 20. Nexus Import & Temporal Compression | v1.3 | 0/? | Not started | - |

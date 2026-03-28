@@ -13,9 +13,9 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 - [x] **SCHEMA-02**: Archives table exists with immutability enforcement (trigger prevents content UPDATE), source_type/source_id tracking, period_start/period_end dates, full-text search
 - [x] **SCHEMA-03**: Resources table exists as curated index referencing documents/media via source_type/source_id (no data duplication), with type categorization and frozen flag
 - [x] **SCHEMA-04**: Templates table exists with body field for .dpn expressions, parameters JSONB schema, category, version tracking, and templates_history for previous versions
-- [ ] **SCHEMA-05**: Projects table has lifestage enum column (Seed/Sapling/Tree/Harvest) with forward-only transition constraint and backfilled values for existing 14 projects
-- [ ] **SCHEMA-06**: Goals table has proper project_id integer FK to projects, migrated from text project field, with all 44 existing goals mapped
-- [ ] **SCHEMA-07**: Projects table has area_id FK to areas table (nullable for standalone projects)
+- [x] **SCHEMA-05**: Projects table has lifestage enum column (Seed/Sapling/Tree/Harvest) with forward-only transition constraint and backfilled values for existing 14 projects
+- [x] **SCHEMA-06**: Goals table has proper project_id integer FK to projects, migrated from text project field, with all 44 existing goals mapped
+- [x] **SCHEMA-07**: Projects table has area_id FK to areas table (nullable for standalone projects)
 
 ### Memory Migration
 
@@ -104,9 +104,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHEMA-02 | Phase 16 | Complete |
 | SCHEMA-03 | Phase 16 | Complete |
 | SCHEMA-04 | Phase 16 | Complete |
-| SCHEMA-05 | Phase 17 | Pending |
-| SCHEMA-06 | Phase 17 | Pending |
-| SCHEMA-07 | Phase 17 | Pending |
+| SCHEMA-05 | Phase 17 | Complete |
+| SCHEMA-06 | Phase 17 | Complete |
+| SCHEMA-07 | Phase 17 | Complete |
 | MEM-01 | Phase 18 | Pending |
 | MEM-02 | Phase 18 | Pending |
 | MEM-03 | Phase 18 | Pending |
