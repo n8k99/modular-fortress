@@ -1,33 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: PARAT Noosphere Schema
-status: completed
-stopped_at: Completed all Phase 20 plans
-last_updated: "2026-03-29T06:34:10.579Z"
+milestone: v1.4
+milestone_name: Ghost Sovereignty
+status: defining_requirements
+stopped_at: Milestone v1.4 started
+last_updated: "2026-03-29T07:00:00.000Z"
 last_activity: 2026-03-29
 progress:
-  total_phases: 20
-  completed_phases: 15
-  total_plans: 33
-  completed_plans: 33
-  percent: 70
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-28)
+See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 20 — nexus-import-temporal-compression
+**Current focus:** v1.4 Ghost Sovereignty — defining requirements
 
 ## Current Position
 
-Phase: 20
-Plan: Not started
-Status: Phase 20 complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-29 — Milestone v1.4 started
 Last activity: 2026-03-29
 
 Progress: [███████░░░] 70%
