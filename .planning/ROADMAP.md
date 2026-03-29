@@ -283,7 +283,7 @@ Plans:
   5. Resolution errors (missing entity, ambiguous match) return structured error values that the Innate interpreter handles without crashing
 **Plans**: 2 plans
 Plans:
-- [ ] 23-01-PLAN.md -- Cross-repo wiring, package definition, resolve-reference, resolve-search
+- [x] 23-01-PLAN.md -- Cross-repo wiring, package definition, resolve-reference, resolve-search
 - [ ] 23-02-PLAN.md -- deliver-commission, resolve-wikilink, resolve-context, load-bundle, integration verification
 
 ### Phase 24: Template Evaluation & Execution
@@ -319,6 +319,6 @@ Plans:
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
 | 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 22. Conversations & Tasks Direct | v1.4 | 3/3 | Complete    | 2026-03-29 |
-| 23. Noosphere Resolver | v1.4 | 0/2 | Planning complete | - |
+| 23. Noosphere Resolver | v1.4 | 1/2 | In Progress|  |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
 | 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |
