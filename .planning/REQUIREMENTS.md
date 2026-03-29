@@ -9,8 +9,8 @@ Requirements for Ghost Sovereignty milestone. Each maps to roadmap phases.
 
 ### Direct PostgreSQL
 
-- [ ] **DB-01**: Perception queries run as SQL from Lisp tick engine, returning the same data shape as /api/perception/:agent_id — messages, tasks, projects, documents, team activity
-- [ ] **DB-02**: Agent state updates (energy, tier, last_tick_at) written directly via SQL from Lisp, bypassing HTTP PATCH
+- [x] **DB-01**: Perception queries run as SQL from Lisp tick engine, returning the same data shape as /api/perception/:agent_id — messages, tasks, projects, documents, team activity
+- [x] **DB-02**: Agent state updates (energy, tier, last_tick_at) written directly via SQL from Lisp, bypassing HTTP PATCH
 - [ ] **DB-03**: Conversations (read, write, mark-read) executed via SQL from Lisp without HTTP — including read_by array operations
 - [ ] **DB-04**: Task mutations (create, update status, complete, blocked_by management) executed via SQL from Lisp
 
@@ -59,8 +59,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DB-01 | Phase 21 | Pending |
-| DB-02 | Phase 21 | Pending |
+| DB-01 | Phase 21 | Complete |
+| DB-02 | Phase 21 | Complete |
 | DB-03 | Phase 22 | Pending |
 | DB-04 | Phase 22 | Pending |
 | INNATE-01 | Phase 23 | Pending |

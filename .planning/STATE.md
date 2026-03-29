@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
-status: planned
-stopped_at: Phase 21 planned (3 plans, 3 waves)
-last_updated: "2026-03-29T08:30:00.000Z"
-last_activity: 2026-03-29 -- Phase 21 planned with research + verification
+status: executing
+stopped_at: Completed 21-01-PLAN.md
+last_updated: "2026-03-29T16:57:04.953Z"
+last_activity: 2026-03-29
 progress:
   total_phases: 20
   completed_phases: 10
   total_plans: 22
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 21 - Direct PostgreSQL Foundation (v1.4 Ghost Sovereignty)
+**Current focus:** Phase 21 — direct-postgresql-foundation
 
 ## Current Position
 
-Phase: 21 (first of 5 in v1.4, 21st overall)
-Plan: 0 of 3 in current phase
-Status: Planned — ready to execute
-Last activity: 2026-03-29 -- Phase 21 planned (3 plans, 3 waves)
+Phase: 21 (direct-postgresql-foundation) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-03-29
 
 Progress (v1.4): [..........] 0%
 
@@ -53,6 +53,8 @@ Progress (v1.4): [..........] 0%
 - [v1.3]: agents table NOT renamed to ghosts (8 FK refs, too much blast radius)
 - [v1.4]: Direct PostgreSQL from Lisp before Innate integration (DB is prerequisite)
 - [v1.4]: Follow AF64 zero-deps convention for PostgreSQL client (no Quicklisp)
+- [Phase 21]: Used SB-ALIEN FFI to libpq.so.5 directly, maintaining AF64 zero-deps convention
+- [Phase 21]: Connection pool size 2, PQescapeLiteral for SQL injection prevention
 
 ### Pending Todos
 
@@ -65,6 +67,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T06:59:30.172Z
-Stopped at: Phase 21 context gathered
-Resume file: .planning/phases/21-direct-postgresql-foundation/21-CONTEXT.md
+Last session: 2026-03-29T16:57:04.946Z
+Stopped at: Completed 21-01-PLAN.md
+Resume file: None
