@@ -245,8 +245,6 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 
 </details>
 
-### v1.4 Phase Details (Phases 21-25)
-
 ### Phase 21: Direct PostgreSQL Foundation
 **Goal**: Ghosts perceive the noosphere and update their own state via direct SQL, eliminating HTTP round-trips for the core tick cycle
 **Depends on**: Phase 20 (v1.3 complete)
