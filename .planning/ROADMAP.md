@@ -46,11 +46,7 @@
 <details>
 <summary>v1.3 PARAT Noosphere Schema (Phases 16-20) - SHIPPED 2026-03-29</summary>
 
-- [x] **Phase 16: Foundation Tables & API** - Create areas, archives, resources, templates tables with full CRUD endpoints
-- [x] **Phase 17: Projects & Goals Restructuring** - Add lifestage arc, goals FK migration, area linkage, perception enrichment
-- [x] **Phase 18: Memories Rename** - Rename vault_notes to memories with view bridge, compression columns, full Rust migration
-- [x] **Phase 19: Ghost Organizational Structure** - Teams, relationships, multi-area assignment, agent aliases
-- [x] **Phase 20: Nexus Import & Temporal Compression** - Deduplicate, import, compress, inject into ghost memory
+See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 
 </details>
 
@@ -269,7 +265,11 @@ Plans:
   2. Ghosts write new conversation messages and mark messages as read via SQL, with `read_by` array append operations working correctly
   3. Task creation, status updates, completion, and `blocked_by` management execute as SQL from Lisp with the same semantics as the current HTTP endpoints
   4. After this phase, zero HTTP calls from the tick engine to dpn-api remain in the ghost-to-noosphere path (dpn-api still serves frontends)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 22-01-PLAN.md -- SQL wrapper functions (db-conversations, db-tasks, db-auxiliary) + ASDF/package wiring
+- [ ] 22-02-PLAN.md -- Rewire action-executor.lisp (39 calls) and tick-engine.lisp (2 calls) to SQL
+- [ ] 22-03-PLAN.md -- Rewire action-planner.lisp (11 calls) and 7 auxiliary files (11 calls) to SQL
 
 ### Phase 23: Noosphere Resolver
 **Goal**: Innate's symbolic references (@, (), {}) resolve against master_chronicle tables, connecting the language to the noosphere
@@ -315,7 +315,7 @@ Plans:
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
 | 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete    | 2026-03-29 |
-| 22. Conversations & Tasks Direct | v1.4 | 0/TBD | Not started | - |
+| 22. Conversations & Tasks Direct | v1.4 | 0/3 | Planned | - |
 | 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
 | 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |
