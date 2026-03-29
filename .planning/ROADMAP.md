@@ -302,9 +302,11 @@ Plans:
   3. Monthly, quarterly, and yearly summary memories exist in the memories table generated from grouped imported conversations via deterministic compression
   4. Nova/T.A.S.K.S. ghost memory columns contain synthesized perspectives on imported content at each temporal tier
   5. Relevant daily/weekly notes contain markdown links to imported archive content without corruption of existing note data
-**Plans**: TBD
+**Plans**: 3 plans
 Plans:
-- [ ] TBD
+- [ ] 20-01-PLAN.md -- Dedup analysis, archive import pipeline, verification scripts
+- [ ] 20-02-PLAN.md -- LLM summarization, temporal cascade compression, ghost memory injection
+- [ ] 20-03-PLAN.md -- Daily/weekly note linking with wikilinks to imported archives
 
 ## Progress
 
@@ -332,4 +334,4 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 17. Projects & Goals Restructuring | v1.3 | 2/2 | Complete    | 2026-03-28 |
 | 18. Memories Rename | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 19. Ghost Organizational Structure | v1.3 | 3/3 | Complete    | 2026-03-28 |
-| 20. Nexus Import & Temporal Compression | v1.3 | 0/? | Not started | - |
+| 20. Nexus Import & Temporal Compression | v1.3 | 0/3 | Not started | - |
