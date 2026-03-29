@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
-status: executing
-stopped_at: Completed 22-02-PLAN.md
-last_updated: "2026-03-29T18:18:10.933Z"
+status: verifying
+stopped_at: Completed 22-03-PLAN.md
+last_updated: "2026-03-29T18:19:41.268Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 20
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 25
-  completed_plans: 24
+  completed_plans: 25
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 Phase: 22 (conversations-tasks-direct) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-29
 
 Progress (v1.4): [..........] 0%
@@ -59,6 +59,7 @@ Progress (v1.4): [..........] 0%
 - [Phase 21]: db-update-energy uses SQL RETURNING for atomic read-after-write; all tick-engine HTTP imports cleaned up after SQL migration
 - [Phase 22]: Cognition job DB functions as no-ops (broker manages in-memory); db-tasks after cognition-types for generate-uuid dependency
 - [Phase 22]: Used direct db-execute SQL for CLASSIFY mutations since db-update-task lacks department keyword
+- [Phase 22]: Removed empirical-rollups API calls entirely (no matching routes existed); extended db-tasks with project-id filter and scheduled-at for full migration coverage
 
 ### Pending Todos
 
@@ -77,9 +78,10 @@ None yet.
 | Phase 21 P03 | 3min | 2 tasks | 4 files |
 | Phase 22 P01 | 7min | 2 tasks | 6 files |
 | Phase 22 P02 | 8min | 2 tasks | 2 files |
+| Phase 22 P03 | 10min | 2 tasks | 11 files |
 
 ## Session Continuity
 
-Last session: 2026-03-29T18:18:10.928Z
-Stopped at: Completed 22-02-PLAN.md
+Last session: 2026-03-29T18:19:41.262Z
+Stopped at: Completed 22-03-PLAN.md
 Resume file: None
