@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 Phase: 21 (direct-postgresql-foundation) — EXECUTING
 Plan: 3 of 3
 Status: Ready to execute
-Last activity: 2026-03-29
+Last activity: 2026-03-29 - Completed quick task 260329-nkq: Update noosphere-ghosts documentation
 
 Progress (v1.4): [..........] 0%
 
