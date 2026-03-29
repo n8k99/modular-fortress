@@ -314,7 +314,7 @@ Plans:
 | 6-10 | v1.1 | 12/12 | Complete | 2026-03-27 |
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
-| 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete   | 2026-03-29 |
+| 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 22. Conversations & Tasks Direct | v1.4 | 0/TBD | Not started | - |
 | 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
