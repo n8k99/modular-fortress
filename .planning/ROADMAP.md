@@ -267,7 +267,7 @@ Plans:
   4. After this phase, zero HTTP calls from the tick engine to dpn-api remain in the ghost-to-noosphere path (dpn-api still serves frontends)
 **Plans**: 3 plans
 Plans:
-- [ ] 22-01-PLAN.md -- SQL wrapper functions (db-conversations, db-tasks, db-auxiliary) + ASDF/package wiring
+- [x] 22-01-PLAN.md -- SQL wrapper functions (db-conversations, db-tasks, db-auxiliary) + ASDF/package wiring
 - [ ] 22-02-PLAN.md -- Rewire action-executor.lisp (39 calls) and tick-engine.lisp (2 calls) to SQL
 - [ ] 22-03-PLAN.md -- Rewire action-planner.lisp (11 calls) and 7 auxiliary files (11 calls) to SQL
 
@@ -315,7 +315,7 @@ Plans:
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
 | 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete    | 2026-03-29 |
-| 22. Conversations & Tasks Direct | v1.4 | 0/3 | Planned | - |
+| 22. Conversations & Tasks Direct | v1.4 | 1/3 | In Progress|  |
 | 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
 | 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |
