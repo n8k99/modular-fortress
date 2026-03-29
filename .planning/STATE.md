@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: PARAT Noosphere Schema
 status: executing
-stopped_at: Completed 20-03-PLAN.md
+stopped_at: Completed 20-03-PLAN.md, 20-02 incomplete (rate limit)
 last_updated: "2026-03-29T01:00:09.453Z"
 last_activity: 2026-03-29
 progress:
@@ -11,7 +11,7 @@ progress:
   completed_phases: 14
   total_plans: 33
   completed_plans: 32
-  percent: 33
+  percent: 67
 ---
 
 # Project State
@@ -26,19 +26,19 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 20
-Plan: 20-01 complete, 20-02 and 20-03 pending
-Status: Executing Wave 2
+Plan: 20-01 complete, 20-03 complete, 20-02 incomplete (rate limited during LLM summarization)
+Status: Executing — Plan 20-02 needs re-run
 Last activity: 2026-03-29
 
-Progress: [███░░░░░░░] 33%
+Progress: [██████░░░░] 67%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 31 (across v1.0-v1.3)
+- Total plans completed: 32 (across v1.0-v1.3)
 - Average duration: ~25 min
-- Total execution time: ~13 hours
+- Total execution time: ~13.5 hours
 
 **Recent Trend:**
 
@@ -58,17 +58,12 @@ Recent decisions affecting current work:
 - [v1.3]: Nexus import uses deterministic compression, LLM only for final synthesis
 - [v1.3]: agents table NOT renamed to ghosts (8 FK refs, too much blast radius)
 - [Phase 16]: PARAT modules follow projects.rs dynamic update builder pattern with explicit column selects
-- [Phase 16]: Synced PARAT modules to /opt/dpn-core to resolve dpn-api build dependency (two dpn-core copies with different dep versions)
 - [Phase 17]: Used postgres user for migration (projects table owned by postgres)
 - [Phase 17]: Forward-only lifestage trigger allows non-sequential forward transitions
-- [Phase 17]: Release build required for PM2 deployment (PM2 runs release binary)
 - [Phase 18-memories-rename]: Fixed INSERT trigger to use RETURNING INTO for id propagation through vault_notes view
-- [Phase 18-memories-rename]: Trigger trg_sync_task_checkbox survives table rename (no drop/recreate needed)
-- [Phase 18-memories-rename]: Local SQLite cache defaults compression_tier to daily since cache has no compression columns
 - [Phase 18-memories-rename]: DATABASE_URL required at build time for sqlx compile-time checking against memories table
 - [Phase 19]: Terminated idle-in-transaction sessions to unblock ALTER TABLE on agents (Phase 18 pattern)
 - [Phase 19]: Eliana set as Technical Development Office lead; Kathryn leads all 4 Strategy sub-teams; Sarah leads Office of the CEO
-- [Phase 19]: Nova document at non-standard path handled via document_id FK; YAML frontmatter uses non-Executive team preference
 - [Phase 20]: LLM per-conversation summarization with content-size filtering (< 2000 chars = trivial)
 - [Phase 20]: Topic-routed ghost memory injection to 4 executives (Nova, LRM, Vincent, Sylvia)
 - [Phase 20]: Daily notes generated from template for dates without existing notes
@@ -81,9 +76,10 @@ None yet.
 ### Blockers/Concerns
 
 - Nexus document count discrepancy resolved: 990 canonical (from 1984 raw)
+- Plan 20-02 hit API rate limit during LLM summarization — needs re-execution
 
 ## Session Continuity
 
 Last session: 2026-03-29T01:00:09.444Z
-Stopped at: Completed 20-03-PLAN.md
-Resume file: None
+Stopped at: Completed 20-03-PLAN.md, 20-02 incomplete
+Resume file: .planning/phases/20-nexus-import-temporal-compression/20-02-PLAN.md
