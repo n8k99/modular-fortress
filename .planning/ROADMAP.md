@@ -299,7 +299,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 24-01-PLAN.md -- Evaluator loading, package imports, evaluate-template-for-project helper, build-project-review-job integration
-- [ ] 24-02-PLAN.md -- Test template insertion, SBCL compilation verification, commission delivery end-to-end test
+- [x] 24-02-PLAN.md -- Test template insertion, SBCL compilation verification, commission delivery end-to-end test
 
 ### Phase 25: Ghost Expression Generation
 **Goal**: Ghosts compose valid Innate .dpn expressions to create or modify Templates, closing the loop where ghosts both read and write their native language
@@ -323,5 +323,5 @@ Plans:
 | 21. Direct PostgreSQL Foundation | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 22. Conversations & Tasks Direct | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 23. Noosphere Resolver | v1.4 | 2/2 | Complete    | 2026-03-29 |
-| 24. Template Evaluation & Execution | v1.4 | 1/2 | In Progress|  |
+| 24. Template Evaluation & Execution | v1.4 | 2/2 | Complete   | 2026-03-29 |
 | 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |

@@ -19,7 +19,7 @@ Requirements for Ghost Sovereignty milestone. Each maps to roadmap phases.
 - [x] **INNATE-01**: Noosphere resolver connects Innate's @, (), {} symbols to master_chronicle tables — @ resolves entities (projects, agents, areas, templates), () addresses agents, {} provides scope/filtering
 - [x] **INNATE-02**: Ghosts evaluate .dpn Template bodies during cognition, receiving resolved content as actionable context that informs their planning and execution
 - [ ] **INNATE-03**: Ghosts compose valid Innate .dpn expressions to create or modify Templates via the interpreter's generation capabilities
-- [ ] **INNATE-04**: Daily Note template Innate expressions — (agent){action} patterns like (sarah_lin){sync_calendar} and (kathryn){finance_positions} — execute during ghost operations, triggering real tool invocations
+- [x] **INNATE-04**: Daily Note template Innate expressions — (agent){action} patterns like (sarah_lin){sync_calendar} and (kathryn){finance_positions} — execute during ghost operations, triggering real tool invocations
 
 ## Previous Milestone Requirements (v1.0-v1.3)
 
@@ -66,7 +66,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INNATE-01 | Phase 23 | Complete |
 | INNATE-02 | Phase 24 | Complete |
 | INNATE-03 | Phase 25 | Pending |
-| INNATE-04 | Phase 24 | Pending |
+| INNATE-04 | Phase 24 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 8 total
