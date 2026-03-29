@@ -257,7 +257,7 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 **Plans**: 3 plans
 Plans:
 - [x] 21-01-PLAN.md -- libpq FFI bindings, connection pool, db-query/db-execute wrappers
-- [ ] 21-02-PLAN.md -- Perception SQL queries, fetch-agents/fetch-fitness via SQL, rewire perception.lisp
+- [x] 21-02-PLAN.md -- Perception SQL queries, fetch-agents/fetch-fitness via SQL, rewire perception.lisp
 - [ ] 21-03-PLAN.md -- State update SQL functions, rewire energy.lisp and tick-engine phase-update-state
 
 ### Phase 22: Conversations & Tasks Direct
@@ -314,7 +314,7 @@ Plans:
 | 6-10 | v1.1 | 12/12 | Complete | 2026-03-27 |
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
-| 21. Direct PostgreSQL Foundation | v1.4 | 1/3 | In Progress|  |
+| 21. Direct PostgreSQL Foundation | v1.4 | 2/3 | In Progress|  |
 | 22. Conversations & Tasks Direct | v1.4 | 0/TBD | Not started | - |
 | 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
 status: executing
-stopped_at: Completed 260329-nkq quick task
-last_updated: "2026-03-29T17:07:07.334Z"
+stopped_at: Completed 21-02-PLAN.md
+last_updated: "2026-03-29T17:08:57.223Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 20
   completed_phases: 10
   total_plans: 22
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 ## Current Position
 
 Phase: 21 (direct-postgresql-foundation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-29
 
@@ -55,6 +55,7 @@ Progress (v1.4): [..........] 0%
 - [v1.4]: Follow AF64 zero-deps convention for PostgreSQL client (no Quicklisp)
 - [Phase 21]: Used SB-ALIEN FFI to libpq.so.5 directly, maintaining AF64 zero-deps convention
 - [Phase 21]: Connection pool size 2, PQescapeLiteral for SQL injection prevention
+- [Phase 21]: handler-case per sub-query in db-perceive for error isolation; PostgreSQL EXTRACT(EPOCH) for cooldown instead of Lisp timestamp parsing
 
 ### Pending Todos
 
@@ -65,8 +66,14 @@ None yet.
 - PostgreSQL client for SBCL: AF64 zero-deps convention means no Quicklisp. May need to vendor postmodern/cl-postgres or write minimal PG wire protocol client.
 - Innate interpreter 175/176 tests passing -- 1 failing test needs investigation before integration.
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260329-nkq | Update noosphere-ghosts README.md and PROJECT_NOOSPHERE_GHOSTS.md to reflect current codebase | 2026-03-29 | f5d77cf | [260329-nkq](./quick/260329-nkq-update-noosphere-ghosts-readme-md-and-pr/) |
+
 ## Session Continuity
 
-Last session: 2026-03-29T17:07:07.314Z
-Stopped at: Completed 260329-nkq quick task
+Last session: 2026-03-29T17:08:57.217Z
+Stopped at: Completed 21-02-PLAN.md
 Resume file: None
