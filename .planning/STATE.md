@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: PARAT Noosphere Schema
-status: verifying
+status: executing
 stopped_at: Completed 20-01-PLAN.md
 last_updated: "2026-03-29T00:52:00.000Z"
 last_activity: 2026-03-29
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 19 — ghost-organizational-structure
+**Current focus:** Phase 20 — nexus-import-temporal-compression
 
 ## Current Position
 
 Phase: 20
-Plan: 1 of 3
-Status: Executing phase 20
+Plan: 20-01 complete, 20-02 and 20-03 pending
+Status: Executing Wave 2
 Last activity: 2026-03-29
 
 Progress: [███░░░░░░░] 33%
@@ -36,13 +36,13 @@ Progress: [███░░░░░░░] 33%
 
 **Velocity:**
 
-- Total plans completed: 30 (across v1.0-v1.2)
+- Total plans completed: 31 (across v1.0-v1.3)
 - Average duration: ~25 min
-- Total execution time: ~12.5 hours
+- Total execution time: ~13 hours
 
 **Recent Trend:**
 
-- v1.2 phases averaged 1.6 plans/phase
+- v1.3 phases averaged 2.5 plans/phase
 - Trend: Stable
 
 ## Accumulated Context
@@ -69,7 +69,9 @@ Recent decisions affecting current work:
 - [Phase 19]: Terminated idle-in-transaction sessions to unblock ALTER TABLE on agents (Phase 18 pattern)
 - [Phase 19]: Eliana set as Technical Development Office lead; Kathryn leads all 4 Strategy sub-teams; Sarah leads Office of the CEO
 - [Phase 19]: Nova document at non-standard path handled via document_id FK; YAML frontmatter uses non-Executive team preference
-- [Phase 20]: 990 canonical Nexus conversations (not ~992 estimated); parameterized SQL regex patterns avoid Python 3.12 warnings
+- [Phase 20]: LLM per-conversation summarization with content-size filtering (< 2000 chars = trivial)
+- [Phase 20]: Topic-routed ghost memory injection to 4 executives (Nova, LRM, Vincent, Sylvia)
+- [Phase 20]: Daily notes generated from template for dates without existing notes
 
 ### Pending Todos
 
@@ -77,12 +79,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- sqlx compile-time checking vs. view RULES needs empirical test before Phase 18
-- Nexus document count discrepancy (993 vs 2179) needs live query before Phase 20
-- trigger function sync_task_checkbox may reference vault_notes internally -- inspect before Phase 18
+- Nexus document count discrepancy resolved: 990 canonical (from 1984 raw)
 
 ## Session Continuity
 
 Last session: 2026-03-29T00:52:00.000Z
 Stopped at: Completed 20-01-PLAN.md
-Resume file: .planning/phases/20-nexus-import-temporal-compression/20-02-PLAN.md
+Resume file: .planning/phases/20-nexus-import-temporal-compression/20-01-SUMMARY.md
