@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
 status: verifying
-stopped_at: Completed 21-03-PLAN.md
-last_updated: "2026-03-29T17:19:00.814Z"
+stopped_at: Phase 22 context gathered
+last_updated: "2026-03-29T17:39:01.036Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 20
@@ -76,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T17:14:23.485Z
-Stopped at: Completed 21-03-PLAN.md
-Resume file: None
+Last session: 2026-03-29T17:39:01.012Z
+Stopped at: Phase 22 context gathered
+Resume file: .planning/phases/22-conversations-tasks-direct/22-CONTEXT.md
