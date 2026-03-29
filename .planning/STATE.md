@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
 status: executing
-stopped_at: Completed 22-01-PLAN.md
-last_updated: "2026-03-29T18:06:30.146Z"
+stopped_at: Completed 22-02-PLAN.md
+last_updated: "2026-03-29T18:18:10.933Z"
 last_activity: 2026-03-29
 progress:
   total_phases: 20
   completed_phases: 11
   total_plans: 25
-  completed_plans: 23
+  completed_plans: 24
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 ## Current Position
 
 Phase: 22 (conversations-tasks-direct) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-29
 
@@ -58,6 +58,7 @@ Progress (v1.4): [..........] 0%
 - [Phase 21]: handler-case per sub-query in db-perceive for error isolation; PostgreSQL EXTRACT(EPOCH) for cooldown instead of Lisp timestamp parsing
 - [Phase 21]: db-update-energy uses SQL RETURNING for atomic read-after-write; all tick-engine HTTP imports cleaned up after SQL migration
 - [Phase 22]: Cognition job DB functions as no-ops (broker manages in-memory); db-tasks after cognition-types for generate-uuid dependency
+- [Phase 22]: Used direct db-execute SQL for CLASSIFY mutations since db-update-task lacks department keyword
 
 ### Pending Todos
 
@@ -75,9 +76,10 @@ None yet.
 | 260329-nkq | Update noosphere-ghosts README.md and PROJECT_NOOSPHERE_GHOSTS.md to reflect current codebase | 2026-03-29 | f5d77cf | [260329-nkq](./quick/260329-nkq-update-noosphere-ghosts-readme-md-and-pr/) |
 | Phase 21 P03 | 3min | 2 tasks | 4 files |
 | Phase 22 P01 | 7min | 2 tasks | 6 files |
+| Phase 22 P02 | 8min | 2 tasks | 2 files |
 
 ## Session Continuity
 
-Last session: 2026-03-29T18:06:30.137Z
-Stopped at: Completed 22-01-PLAN.md
+Last session: 2026-03-29T18:18:10.928Z
+Stopped at: Completed 22-02-PLAN.md
 Resume file: None
