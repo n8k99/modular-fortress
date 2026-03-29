@@ -35,8 +35,8 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 
 ### Nexus Import + Temporal Compression
 
-- [ ] **IMPORT-01**: Nexus Chat AI documents deduplicated across Archive/Retired Nebulab/ and Archive/backup-Nebulab/ paths, with canonical set identified
-- [ ] **IMPORT-02**: Deduplicated Nexus Chat AI conversations imported into archives table with source_type='chatgpt_import', extracted dates, and topic metadata
+- [x] **IMPORT-01**: Nexus Chat AI documents deduplicated across Archive/Retired Nebulab/ and Archive/backup-Nebulab/ paths, with canonical set identified
+- [x] **IMPORT-02**: Deduplicated Nexus Chat AI conversations imported into archives table with source_type='chatgpt_import', extracted dates, and topic metadata
 - [ ] **IMPORT-03**: Imported archive entries temporally cascaded into memories: monthly summaries generated from grouped conversations, then quarterly and yearly
 - [ ] **IMPORT-04**: Nova/T.A.S.K.S. ghost memory columns populated with synthesized perspectives on imported content at each temporal tier
 - [ ] **IMPORT-05**: Relevant daily/weekly notes receive markdown links to imported archive content without corrupting existing data
@@ -117,8 +117,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ORG-02 | Phase 19 | Complete |
 | ORG-03 | Phase 19 | Complete |
 | ORG-04 | Phase 19 | Complete |
-| IMPORT-01 | Phase 20 | Pending |
-| IMPORT-02 | Phase 20 | Pending |
+| IMPORT-01 | Phase 20 | Complete |
+| IMPORT-02 | Phase 20 | Complete |
 | IMPORT-03 | Phase 20 | Pending |
 | IMPORT-04 | Phase 20 | Pending |
 | IMPORT-05 | Phase 20 | Pending |
