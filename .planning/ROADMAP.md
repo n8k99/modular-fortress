@@ -6,6 +6,7 @@
 - v1.1 Ghost Coordination Patterns (Phases 6-10) -- shipped 2026-03-27
 - v1.2 Operational Readiness (Phases 11-15) -- shipped 2026-03-28
 - v1.3 PARAT Noosphere Schema (Phases 16-20) -- shipped 2026-03-29
+- v1.4 Ghost Sovereignty (Phases 21-25) -- in progress
 
 ## Phases
 
@@ -52,6 +53,16 @@
 - [x] **Phase 20: Nexus Import & Temporal Compression** - Deduplicate, import, compress, inject into ghost memory
 
 </details>
+
+### v1.4 Ghost Sovereignty (In Progress)
+
+**Milestone Goal:** Ghosts speak directly to the noosphere via PostgreSQL and evaluate Innate .dpn Templates as executable instructions -- removing the HTTP middleman and giving ghosts a native language.
+
+- [ ] **Phase 21: Direct PostgreSQL Foundation** - Lisp tick engine connects to PostgreSQL and runs perception + state updates as SQL, replacing HTTP calls
+- [ ] **Phase 22: Conversations & Tasks Direct** - Conversations and task mutations run as SQL from Lisp, completing the HTTP-to-SQL migration
+- [ ] **Phase 23: Noosphere Resolver** - Innate's @, (), {} symbols resolve against master_chronicle tables via a Lisp resolver module
+- [ ] **Phase 24: Template Evaluation & Execution** - Ghosts evaluate .dpn Template bodies during cognition and Daily Note (agent){action} patterns trigger real tool invocations
+- [ ] **Phase 25: Ghost Expression Generation** - Ghosts compose valid Innate .dpn expressions to create or modify Templates
 
 ## Phase Details
 
@@ -234,6 +245,65 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 
 </details>
 
+### v1.4 Phase Details (Phases 21-25)
+
+### Phase 21: Direct PostgreSQL Foundation
+**Goal**: Ghosts perceive the noosphere and update their own state via direct SQL, eliminating HTTP round-trips for the core tick cycle
+**Depends on**: Phase 20 (v1.3 complete)
+**Requirements**: DB-01, DB-02
+**Success Criteria** (what must be TRUE):
+  1. The Lisp tick engine opens a persistent PostgreSQL connection at startup using native SBCL socket I/O (no Quicklisp, following AF64 zero-deps convention)
+  2. `SELECT` queries from Lisp return the same perception data shape (messages, tasks, projects, documents, team activity) as the current `/api/perception/:agent_id` HTTP endpoint, verifiable by comparing JSON output
+  3. Agent state updates (energy, tier, last_tick_at) written via `UPDATE` from Lisp are immediately visible in `SELECT agent_state` queries
+  4. The tick engine completes a full perceive-rank-classify cycle using SQL instead of HTTP without exceeding the current tick interval
+**Plans**: TBD
+
+### Phase 22: Conversations & Tasks Direct
+**Goal**: All ghost-to-noosphere communication (conversations and task mutations) runs as SQL, completing the removal of HTTP from the ghost tick path
+**Depends on**: Phase 21
+**Requirements**: DB-03, DB-04
+**Success Criteria** (what must be TRUE):
+  1. Ghosts read unread conversations via SQL with `read_by` array filtering identical to the current API behavior
+  2. Ghosts write new conversation messages and mark messages as read via SQL, with `read_by` array append operations working correctly
+  3. Task creation, status updates, completion, and `blocked_by` management execute as SQL from Lisp with the same semantics as the current HTTP endpoints
+  4. After this phase, zero HTTP calls from the tick engine to dpn-api remain in the ghost-to-noosphere path (dpn-api still serves frontends)
+**Plans**: TBD
+
+### Phase 23: Noosphere Resolver
+**Goal**: Innate's symbolic references (@, (), {}) resolve against master_chronicle tables, connecting the language to the noosphere
+**Depends on**: Phase 21
+**Requirements**: INNATE-01
+**Success Criteria** (what must be TRUE):
+  1. `@project_name` resolves to the matching project row from `projects` table, returning its id, status, goals, and owner
+  2. `@area_name`, `@template_name`, `@agent_name` resolve to their respective table rows (areas, templates, agents)
+  3. `(agent_name)` resolves to the agent record with id, department, energy, tier, and current assignments
+  4. `{scope_filter}` narrows queries -- e.g., `@projects{status=active}` returns only active projects
+  5. Resolution errors (missing entity, ambiguous match) return structured error values that the Innate interpreter handles without crashing
+**Plans**: TBD
+
+### Phase 24: Template Evaluation & Execution
+**Goal**: Ghosts read .dpn Templates from the noosphere, evaluate their Innate expressions, and Daily Note (agent){action} patterns trigger real tool invocations during operations
+**Depends on**: Phase 22, Phase 23
+**Requirements**: INNATE-02, INNATE-04
+**Success Criteria** (what must be TRUE):
+  1. A ghost's cognition job includes evaluated Template content -- Innate expressions in the Template body are resolved to concrete values before the LLM prompt is built
+  2. Template evaluation results inform ghost planning: an executive reading a Template with `@projects{status=blocked}` sees the actual blocked projects, not the raw expression
+  3. `(sarah_lin){sync_calendar}` in a Daily Note template triggers the calendar sync tool invocation during ghost operations, producing real output
+  4. `(kathryn){finance_positions}` triggers the trading positions tool, with output attributed to Kathryn in the conversations table
+  5. Evaluation errors in a Template do not crash the tick -- the ghost receives an error context and can skip or report the failure
+**Plans**: TBD
+
+### Phase 25: Ghost Expression Generation
+**Goal**: Ghosts compose valid Innate .dpn expressions to create or modify Templates, closing the loop where ghosts both read and write their native language
+**Depends on**: Phase 24
+**Requirements**: INNATE-03
+**Success Criteria** (what must be TRUE):
+  1. A ghost can generate a syntactically valid Innate expression (e.g., `@project_name{status=active}`) as part of its cognition output
+  2. Generated expressions pass the Innate interpreter's parser without errors
+  3. A ghost can create a new Template row in the `templates` table with a body containing Innate expressions, and that Template is evaluable by other ghosts in subsequent ticks
+  4. A ghost can modify an existing Template's body, and the updated version evaluates correctly on the next read
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -242,3 +312,8 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 | 6-10 | v1.1 | 12/12 | Complete | 2026-03-27 |
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
+| 21. Direct PostgreSQL Foundation | v1.4 | 0/TBD | Not started | - |
+| 22. Conversations & Tasks Direct | v1.4 | 0/TBD | Not started | - |
+| 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
+| 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
+| 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |

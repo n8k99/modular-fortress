@@ -59,20 +59,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DB-01 | TBD | Pending |
-| DB-02 | TBD | Pending |
-| DB-03 | TBD | Pending |
-| DB-04 | TBD | Pending |
-| INNATE-01 | TBD | Pending |
-| INNATE-02 | TBD | Pending |
-| INNATE-03 | TBD | Pending |
-| INNATE-04 | TBD | Pending |
+| DB-01 | Phase 21 | Pending |
+| DB-02 | Phase 21 | Pending |
+| DB-03 | Phase 22 | Pending |
+| DB-04 | Phase 22 | Pending |
+| INNATE-01 | Phase 23 | Pending |
+| INNATE-02 | Phase 24 | Pending |
+| INNATE-03 | Phase 25 | Pending |
+| INNATE-04 | Phase 24 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 8 total
-- Mapped to phases: 0
-- Unmapped: 8
+- Mapped to phases: 8
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-29 after milestone creation*
+*Last updated: 2026-03-29 after v1.4 roadmap creation*
