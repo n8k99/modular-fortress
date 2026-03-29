@@ -254,7 +254,11 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
   2. `SELECT` queries from Lisp return the same perception data shape (messages, tasks, projects, documents, team activity) as the current `/api/perception/:agent_id` HTTP endpoint, verifiable by comparing JSON output
   3. Agent state updates (energy, tier, last_tick_at) written via `UPDATE` from Lisp are immediately visible in `SELECT agent_state` queries
   4. The tick engine completes a full perceive-rank-classify cycle using SQL instead of HTTP without exceeding the current tick interval
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 21-01-PLAN.md -- libpq FFI bindings, connection pool, db-query/db-execute wrappers
+- [ ] 21-02-PLAN.md -- Perception SQL queries, fetch-agents/fetch-fitness via SQL, rewire perception.lisp
+- [ ] 21-03-PLAN.md -- State update SQL functions, rewire energy.lisp and tick-engine phase-update-state
 
 ### Phase 22: Conversations & Tasks Direct
 **Goal**: All ghost-to-noosphere communication (conversations and task mutations) runs as SQL, completing the removal of HTTP from the ghost tick path
@@ -310,7 +314,7 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 | 6-10 | v1.1 | 12/12 | Complete | 2026-03-27 |
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
-| 21. Direct PostgreSQL Foundation | v1.4 | 0/TBD | Not started | - |
+| 21. Direct PostgreSQL Foundation | v1.4 | 0/3 | In progress | - |
 | 22. Conversations & Tasks Direct | v1.4 | 0/TBD | Not started | - |
 | 23. Noosphere Resolver | v1.4 | 0/TBD | Not started | - |
 | 24. Template Evaluation & Execution | v1.4 | 0/TBD | Not started | - |
