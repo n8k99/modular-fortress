@@ -39,7 +39,7 @@ Requirements for PARAT Noosphere Schema milestone. Each maps to roadmap phases.
 - [x] **IMPORT-02**: Deduplicated Nexus Chat AI conversations imported into archives table with source_type='chatgpt_import', extracted dates, and topic metadata
 - [ ] **IMPORT-03**: Imported archive entries temporally cascaded into memories: monthly summaries generated from grouped conversations, then quarterly and yearly
 - [ ] **IMPORT-04**: Nova/T.A.S.K.S. ghost memory columns populated with synthesized perspectives on imported content at each temporal tier
-- [ ] **IMPORT-05**: Relevant daily/weekly notes receive markdown links to imported archive content without corrupting existing data
+- [x] **IMPORT-05**: Relevant daily/weekly notes receive markdown links to imported archive content without corrupting existing data
 
 ### API Surface
 
@@ -121,7 +121,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPORT-02 | Phase 20 | Complete |
 | IMPORT-03 | Phase 20 | Pending |
 | IMPORT-04 | Phase 20 | Pending |
-| IMPORT-05 | Phase 20 | Pending |
+| IMPORT-05 | Phase 20 | Complete |
 | API-01 | Phase 16 | Complete |
 | API-02 | Phase 16 | Complete |
 | API-03 | Phase 16 | Complete |

@@ -306,7 +306,7 @@ Plans:
 Plans:
 - [x] 20-01-PLAN.md -- Dedup analysis, archive import pipeline, verification scripts
 - [ ] 20-02-PLAN.md -- LLM summarization, temporal cascade compression, ghost memory injection
-- [ ] 20-03-PLAN.md -- Daily/weekly note linking with wikilinks to imported archives
+- [x] 20-03-PLAN.md -- Daily/weekly note linking with wikilinks to imported archives
 
 ## Progress
 
@@ -334,4 +334,4 @@ Phases execute in numeric order: 16 -> 17 -> 18 -> 19 -> 20
 | 17. Projects & Goals Restructuring | v1.3 | 2/2 | Complete    | 2026-03-28 |
 | 18. Memories Rename | v1.3 | 3/3 | Complete    | 2026-03-28 |
 | 19. Ghost Organizational Structure | v1.3 | 3/3 | Complete    | 2026-03-28 |
-| 20. Nexus Import & Temporal Compression | v1.3 | 1/3 | In Progress|  |
+| 20. Nexus Import & Temporal Compression | v1.3 | 2/3 | In Progress|  |
