@@ -58,6 +58,10 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Ghost org structure: 13 teams, 500 typed relationships, 67 area assignments, 11 routines — Phase 19
 - ✓ 64 EM Staff documents enriched with YAML frontmatter (agent_id, memory_column, dept, team, area) — Phase 19
 - ✓ Nova aliases: {T.A.S.K.S.}, routines table backing Innate (agent){action} expressions — Phase 19
+- ✓ Nexus Chat AI deduplicated: 990 canonical conversations from 1984 raw documents — Phase 20
+- ✓ Temporal compression cascade: 18 monthly + 7 quarterly + 3 yearly memories from ChatGPT imports — Phase 20
+- ✓ Ghost memory injection: 111 domain-routed perspectives across Nova, LRM, Vincent, Sylvia — Phase 20
+- ✓ Daily/weekly note linking: 381 notes with ## Nexus Imports wikilink sections — Phase 20
 
 ## Current Milestone: v1.3 PARAT Noosphere Schema
 
@@ -173,4 +177,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-28 after Phase 19 (Ghost Organizational Structure) complete*
+*Last updated: 2026-03-29 after Phase 20 (Nexus Import & Temporal Compression) complete — v1.3 milestone complete*
