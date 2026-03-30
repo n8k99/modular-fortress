@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: verifying
-stopped_at: Phase 27 context gathered
-last_updated: "2026-03-30T07:40:01.246Z"
+status: executing
+stopped_at: Completed 27-01-PLAN.md
+last_updated: "2026-03-30T07:57:42.763Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -20,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 26 — runtime-stability
+**Current focus:** Phase 27 — area-content-tables
 
 ## Current Position
 
-Phase: 26
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 27 (area-content-tables) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
@@ -56,6 +56,7 @@ Progress (v1.5): [██████████] 100%
 - [Phase 26]: Committed packages.lisp with db-auxiliary/db-conversations to avoid broken import state
 - [Phase 26]: action-error entries are caught handler-case errors (not crashes), confirming STAB-01 paren fix works
 - [Phase 26]: Surgical 2-char paren fix: remove one paren from line 497, add one to line 612 — outer let* scope restored
+- [Phase 27]: Single transaction for DDL + data migration ensures atomicity
 
 ### Pending Todos
 
@@ -75,9 +76,10 @@ None yet.
 | Phase 26 P01 | 3min | 2 tasks | 9 files |
 | Phase 26 P02 | 3min | 2 tasks | 0 files |
 | Phase 26 P03 | 4min | 2 tasks | 1 files |
+| Phase 27 P01 | 2min | 1 tasks | 1 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T07:40:01.224Z
-Stopped at: Phase 27 context gathered
-Resume file: .planning/phases/27-area-content-tables/27-CONTEXT.md
+Last session: 2026-03-30T07:57:42.757Z
+Stopped at: Completed 27-01-PLAN.md
+Resume file: None

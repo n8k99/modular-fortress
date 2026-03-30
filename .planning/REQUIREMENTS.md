@@ -26,8 +26,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 ### Area Content
 
-- [ ] **AREA-01**: Eckenrode Muziekopname area has structured table(s) for its content
-- [ ] **AREA-02**: Content records scoped under areas via FK relationships
+- [x] **AREA-01**: Eckenrode Muziekopname area has structured table(s) for its content
+- [x] **AREA-02**: Content records scoped under areas via FK relationships
 - [ ] **AREA-03**: Noosphere resolver can query area-scoped content via InnateScipt
 
 ### Tool Migration
@@ -79,8 +79,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 |-------------|-------|--------|
 | STAB-01 | Phase 26 | Complete |
 | STAB-02 | Phase 26 | Complete |
-| AREA-01 | Phase 27 | Pending |
-| AREA-02 | Phase 27 | Pending |
+| AREA-01 | Phase 27 | Complete |
+| AREA-02 | Phase 27 | Complete |
 | AREA-03 | Phase 27 | Pending |
 | CAP-01 | Phase 28 | Pending |
 | CAP-02 | Phase 28 | Pending |
