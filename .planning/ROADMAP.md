@@ -315,7 +315,10 @@ Plans:
   1. Each ghost's YAML has starting_point with x/y coordinates derived from Pantheon Formation ship assignment
   2. Ghost YAML includes ship_assignment and rpg_persona fields that are loadable by the tick engine
   3. Trust and energy thresholds for Orbis access are defined in ghost YAML and readable at runtime
-**Plans**: [To be planned]
+**Plans**: 2 plans
+Plans:
+- [ ] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
+- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ### Phase 30: Team Pipelines
 **Goal**: Department and team pipelines are defined in YAML with explicit handoff chains, replacing hardcoded pipeline advancement
@@ -325,7 +328,10 @@ Plans:
   1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
   2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
-**Plans**: [To be planned]
+**Plans**: 2 plans
+Plans:
+- [ ] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
+- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ### Phase 31: Tool Migration
 **Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
@@ -336,7 +342,10 @@ Plans:
   2. The noosphere resolver can invoke Python scripts when evaluating an InnateScipt tool expression (e.g., a commission triggers script execution)
   3. tool-registry.json is deleted and no code path references it -- all tool discovery flows through InnateScipt capabilities
   4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
-**Plans**: [To be planned]
+**Plans**: 2 plans
+Plans:
+- [ ] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
+- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ## Progress
 
@@ -350,6 +359,6 @@ Plans:
 | 26. Runtime Stability | v1.5 | 3/3 | Complete    | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
-| 29. Orbis Foundation | v1.5 | 0/? | Not started | - |
+| 29. Orbis Foundation | v1.5 | 0/2 | Planning    | - |
 | 30. Team Pipelines | v1.5 | 0/? | Not started | - |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |
