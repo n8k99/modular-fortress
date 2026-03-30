@@ -321,16 +321,17 @@ Plans:
 - [x] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ### Phase 30: Team Pipelines
-**Goal**: Department and team pipelines are defined in YAML with explicit handoff chains, replacing hardcoded pipeline advancement
+**Goal**: Department and team pipelines are defined in master_chronicle (area_content) with explicit handoff chains, replacing hardcoded pipeline advancement
 **Depends on**: Phase 28
 **Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04
 **Success Criteria** (what must be TRUE):
   1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
   2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
+**Plans:** 2 plans
 Plans:
-- [ ] 30-01-PLAN.md
-- [ ] 30-02-PLAN.md
+- [ ] 30-01-PLAN.md -- Pipeline definitions in area_content + pipeline-definitions.lisp module
+- [ ] 30-02-PLAN.md -- Wire DB pipelines into action-executor, action-planner, tick-engine
 
 ### Phase 31: Tool Migration
 **Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
