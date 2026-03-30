@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
 status: executing
-stopped_at: Phase 31 plans created and verified
-last_updated: "2026-03-30T21:21:55.083Z"
+stopped_at: Completed 31-02-PLAN.md
+last_updated: "2026-03-30T21:35:11.989Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -69,6 +69,7 @@ Progress (v1.5): [██████████] 100%
 - [Phase 29]: Orbis fields as read-only YAML metadata; load-ghost-orbis returns plist for v1.6+ runtime access
 - [Phase 30]: Used get-pipeline-type-for-stage in action-planner to avoid circular dependency with action-executor
 - [Phase 30]: Preserved detect-pipeline-type wrapper for backward compatibility per D-14
+- [Phase 31]: Worldbuilding tools to JMax (canon arbiter); delegate_modular_fortress to Eliana; OpenClaw tools skipped (deprecated)
 
 ### Pending Todos
 
@@ -97,9 +98,10 @@ None yet.
 | Phase 29 P01 | 7min | 2 tasks | 2 files |
 | Phase 29 P02 | 4min | 2 tasks | 11 files |
 | Phase 30 P02 | 5min | 2 tasks | 4 files |
+| Phase 31 P02 | 1min | 1 tasks | 9 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T21:21:55.076Z
-Stopped at: Phase 31 plans created and verified
-Resume file: .planning/phases/31-tool-migration/31-01-PLAN.md
+Last session: 2026-03-30T21:35:11.980Z
+Stopped at: Completed 31-02-PLAN.md
+Resume file: None
