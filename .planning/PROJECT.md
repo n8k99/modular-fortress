@@ -125,7 +125,7 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ## Context
 
-**Current state (post v1.5 Phase 30):** The full pipeline is sovereign — ghosts speak directly to PostgreSQL via libpq FFI (zero HTTP in tick path) and speak Innate natively. master_chronicle has 85+ tables with PARAT five-pillar structure. Innate interpreter v1.0 at `/opt/innatescript/` is connected via noosphere-resolver — ghosts evaluate .dpn Templates during cognition and compose new expressions via LLM generation.
+**Current state (post v1.5 complete):** The full pipeline is sovereign — ghosts speak directly to PostgreSQL via libpq FFI (zero HTTP in tick path) and speak Innate natively. master_chronicle has 85+ tables with PARAT five-pillar structure. Innate interpreter v1.0 at `/opt/innatescript/` is connected via noosphere-resolver — ghosts evaluate .dpn Templates during cognition and compose new expressions via LLM generation.
 - Tick engine runs entirely over SQL: perception, conversations, tasks, energy, tiers — no dpn-api dependency
 - Noosphere resolver connects @, (), {} symbols to master_chronicle tables
 - Template evaluation enriches cognition with resolved expressions; commission delivery triggers real tools
@@ -137,7 +137,8 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - Tick engine reloads pipeline definitions from DB each tick; 4 pipelines (engineering, investment, editorial, modular-fortress) migrated
 - Orbis spatial identity in ghost YAML (coordinates, ship assignment, RPG persona) — Phase 29
 - **Runtime bugs from 2026-03-29:** All fixed (Phase 26), paren scope bug resolved
-- **Financial tools in gotcha-workspace:** 4 Kalshi/trading Python scripts need InnateScipt wrappers (Phase 31)
+- tool-registry.json retired — all 75 tools migrated to area_content JSONB, noosphere resolver dispatches ![tool] expressions to Python scripts (Phase 31)
+- All 9 ghost YAMLs have complete InnateScipt capability declarations (4-27 tools each, departmentally scoped)
 
 **OpenClaw migration status:** 11 of 14 cron jobs migrated to ghost standing orders. Remaining 3 are OpenClaw-internal and will retire with OpenClaw itself.
 
@@ -207,4 +208,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 — after Phase 30 (Team Pipelines) completed*
+*Last updated: 2026-03-30 — after v1.5 milestone complete (Phase 31 Tool Migration)*
