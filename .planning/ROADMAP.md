@@ -328,10 +328,10 @@ Plans:
   1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
   2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 30-01-PLAN.md -- Pipeline definitions in area_content + pipeline-definitions.lisp module
-- [ ] 30-02-PLAN.md -- Wire DB pipelines into action-executor, action-planner, tick-engine
+- [x] 30-02-PLAN.md -- Wire DB pipelines into action-executor, action-planner, tick-engine
 
 ### Phase 31: Tool Migration
 **Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
@@ -359,5 +359,5 @@ Plans:
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
 | 29. Orbis Foundation | v1.5 | 2/2 | Complete    | 2026-03-30 |
-| 30. Team Pipelines | v1.5 | 1/2 | In Progress|  |
+| 30. Team Pipelines | v1.5 | 2/2 | Complete   | 2026-03-30 |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |

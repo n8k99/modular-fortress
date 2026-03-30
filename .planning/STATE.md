@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
 status: executing
-stopped_at: Phase 30 plans created and verified
-last_updated: "2026-03-30T20:15:30.540Z"
-last_activity: 2026-03-30 -- Phase 30 execution started
+stopped_at: Completed 30-02-PLAN.md
+last_updated: "2026-03-30T20:38:06.957Z"
+last_activity: 2026-03-30
 progress:
   total_phases: 15
   completed_phases: 10
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 ## Current Position
 
 Phase: 30 (team-pipelines) — EXECUTING
-Plan: 1 of 2
-Status: Executing Phase 30
-Last activity: 2026-03-30 -- Phase 30 execution started
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
 
@@ -67,6 +67,8 @@ Progress (v1.5): [██████████] 100%
 - [Phase 29]: Serializer emission order: scalars, nested sections, top-level lists (responsibilities last)
 - [Phase 29]: write-ghost-yaml loads existing YAML before writing to preserve non-responsibility sections
 - [Phase 29]: Orbis fields as read-only YAML metadata; load-ghost-orbis returns plist for v1.6+ runtime access
+- [Phase 30]: Used get-pipeline-type-for-stage in action-planner to avoid circular dependency with action-executor
+- [Phase 30]: Preserved detect-pipeline-type wrapper for backward compatibility per D-14
 
 ### Pending Todos
 
@@ -94,9 +96,10 @@ None yet.
 | Phase 28 P04 | 2min | 1 tasks | 2 files |
 | Phase 29 P01 | 7min | 2 tasks | 2 files |
 | Phase 29 P02 | 4min | 2 tasks | 11 files |
+| Phase 30 P02 | 5min | 2 tasks | 4 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:09:40.370Z
-Stopped at: Phase 30 plans created and verified
-Resume file: .planning/phases/30-team-pipelines/30-01-PLAN.md
+Last session: 2026-03-30T20:38:06.941Z
+Stopped at: Completed 30-02-PLAN.md
+Resume file: None

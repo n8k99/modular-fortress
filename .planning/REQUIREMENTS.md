@@ -21,8 +21,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 - [x] **PIPE-01**: Department/team YAML has assignments: section defining pipeline handoff chains
 - [x] **PIPE-02**: Pipeline definitions specify step sequence with ghost assignment per step
-- [ ] **PIPE-03**: Tick engine routes pipeline handoffs using YAML definitions instead of hardcoded *pipeline-advancement*
-- [ ] **PIPE-04**: Pipeline state tracked per-task (current step, next ghost) in task metadata
+- [x] **PIPE-03**: Tick engine routes pipeline handoffs using YAML definitions instead of hardcoded *pipeline-advancement*
+- [x] **PIPE-04**: Pipeline state tracked per-task (current step, next ghost) in task metadata
 
 ### Area Content
 
@@ -94,8 +94,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 | ORBIS-03 | Phase 29 | Complete |
 | PIPE-01 | Phase 30 | Complete |
 | PIPE-02 | Phase 30 | Complete |
-| PIPE-03 | Phase 30 | Pending |
-| PIPE-04 | Phase 30 | Pending |
+| PIPE-03 | Phase 30 | Complete |
+| PIPE-04 | Phase 30 | Complete |
 | TOOL-01 | Phase 31 | Pending |
 | TOOL-02 | Phase 31 | Pending |
 | TOOL-03 | Phase 31 | Pending |
