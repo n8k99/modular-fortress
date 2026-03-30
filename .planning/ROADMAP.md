@@ -342,11 +342,11 @@ Plans:
   2. The noosphere resolver can invoke Python scripts when evaluating an InnateScipt tool expression (e.g., a commission triggers script execution)
   3. tool-registry.json is deleted and no code path references it -- all tool discovery flows through InnateScipt capabilities
   4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
-**Plans:** 1/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 31-01-PLAN.md -- DB tool definitions in area_content + tool-definitions.lisp loader module
+- [x] 31-01-PLAN.md -- DB tool definitions in area_content + tool-definitions.lisp loader module
 - [x] 31-02-PLAN.md -- Update all 9 ghost YAMLs with complete tool capabilities
-- [ ] 31-03-PLAN.md -- Wire resolver + refactor execute-tool-call + retire registry
+- [x] 31-03-PLAN.md -- Wire resolver + refactor execute-tool-call + retire registry
 
 ## Progress
 
@@ -362,4 +362,4 @@ Plans:
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
 | 29. Orbis Foundation | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 30. Team Pipelines | v1.5 | 2/2 | Complete    | 2026-03-30 |
-| 31. Tool Migration | v1.5 | 1/3 | In Progress|  |
+| 31. Tool Migration | v1.5 | 3/3 | Complete   | 2026-03-30 |
