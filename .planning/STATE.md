@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: verifying
-stopped_at: Completed 30-01-PLAN.md
-last_updated: "2026-03-30T20:30:46.406Z"
-last_activity: 2026-03-30
+status: executing
+stopped_at: Phase 30 plans created and verified
+last_updated: "2026-03-30T20:15:30.540Z"
+last_activity: 2026-03-30 -- Phase 30 execution started
 progress:
   total_phases: 15
   completed_phases: 10
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 29 — orbis-foundation
+**Current focus:** Phase 30 — team-pipelines
 
 ## Current Position
 
-Phase: 29
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-03-30
+Phase: 30 (team-pipelines) — EXECUTING
+Plan: 1 of 2
+Status: Executing Phase 30
+Last activity: 2026-03-30 -- Phase 30 execution started
 
 Progress (v1.5): [██████████] 100%
 
@@ -67,7 +67,6 @@ Progress (v1.5): [██████████] 100%
 - [Phase 29]: Serializer emission order: scalars, nested sections, top-level lists (responsibilities last)
 - [Phase 29]: write-ghost-yaml loads existing YAML before writing to preserve non-responsibility sections
 - [Phase 29]: Orbis fields as read-only YAML metadata; load-ghost-orbis returns plist for v1.6+ runtime access
-- [Phase 30-team-pipelines]: Edge-based DAG support for diamond pipelines: order-based inference cannot capture skip-level edges or terminal fork branches
 
 ### Pending Todos
 
@@ -95,10 +94,9 @@ None yet.
 | Phase 28 P04 | 2min | 1 tasks | 2 files |
 | Phase 29 P01 | 7min | 2 tasks | 2 files |
 | Phase 29 P02 | 4min | 2 tasks | 11 files |
-| Phase 30-team-pipelines P01 | 13min | 2 tasks | 5 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:30:46.394Z
-Stopped at: Completed 30-01-PLAN.md
-Resume file: None
+Last session: 2026-03-30T20:09:40.370Z
+Stopped at: Phase 30 plans created and verified
+Resume file: .planning/phases/30-team-pipelines/30-01-PLAN.md
