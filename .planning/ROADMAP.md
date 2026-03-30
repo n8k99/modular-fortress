@@ -310,7 +310,10 @@ Plans:
   2. Generated expressions pass the Innate interpreter's parser without errors
   3. A ghost can create a new Template row in the `templates` table with a body containing Innate expressions, and that Template is evaluable by other ghosts in subsequent ticks
   4. A ghost can modify an existing Template's body, and the updated version evaluates correctly on the next read
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 25-01-PLAN.md -- Builder functions, validation, slug generation, template CRUD, package wiring
+- [ ] 25-02-PLAN.md -- Cognition pipeline integration (action-planner prompts + action-executor extraction/persistence)
 
 ## Progress
 
@@ -324,4 +327,4 @@ Plans:
 | 22. Conversations & Tasks Direct | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 23. Noosphere Resolver | v1.4 | 2/2 | Complete    | 2026-03-29 |
 | 24. Template Evaluation & Execution | v1.4 | 2/2 | Complete   | 2026-03-29 |
-| 25. Ghost Expression Generation | v1.4 | 0/TBD | Not started | - |
+| 25. Ghost Expression Generation | v1.4 | 0/2 | In progress | - |
