@@ -1,5 +1,45 @@
 # Milestones
 
+## v1.4 Ghost Sovereignty (Shipped: 2026-03-30)
+
+**Phases completed:** 15 phases, 31 plans, 62 tasks
+
+**Key accomplishments:**
+
+- Fixed dispatch_project() with H1 name extraction, owner column persistence, department lookup from agents table, and PG_CONFIG integration -- 6 tests all GREEN
+- Hierarchical parent+subtask dispatch with must_have truth extraction, assigned_to text[], department routing, and enhanced status reporting -- 12 tests all GREEN
+- Perception endpoint enhanced with GSD task fields (project_id, source, context, assigned_to, priority, scheduled_at) using assigned_to array queries replacing legacy assignee string matching
+- All 5 PERC requirements verified via automated E2E test script (curl+jq) against live dpn-api, with human-approved urgency boost path confirmation
+- POST /api/af64/tasks extended with task_id/parent_id/source fields and project_id filter for ghost task creation and prompt enrichment
+- Enriched build-project-review-job with per-task GSD context (wave numbers, must_haves) and dynamic team roster for wave-aware executive decomposition and delegation
+- parse-create-task-lines extracts task descriptions from LLM output and POSTs them to /api/af64/tasks with ghost source, project linkage, and optional assignee
+- Fixed wildcard scope bug making memory tools invisible, registered claude_code tool with bash wrapper for engineering ghosts
+- 18-test E2E smoke script covering DB/API/code/memory tools plus D-08 stage_notes, with agent tool_scope corrections for 4 agents per D-10/D-11
+- Wave advancement trigger, enriched completion reports, blocker/escalation routing via conversations table
+- Wave-level progress in dispatch --status and comprehensive E2E script verifying all 6 REPT requirements against live DB triggers
+- POST /api/conversations/mark-read endpoint with read_by perception filtering, GIN index, and historical cleanup of 2229 stale messages
+- Tick engine marks all perceived messages as read after cognition via api-post to /api/conversations/mark-read, closing the perception-cognition-mark-read loop
+- JSONB schedule column on projects, PATCH API endpoint, perception schedule metadata, and Lisp cron matcher for 5-field cron expressions
+- Cron schedule evaluation wired into tick engine ranking with +50 boost, double-fire prevention, and Standing Orders Fired prompt enrichment for executive project reviews
+- 6 operational Python scripts registered in ghost tool-registry with operations scope, process-tool-calls wired into execute-project-review, Podcast Watch schedule added to Project #14
+- 1. [Rule 1 - Bug] Corrected ops_daily_note tool name
+- editorial_nightly registered with dynamic per-label tool mapping so Sylvia executes nightly editorial via standing order, not OpenClaw cron
+- Trading briefing and calendar sync tools wired into ghost standing orders under Kathryn's Project #10 with 4 label-to-tool mappings
+- Direct PostgreSQL access from SBCL via libpq FFI with 2-connection pool, db-query/db-execute wrappers, and 11 passing smoke tests
+- 11 perception SQL query functions in db-client.lisp, perception.lisp and tick-engine.lisp rewired from HTTP to direct PostgreSQL -- ghosts now perceive the noosphere via SQL
+- Energy updates, tier changes, and tick counters all converted from HTTP PATCH to direct PostgreSQL SQL -- the perceive-rank-classify-update cycle now runs entirely over the noosphere
+- 26 SQL wrapper functions across 3 domain files (conversations, tasks, auxiliary) providing complete DB operation library for Plans 02 and 03 to rewire HTTP calls
+- Replaced all 41 HTTP calls in action-executor.lisp (39) and tick-engine.lisp (2) with direct PostgreSQL via SQL wrapper functions
+- Rewired 22 HTTP calls across action-planner.lisp and 7 auxiliary files to direct SQL, completing zero-HTTP tick engine
+- CLOS noosphere-resolver wiring innatescript packages into AF64 boot with resolve-reference (cascade + table.name + qualifiers) and resolve-search (dynamic WHERE from key=value terms) against master_chronicle
+- Complete Innate resolver protocol with all 6 methods plus startup wiring, delivering commissions via conversations table, wikilinks from memories, template body parsing, and live DB verification
+- Innate evaluator wired into ghost cognition pipeline -- project review jobs now include evaluated .dpn Template content with noosphere-resolved @references
+- Commission delivery verified end-to-end: (sarah){sync_calendar} and (kathryn){finance_positions} create channel=commission conversations from template evaluation
+- Lisp builder functions for constructing valid Innate expressions (@references, commissions, searches, bundles) with parse-round-trip validation, slug generation, and template CRUD via direct SQL
+- Innate expression generation wired into ghost cognition: action-planner adds syntax instructions to LLM prompts, action-executor extracts/validates/persists generated expressions from LLM output to templates table
+
+---
+
 ## v1.3 PARAT Noosphere Schema (Shipped: 2026-03-29)
 
 **Phases completed:** 15 phases, 33 plans, 64 tasks

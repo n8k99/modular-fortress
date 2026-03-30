@@ -2,31 +2,31 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
-status: executing
-stopped_at: Completed 25-02-PLAN.md
-last_updated: "2026-03-30T01:43:16.934Z"
-last_activity: 2026-03-30
+status: complete
+stopped_at: v1.4 milestone complete
+last_updated: "2026-03-30"
+last_activity: 2026-03-30 -- v1.4 Ghost Sovereignty shipped
 progress:
-  total_phases: 20
-  completed_phases: 15
-  total_plans: 31
-  completed_plans: 31
+  total_phases: 25
+  completed_phases: 25
+  total_plans: 57
+  completed_plans: 57
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-29)
+See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 25 — ghost-expression-generation
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 25
-Plan: Not started
-Status: Ready to execute
+Phase: Complete
+Plan: N/A
+Status: v1.4 shipped — ready for /gsd:new-milestone
 Last activity: 2026-03-30
 
 Progress (v1.4): [..........] 0%

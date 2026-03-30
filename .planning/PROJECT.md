@@ -72,17 +72,14 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - ✓ Ghost memory injection: 111 domain-routed perspectives across Nova, LRM, Vincent, Sylvia — Phase 20
 - ✓ Daily/weekly note linking: 381 notes with ## Nexus Imports wikilink sections — Phase 20
 
-## Current Milestone: v1.4 Ghost Sovereignty
-
-**Goal:** Ghosts speak directly to the noosphere via PostgreSQL and evaluate Innate .dpn Templates as executable instructions — removing the HTTP middleman and giving ghosts a native language.
-
-**Target features:**
-- Direct PostgreSQL from Lisp tick engine (replace dpn-api HTTP calls for perception, state updates, conversations)
-- Noosphere resolver for Innate (connect @, (), {} symbols to master_chronicle tables)
-- Template evaluation in ghost cognition (ghosts read .dpn Templates, evaluate them, act on results)
-- Ghost .dpn generation (ghosts compose Innate expressions to create/modify Templates)
-
 ## Shipped Milestones
+
+### v1.4 Ghost Sovereignty (shipped 2026-03-30)
+- Direct PostgreSQL via SB-ALIEN FFI to libpq: 63 HTTP calls replaced with SQL, zero-HTTP tick engine
+- Noosphere resolver: Innate's @, (), {} symbols resolve against master_chronicle via CLOS protocol
+- Template evaluation in cognition: ghosts read/evaluate .dpn Templates, commission delivery triggers real tools
+- Ghost expression generation: LLM prompts include Innate syntax, action-executor extracts/validates/persists expressions
+- 1,832 new LOC Common Lisp across 6 modules (db-client, db-conversations, db-tasks, db-auxiliary, noosphere-resolver, innate-builder)
 
 ### v1.3 PARAT Noosphere Schema (shipped 2026-03-29)
 - PARAT five-pillar schema: areas, archives, resources, templates with DB-level integrity
@@ -114,23 +111,24 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ## Context
 
-**Current state (post v1.3, starting v1.4):** The full pipeline works end-to-end with PARAT schema. master_chronicle has 85+ tables with five-pillar structure (Projects/Areas/Resources/Archives/Templates), ghost org structure (13 teams, 500 relationships), and temporal compression (28 memories from 990 Nexus imports). Ghosts currently communicate via dpn-api HTTP layer. Innate interpreter v1.0 exists at `/opt/innatescript/` (2000 LOC Lisp, 175/176 tests pass) with pluggable resolver protocol — needs noosphere resolver to connect to master_chronicle.
-- dispatch_to_db.py writes hierarchical tasks with owner, department, wave context, and dependencies
-- Perception returns all GSD fields, filters read messages, includes schedule metadata
-- Cron schedules fire on projects, injecting owning executives into acting-set with +50 urgency boost
-- Action planner maps schedule labels to specific tool invocations via dynamic `tool-mapping-for-label`
-- `execute-project-review` calls `process-tool-calls` so standing orders execute real tools
-- Nova runs 6 ops tools, Sylvia runs editorial, Kathryn runs trading briefings + calendar sync
+**Current state (post v1.4):** The full pipeline is sovereign — ghosts speak directly to PostgreSQL via libpq FFI (zero HTTP in tick path) and speak Innate natively. master_chronicle has 85+ tables with PARAT five-pillar structure. Innate interpreter v1.0 at `/opt/innatescript/` is connected via noosphere-resolver — ghosts evaluate .dpn Templates during cognition and compose new expressions via LLM generation.
+- Tick engine runs entirely over SQL: perception, conversations, tasks, energy, tiers — no dpn-api dependency
+- Noosphere resolver connects @, (), {} symbols to master_chronicle tables
+- Template evaluation enriches cognition with resolved expressions; commission delivery triggers real tools
+- Ghosts generate valid Innate expressions with parse-round-trip validation before persistence
+- Standing orders: Nova (6 ops tools), Sylvia (editorial), Kathryn (trading + calendar)
 - All output attributed to the executing ghost via conversations table
 
-**OpenClaw migration status:** 11 of 14 cron jobs migrated to ghost standing orders. Remaining 3 are OpenClaw-internal (pipeline wakeup, conversations poll, tasks archive) and will retire with OpenClaw itself.
+**OpenClaw migration status:** 11 of 14 cron jobs migrated to ghost standing orders. Remaining 3 are OpenClaw-internal and will retire with OpenClaw itself.
 
 **Key files:**
 - `gotcha-workspace/tools/gsd/dispatch_to_db.py` — GSD-to-DB bridge
-- `dpn-api/src/handlers/af64_perception.rs` — perception endpoint with schedule metadata
-- `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp` — tick cycle with cron schedule evaluation
-- `project-noosphere-ghosts/lisp/runtime/action-planner.lisp` — cognition prompts with label-to-tool mapping
-- `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` — tool execution in project reviews
+- `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp` — tick cycle with direct SQL
+- `project-noosphere-ghosts/lisp/runtime/action-planner.lisp` — cognition prompts with Innate generation instructions
+- `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` — tool execution + expression extraction/persistence
+- `project-noosphere-ghosts/lisp/runtime/db-client.lisp` — libpq FFI bindings and connection pool
+- `project-noosphere-ghosts/lisp/runtime/noosphere-resolver.lisp` — CLOS resolver for Innate symbols
+- `project-noosphere-ghosts/lisp/runtime/innate-builder.lisp` — expression constructors, validation, template CRUD
 - `project-noosphere-ghosts/config/tool-registry.json` — 9 registered operational tools
 
 **Executive roster and standing order domains:**
@@ -166,6 +164,10 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 | Run existing Python scripts via tool invocation | No rewrites, proven tools, ghost just triggers them | ✓ Good — v1.2 |
 | Dynamic label-to-tool mapping | Generalized for any executive/project, not hardcoded per-agent | ✓ Good — v1.2 |
 | Noosphere-native output (conversations, not Discord) | Ghosts live in the noosphere; external delivery is a separate concern | ✓ Good — v1.2 |
+| SB-ALIEN FFI to libpq (not Quicklisp) | AF64 zero-deps convention; direct C bindings, 2-connection pool | ✓ Good — v1.4 |
+| Direct SQL before Innate integration | DB is prerequisite for resolver; HTTP removal first, then language | ✓ Good — v1.4 |
+| CLOS resolver protocol for Innate | Extensible method dispatch, clean separation from interpreter core | ✓ Good — v1.4 |
+| LLM-generated expressions with validation | Parse-round-trip ensures only valid Innate persists to templates | ✓ Good — v1.4 |
 
 ## Evolution
 
@@ -185,4 +187,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 — v1.4 Phase 25 complete, all 5 phases shipped*
+*Last updated: 2026-03-30 — after v1.4 Ghost Sovereignty milestone*

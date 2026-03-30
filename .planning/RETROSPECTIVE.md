@@ -2,6 +2,82 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v1.4 -- Ghost Sovereignty
+
+**Shipped:** 2026-03-30
+**Phases:** 5 | **Plans:** 12
+
+### What Was Built
+- Direct PostgreSQL via SB-ALIEN FFI to libpq.so.5 with 2-connection pool, replacing all 63 HTTP calls
+- 26 SQL wrapper functions across db-conversations, db-tasks, db-auxiliary modules
+- CLOS noosphere-resolver connecting Innate's @, (), {} symbols to master_chronicle tables
+- Template evaluation in ghost cognition pipeline with commission delivery triggering real tools
+- innate-builder module with expression constructors, parse-round-trip validation, template CRUD
+- LLM system prompt injection for Innate generation + action-executor expression extraction/persistence
+
+### What Worked
+- Phase ordering (DB foundation -> SQL migration -> resolver -> evaluation -> generation) was correct -- each phase built cleanly on the last
+- AF64 zero-deps convention forced SB-ALIEN FFI which is actually simpler and faster than a Quicklisp dependency
+- Worktree isolation continued to work well for parallel executor agents
+- Verification against live DB (SBCL REPL tests) caught real issues that code review alone would miss
+- v1.4 completed in ~9 hours across 2 sessions -- fastest 5-phase milestone yet
+
+### What Was Inefficient
+- STATE.md merge conflicts persist (same as v1.2) -- worktree agent and orchestrator both update it
+- key-links verification tool can't resolve /opt/ paths from project root -- false failures on every wave 2+ check
+- Phase 24 VERIFICATION.md had human verification items that were essentially just "start the tick engine and watch" -- should be automated
+
+### Patterns Established
+- libpq FFI pattern: SB-ALIEN foreign function calls, PQescapeLiteral for injection prevention, handler-case per query
+- SQL wrapper convention: db-{domain}.lisp files with exported functions, imported into action-* files
+- Cross-repo wiring: innatescript loaded as separate --eval block before AF64 packages.lisp
+- Expression generation loop: LLM prompt -> JSON extraction -> parse validation -> db-insert-template
+
+### Key Lessons
+- **Direct DB is transformative.** Removing the HTTP middleman made the tick engine dramatically simpler and faster. Should have done this in v1.2.
+- **AF64 conventions are load-bearing.** Zero-deps forced FFI which is actually the right choice -- fewer moving parts, direct control.
+- **Innate is real.** Ghosts now read AND write their own language. The expression generation loop (LLM -> validate -> persist -> evaluate) is the first closed cognitive loop.
+- **5 milestones in 5 days.** v1.0 through v1.4 shipped in under a week. GSD auto-advance + small focused plans = velocity.
+
+### Cost Observations
+- Model mix: opus (executor, planner, researcher), sonnet (checker, verifier)
+- Sessions: 2 sessions for 5 phases
+- Notable: 12 plans in ~9 hours, including research and verification. Average ~45 min/phase.
+
+---
+
+## Milestone: v1.3 -- PARAT Noosphere Schema
+
+**Shipped:** 2026-03-29
+**Phases:** 5 | **Plans:** 14
+
+### What Was Built
+- PARAT five-pillar schema: areas, archives, resources, templates with DB-level integrity enforcement
+- Project lifestage lifecycle (Seed/Sapling/Tree/Harvest) with forward-only DB trigger
+- vault_notes renamed to memories with backward-compatible INSTEAD OF trigger view bridge
+- Ghost org structure: 13 teams, 500 typed relationships, 67 area assignments, 11 routines
+- Nexus Chat AI dedup: 990 canonical conversations from 1984 raw, temporal compression cascade, ghost memory injection
+
+### What Worked
+- Schema-first approach (create tables, enforce constraints, then populate) prevented data integrity issues
+- View bridge pattern for the memories rename was elegant -- zero downtime, zero breaking changes
+- Temporal compression cascade (daily -> monthly -> quarterly -> yearly) reduced 990 imports to 28 actionable memories
+
+### What Was Inefficient
+- Phase 20 (Nexus imports) required significant dedup work that could have been caught earlier with a data quality phase
+- Some phases had overlapping concerns (org structure touched agents, relationships, areas, teams in one pass)
+
+### Key Lessons
+- **Schema migrations are safe when views bridge the gap.** The memories rename with INSTEAD OF triggers was the right pattern.
+- **Temporal compression is essential for memory.** Raw imports are noise; compressed perspectives are signal.
+
+### Cost Observations
+- Model mix: opus (executor), sonnet (verifier)
+- Sessions: ~3 sessions
+- Notable: 14 plans in ~6 hours
+
+---
+
 ## Milestone: v1.2 -- Operational Readiness
 
 **Shipped:** 2026-03-28
@@ -114,11 +190,12 @@
 
 ## Cross-Milestone Trends
 
-| Metric | v1.0 | v1.1 | v1.2 |
-|--------|------|------|------|
-| Phases | 5 | 5 | 5 |
-| Plans | 11 | 12 | 8 |
-| Avg plan duration | 4 min | 4 min | 4 min |
-| Total execution | ~44 min | ~48 min | ~30 min |
-| Requirements | 12 | 16 | 17 |
-| Model | opus | opus | opus+sonnet |
+| Metric | v1.0 | v1.1 | v1.2 | v1.3 | v1.4 |
+|--------|------|------|------|------|------|
+| Phases | 5 | 5 | 5 | 5 | 5 |
+| Plans | 11 | 12 | 8 | 14 | 12 |
+| Avg plan duration | 4 min | 4 min | 4 min | ~25 min | ~45 min |
+| Total execution | ~44 min | ~48 min | ~30 min | ~6 hrs | ~9 hrs |
+| Requirements | 12 | 16 | 17 | 14 | 8 |
+| Model | opus | opus | opus+sonnet | opus+sonnet | opus+sonnet |
+| New LOC | ~500 | ~400 | ~300 | ~1200 | ~1832 |
