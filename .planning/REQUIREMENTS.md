@@ -39,9 +39,9 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 ### Orbis Foundation
 
-- [ ] **ORBIS-01**: Ghost YAML has starting_point coordinates (x, y) from Pantheon Formation ship assignment
-- [ ] **ORBIS-02**: Ghost YAML has ship_assignment and rpg_persona fields
-- [ ] **ORBIS-03**: Trust and energy thresholds for Orbis access defined in ghost YAML
+- [x] **ORBIS-01**: Ghost YAML has starting_point coordinates (x, y) from Pantheon Formation ship assignment
+- [x] **ORBIS-02**: Ghost YAML has ship_assignment and rpg_persona fields
+- [x] **ORBIS-03**: Trust and energy thresholds for Orbis access defined in ghost YAML
 
 ### Runtime Stability
 
@@ -89,9 +89,9 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 | CAP-05 | Phase 28 | Complete |
 | CAP-06 | Phase 28 | Complete |
 | CAP-07 | Phase 28 | Complete |
-| ORBIS-01 | Phase 29 | Pending |
-| ORBIS-02 | Phase 29 | Pending |
-| ORBIS-03 | Phase 29 | Pending |
+| ORBIS-01 | Phase 29 | Complete |
+| ORBIS-02 | Phase 29 | Complete |
+| ORBIS-03 | Phase 29 | Complete |
 | PIPE-01 | Phase 30 | Pending |
 | PIPE-02 | Phase 30 | Pending |
 | PIPE-03 | Phase 30 | Pending |

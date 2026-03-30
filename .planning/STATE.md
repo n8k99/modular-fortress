@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: verifying
-stopped_at: Phase 29 context gathered
-last_updated: "2026-03-30T18:06:12.241Z"
+status: executing
+stopped_at: Completed 29-01-PLAN.md
+last_updated: "2026-03-30T18:25:43.910Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -20,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 28 — ghost-capabilities
+**Current focus:** Phase 29 — orbis-foundation
 
 ## Current Position
 
-Phase: 28
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 29 (orbis-foundation) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
@@ -63,6 +63,9 @@ Progress (v1.5): [██████████] 100%
 - [Phase 28]: Refactored mutation interface from plist to hash-table matching AF64 JSON parser output
 - [Phase 28]: Separate *capability-mutation-instructions* defparameter for modularity
 - [Phase 28]: Mutation instructions appended unconditionally in proactive-work (even without YAML capabilities), matching work-task pattern
+- [Phase 29]: Flat cond structure in parse-simple-yaml to avoid deep paren nesting
+- [Phase 29]: Serializer emission order: scalars, nested sections, top-level lists (responsibilities last)
+- [Phase 29]: write-ghost-yaml loads existing YAML before writing to preserve non-responsibility sections
 
 ### Pending Todos
 
@@ -88,9 +91,10 @@ None yet.
 | Phase 28 P02 | 3min | 1 tasks | 1 files |
 | Phase 28 P03 | 6min | 2 tasks | 4 files |
 | Phase 28 P04 | 2min | 1 tasks | 2 files |
+| Phase 29 P01 | 7min | 2 tasks | 2 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T18:06:12.235Z
-Stopped at: Phase 29 context gathered
-Resume file: .planning/phases/29-orbis-foundation/29-CONTEXT.md
+Last session: 2026-03-30T18:25:43.897Z
+Stopped at: Completed 29-01-PLAN.md
+Resume file: None
