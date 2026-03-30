@@ -271,10 +271,11 @@ See `.planning/milestones/v1.4-ROADMAP.md` for full phase details.
   1. The execute-work-task function returns its json-object result from the correct let* scope without paren mismatch
   2. All 7 tick engine fixes from the 2026-03-29 session (UTF-8 pg-escape, NULL handling, tilde SQL, type coercion, description column) are committed and loadable by SBCL without errors
   3. A full tick cycle completes without runtime errors on the live system
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
 - [x] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
 - [x] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+- [ ] 26-03-PLAN.md -- Gap closure: fix outer let* scope in execute-work-task
 
 ### Phase 27: Area Content Tables
 **Goal**: Eckenrode Muziekopname has structured content tables that the noosphere resolver can query by area scope
