@@ -7,6 +7,7 @@
 - v1.2 Operational Readiness (Phases 11-15) -- shipped 2026-03-28
 - v1.3 PARAT Noosphere Schema (Phases 16-20) -- shipped 2026-03-29
 - v1.4 Ghost Sovereignty (Phases 21-25) -- shipped 2026-03-30
+- v1.5 InnateScipt Capabilities (Phases 26-31) -- in progress
 
 ## Phases
 
@@ -60,6 +61,17 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 - [x] **Phase 25: Ghost Expression Generation** - Ghosts compose valid Innate expressions via LLM prompts with parse-round-trip validation
 
 </details>
+
+### v1.5 InnateScipt Capabilities (In Progress)
+
+**Milestone Goal:** Replace the static tool registry with InnateScipt-defined ghost capabilities -- every ghost's YAML declares what it can do as live InnateScipt expressions, with executive oversight and team pipeline definitions.
+
+- [ ] **Phase 26: Runtime Stability** - Fix the execute-work-task paren bug and commit all tick engine fixes before building on top
+- [ ] **Phase 27: Area Content Tables** - Structured area-scoped content tables for Eckenrode Muziekopname replacing flat documents
+- [ ] **Phase 28: Ghost Capabilities** - YAML-defined InnateScipt responsibilities replace tool-registry.json for ghost capability declaration and cognition
+- [ ] **Phase 29: Orbis Foundation** - YAML coordinates, ship assignment, and RPG persona fields for ghost spatial identity
+- [ ] **Phase 30: Team Pipelines** - YAML-defined pipeline handoff chains replace hardcoded pipeline advancement logic
+- [ ] **Phase 31: Tool Migration** - Existing Python tools wrapped as InnateScipt expressions, tool-registry.json retired
 
 ## Phase Details
 
@@ -249,6 +261,89 @@ See `.planning/milestones/v1.4-ROADMAP.md` for full phase details.
 
 </details>
 
+### v1.5 Phase Details (Phases 26-31)
+
+### Phase 26: Runtime Stability
+**Goal**: Tick engine runs without known bugs so subsequent phases build on a solid foundation
+**Depends on**: Phase 25 (v1.4 complete)
+**Requirements**: STAB-01, STAB-02
+**Success Criteria** (what must be TRUE):
+  1. The execute-work-task function returns its json-object result from the correct let* scope without paren mismatch
+  2. All 7 tick engine fixes from the 2026-03-29 session (UTF-8 pg-escape, NULL handling, tilde SQL, type coercion, description column) are committed and loadable by SBCL without errors
+  3. A full tick cycle completes without runtime errors on the live system
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
+### Phase 27: Area Content Tables
+**Goal**: Eckenrode Muziekopname has structured content tables that the noosphere resolver can query by area scope
+**Depends on**: Phase 26
+**Requirements**: AREA-01, AREA-02, AREA-03
+**Success Criteria** (what must be TRUE):
+  1. EM area has one or more dedicated content tables with columns appropriate to its content domain
+  2. Content records are linked to the EM area via FK relationship and queryable by area scope
+  3. An InnateScipt expression like {em.content} or equivalent resolves to area-scoped content via the noosphere resolver
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
+### Phase 28: Ghost Capabilities
+**Goal**: Ghosts declare what they can do as InnateScipt expressions in their YAML, replacing the static tool registry for capability discovery and cognition
+**Depends on**: Phase 26
+**Requirements**: CAP-01, CAP-02, CAP-03, CAP-04, CAP-05, CAP-06, CAP-07
+**Success Criteria** (what must be TRUE):
+  1. A ghost's YAML file contains a responsibilities: section with valid InnateScipt expressions describing its capabilities
+  2. The tick engine reads capabilities from ghost YAML instead of tool-registry.json when determining what a ghost can do
+  3. The action planner includes the ghost's InnateScipt capabilities in LLM cognition prompts so the LLM knows what tools/actions are available
+  4. A ghost can add, edit, or remove its own responsibility expressions via cognition output, with parse-round-trip validation before persistence
+  5. An executive ghost can modify a subordinate's responsibility expressions (add new capabilities, prune outdated ones)
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
+### Phase 29: Orbis Foundation
+**Goal**: Ghosts have spatial identity in the Orbis world via YAML-defined coordinates, ship assignment, and RPG persona
+**Depends on**: Phase 26
+**Requirements**: ORBIS-01, ORBIS-02, ORBIS-03
+**Success Criteria** (what must be TRUE):
+  1. Each ghost's YAML has starting_point with x/y coordinates derived from Pantheon Formation ship assignment
+  2. Ghost YAML includes ship_assignment and rpg_persona fields that are loadable by the tick engine
+  3. Trust and energy thresholds for Orbis access are defined in ghost YAML and readable at runtime
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
+### Phase 30: Team Pipelines
+**Goal**: Department and team pipelines are defined in YAML with explicit handoff chains, replacing hardcoded pipeline advancement
+**Depends on**: Phase 28
+**Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04
+**Success Criteria** (what must be TRUE):
+  1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
+  2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
+  3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
+### Phase 31: Tool Migration
+**Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
+**Depends on**: Phase 27, Phase 28
+**Requirements**: TOOL-01, TOOL-02, TOOL-03, TOOL-04
+**Success Criteria** (what must be TRUE):
+  1. Kalshi, trading, ops, and other Python scripts have InnateScipt expression wrappers in ghost YAML responsibilities
+  2. The noosphere resolver can invoke Python scripts when evaluating an InnateScipt tool expression (e.g., a commission triggers script execution)
+  3. tool-registry.json is deleted and no code path references it -- all tool discovery flows through InnateScipt capabilities
+  4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
+**Plans**: 2 plans
+Plans:
+- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -258,3 +353,9 @@ See `.planning/milestones/v1.4-ROADMAP.md` for full phase details.
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
 | 21-25 | v1.4 | 12/12 | Complete | 2026-03-30 |
+| 26. Runtime Stability | v1.5 | 0/2 | Planning | - |
+| 27. Area Content Tables | v1.5 | 0/? | Not started | - |
+| 28. Ghost Capabilities | v1.5 | 0/? | Not started | - |
+| 29. Orbis Foundation | v1.5 | 0/? | Not started | - |
+| 30. Team Pipelines | v1.5 | 0/? | Not started | - |
+| 31. Tool Migration | v1.5 | 0/? | Not started | - |
