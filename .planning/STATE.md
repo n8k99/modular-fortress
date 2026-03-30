@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
 status: verifying
-stopped_at: Phase 25 plans verified
-last_updated: "2026-03-30T00:24:20.965Z"
-last_activity: 2026-03-29
+stopped_at: Completed 25-01-PLAN.md
+last_updated: "2026-03-30T01:31:48.947Z"
+last_activity: 2026-03-30
 progress:
   total_phases: 20
   completed_phases: 14
   total_plans: 31
-  completed_plans: 29
+  completed_plans: 30
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 Phase: 24 (template-evaluation-execution) — EXECUTING
 Plan: 2 of 2
 Status: Phase complete — ready for verification
-Last activity: 2026-03-29
+Last activity: 2026-03-30
 
 Progress (v1.4): [..........] 0%
 
@@ -66,6 +66,8 @@ Progress (v1.4): [..........] 0%
 - [Phase 24]: Standard import-from for innate packages; template-context defaults to empty string for additive enrichment
 - [Phase 24]: Moved noosphere-resolver defpackage before action-planner in packages.lisp (dependency ordering)
 - [Phase 24]: Agent IDs use DB id column (sarah, kathryn) not compound names (sarah_lin)
+- [Phase 25]: innate-builder follows same handler-case wrapping pattern as noosphere-resolver for conditional innate loading
+- [Phase 25]: Load order: noosphere-resolver -> innate-builder -> provider-adapters
 
 ### Pending Todos
 
@@ -90,9 +92,10 @@ None yet.
 | Phase 23 P02 | 4min | 3 tasks | 3 files |
 | Phase 24 P01 | 2min | 2 tasks | 3 files |
 | Phase 24 P02 | 6min | 2 tasks | 1 files |
+| Phase 25 P01 | 2min | 2 tasks | 3 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T00:24:20.959Z
-Stopped at: Phase 25 plans verified
-Resume file: .planning/phases/25-ghost-expression-generation/25-01-PLAN.md
+Last session: 2026-03-30T01:31:48.941Z
+Stopped at: Completed 25-01-PLAN.md
+Resume file: None
