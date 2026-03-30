@@ -33,7 +33,7 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 ### Tool Migration
 
 - [x] **TOOL-01**: Existing Python tools (Kalshi, trading, ops) wrapped as InnateScipt expressions
-- [x] **TOOL-02**: Noosphere resolver can invoke Python scripts when evaluating InnateScipt tool expressions
+- [ ] **TOOL-02**: Noosphere resolver can invoke Python scripts when evaluating InnateScipt tool expressions
 - [ ] **TOOL-03**: tool-registry.json retired -- all tool access flows through InnateScipt capabilities
 - [ ] **TOOL-04**: Tool execution results flow back through the same cognition pipeline
 
@@ -97,7 +97,7 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 | PIPE-03 | Phase 30 | Complete |
 | PIPE-04 | Phase 30 | Complete |
 | TOOL-01 | Phase 31 | Complete |
-| TOOL-02 | Phase 31 | Complete |
+| TOOL-02 | Phase 31 | Pending |
 | TOOL-03 | Phase 31 | Pending |
 | TOOL-04 | Phase 31 | Pending |
 

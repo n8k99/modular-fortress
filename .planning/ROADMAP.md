@@ -344,8 +344,8 @@ Plans:
   4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
 **Plans:** 1/3 plans executed
 Plans:
-- [x] 31-01-PLAN.md -- DB tool definitions in area_content + tool-definitions.lisp loader module
-- [ ] 31-02-PLAN.md -- Update all 9 ghost YAMLs with complete tool capabilities
+- [ ] 31-01-PLAN.md -- DB tool definitions in area_content + tool-definitions.lisp loader module
+- [x] 31-02-PLAN.md -- Update all 9 ghost YAMLs with complete tool capabilities
 - [ ] 31-03-PLAN.md -- Wire resolver + refactor execute-tool-call + retire registry
 
 ## Progress
