@@ -359,6 +359,6 @@ Plans:
 | 26. Runtime Stability | v1.5 | 3/3 | Complete    | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
-| 29. Orbis Foundation | v1.5 | 2/2 | Complete   | 2026-03-30 |
+| 29. Orbis Foundation | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 30. Team Pipelines | v1.5 | 0/? | Not started | - |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |
