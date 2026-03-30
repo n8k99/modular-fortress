@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
 status: verifying
-stopped_at: Completed 28-03-PLAN.md
-last_updated: "2026-03-30T17:45:36.301Z"
+stopped_at: Completed 28-04-PLAN.md (gap closure)
+last_updated: "2026-03-30T17:57:23.761Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -62,6 +62,7 @@ Progress (v1.5): [██████████] 100%
 - [Phase 28]: YAML-first capability injection: try ghost-capabilities YAML, fall back to tool-registry.json when nil (D-11)
 - [Phase 28]: Refactored mutation interface from plist to hash-table matching AF64 JSON parser output
 - [Phase 28]: Separate *capability-mutation-instructions* defparameter for modularity
+- [Phase 28]: Mutation instructions appended unconditionally in proactive-work (even without YAML capabilities), matching work-task pattern
 
 ### Pending Todos
 
@@ -86,9 +87,10 @@ None yet.
 | Phase 28 P01 | 4min | 2 tasks | 13 files |
 | Phase 28 P02 | 3min | 1 tasks | 1 files |
 | Phase 28 P03 | 6min | 2 tasks | 4 files |
+| Phase 28 P04 | 2min | 1 tasks | 2 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T17:45:36.292Z
-Stopped at: Completed 28-03-PLAN.md
+Last session: 2026-03-30T17:57:23.752Z
+Stopped at: Completed 28-04-PLAN.md (gap closure)
 Resume file: None
