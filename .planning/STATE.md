@@ -4,7 +4,7 @@ milestone: v1.5
 milestone_name: InnateScipt Capabilities
 status: verifying
 stopped_at: Completed 28-04-PLAN.md (gap closure)
-last_updated: "2026-03-30T17:57:23.761Z"
+last_updated: "2026-03-30T17:59:48.114Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -24,8 +24,8 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 ## Current Position
 
-Phase: 28 (ghost-capabilities) — EXECUTING
-Plan: 3 of 3
+Phase: 28
+Plan: Not started
 Status: Phase complete — ready for verification
 Last activity: 2026-03-30
 
