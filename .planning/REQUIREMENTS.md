@@ -1,7 +1,7 @@
 # Requirements: Noosphere Dispatch Pipeline
 
 **Defined:** 2026-03-29
-**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention — executives plan, staff execute, results report themselves.
+**Core Value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention -- executives plan, staff execute, results report themselves.
 
 ## v1.5 Requirements
 
@@ -34,7 +34,7 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 - [ ] **TOOL-01**: Existing Python tools (Kalshi, trading, ops) wrapped as InnateScipt expressions
 - [ ] **TOOL-02**: Noosphere resolver can invoke Python scripts when evaluating InnateScipt tool expressions
-- [ ] **TOOL-03**: tool-registry.json retired — all tool access flows through InnateScipt capabilities
+- [ ] **TOOL-03**: tool-registry.json retired -- all tool access flows through InnateScipt capabilities
 - [ ] **TOOL-04**: Tool execution results flow back through the same cognition pipeline
 
 ### Orbis Foundation
@@ -45,8 +45,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 ### Runtime Stability
 
-- [ ] **STAB-01**: execute-work-task paren scope bug fixed — return json-object executes in correct let* scope
-- [ ] **STAB-02**: All 7 tick engine fixes from 2026-03-29 session committed to project-noosphere-ghosts
+- [x] **STAB-01**: execute-work-task paren scope bug fixed -- return json-object executes in correct let* scope
+- [x] **STAB-02**: All 7 tick engine fixes from 2026-03-29 session committed to project-noosphere-ghosts
 
 ## Future Requirements (v1.6+)
 
@@ -65,8 +65,8 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 | Feature | Reason |
 |---------|--------|
-| Drunkard's Walk movement system | v1.6+ — v1.5 lays YAML foundation only |
-| Orbis map visualization of ghost paths | ~v1.9 — "grits and shingles" |
+| Drunkard's Walk movement system | v1.6+ -- v1.5 lays YAML foundation only |
+| Orbis map visualization of ghost paths | ~v1.9 -- "grits and shingles" |
 | Ghost-to-ghost negotiation | Ghosts execute dispatched work, don't create projects |
 | Discord output bridge | External delivery concern, not noosphere |
 | Multi-droplet distribution | Single node constraint |
@@ -77,35 +77,35 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| STAB-01 | — | Pending |
-| STAB-02 | — | Pending |
-| CAP-01 | — | Pending |
-| CAP-02 | — | Pending |
-| CAP-03 | — | Pending |
-| CAP-04 | — | Pending |
-| CAP-05 | — | Pending |
-| CAP-06 | — | Pending |
-| CAP-07 | — | Pending |
-| PIPE-01 | — | Pending |
-| PIPE-02 | — | Pending |
-| PIPE-03 | — | Pending |
-| PIPE-04 | — | Pending |
-| AREA-01 | — | Pending |
-| AREA-02 | — | Pending |
-| AREA-03 | — | Pending |
-| TOOL-01 | — | Pending |
-| TOOL-02 | — | Pending |
-| TOOL-03 | — | Pending |
-| TOOL-04 | — | Pending |
-| ORBIS-01 | — | Pending |
-| ORBIS-02 | — | Pending |
-| ORBIS-03 | — | Pending |
+| STAB-01 | Phase 26 | Complete |
+| STAB-02 | Phase 26 | Complete |
+| AREA-01 | Phase 27 | Pending |
+| AREA-02 | Phase 27 | Pending |
+| AREA-03 | Phase 27 | Pending |
+| CAP-01 | Phase 28 | Pending |
+| CAP-02 | Phase 28 | Pending |
+| CAP-03 | Phase 28 | Pending |
+| CAP-04 | Phase 28 | Pending |
+| CAP-05 | Phase 28 | Pending |
+| CAP-06 | Phase 28 | Pending |
+| CAP-07 | Phase 28 | Pending |
+| ORBIS-01 | Phase 29 | Pending |
+| ORBIS-02 | Phase 29 | Pending |
+| ORBIS-03 | Phase 29 | Pending |
+| PIPE-01 | Phase 30 | Pending |
+| PIPE-02 | Phase 30 | Pending |
+| PIPE-03 | Phase 30 | Pending |
+| PIPE-04 | Phase 30 | Pending |
+| TOOL-01 | Phase 31 | Pending |
+| TOOL-02 | Phase 31 | Pending |
+| TOOL-03 | Phase 31 | Pending |
+| TOOL-04 | Phase 31 | Pending |
 
 **Coverage:**
 - v1.5 requirements: 23 total
-- Mapped to phases: 0
-- Unmapped: 23
+- Mapped to phases: 23
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-29 after initial definition*
+*Last updated: 2026-03-29 after roadmap creation*
