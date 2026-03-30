@@ -42,7 +42,16 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ### Active
 
-(Defined in REQUIREMENTS.md for v1.3)
+(Defined in REQUIREMENTS.md for v1.4)
+
+### Recently Validated (v1.4)
+
+- ✓ Direct PostgreSQL from Lisp via SB-ALIEN FFI to libpq (zero-deps, pool size 2) — Phase 21
+- ✓ Full SQL migration: perception, energy, conversations, tasks, tick reports replace HTTP calls — Phase 22
+- ✓ Noosphere resolver connecting @, (), {} Innate symbols to master_chronicle tables — Phase 23
+- ✓ Template evaluation in ghost cognition: action-planner reads .dpn Templates, evaluates via Innate interpreter — Phase 24
+- ✓ Ghost expression generation: innate-builder module with builder functions, validation, template CRUD — Phase 25
+- ✓ Cognition pipeline integration: LLM system prompts include Innate syntax, action-executor extracts/validates/persists expressions — Phase 25
 
 ### Recently Validated (v1.3)
 
@@ -176,4 +185,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-29 — v1.4 Ghost Sovereignty milestone started*
+*Last updated: 2026-03-30 — v1.4 Phase 25 complete, all 5 phases shipped*
