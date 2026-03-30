@@ -1,33 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Ghost Sovereignty
-status: complete
-stopped_at: v1.4 milestone complete
-last_updated: "2026-03-30"
-last_activity: 2026-03-30 -- v1.4 Ghost Sovereignty shipped
+milestone: v1.5
+milestone_name: InnateScipt Capabilities
+status: active
+stopped_at: null
+last_updated: "2026-03-29"
+last_activity: 2026-03-29 -- v1.5 InnateScipt Capabilities started
 progress:
-  total_phases: 25
-  completed_phases: 25
-  total_plans: 57
-  completed_plans: 57
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-30)
+See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Planning next milestone
+**Current focus:** v1.5 InnateScipt Capabilities — defining requirements
 
 ## Current Position
 
-Phase: Complete
-Plan: N/A
-Status: v1.4 shipped — ready for /gsd:new-milestone
-Last activity: 2026-03-30
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-29 — Milestone v1.5 started
 
 Progress (v1.4): [..........] 0%
 

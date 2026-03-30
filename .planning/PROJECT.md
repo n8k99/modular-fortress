@@ -42,7 +42,21 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ### Active
 
-(Defined in REQUIREMENTS.md for v1.4)
+(Defined in REQUIREMENTS.md for v1.5)
+
+## Current Milestone: v1.5 InnateScipt Capabilities
+
+**Goal:** Replace the static tool registry with InnateScipt-defined ghost capabilities — every ghost's YAML declares what it can do as live InnateScipt expressions, with executive oversight and team pipeline definitions.
+
+**Target features:**
+- Ghost YAML responsibilities as InnateScipt expressions (replaces tool-registry.json)
+- Ghost self-modification capability (write/edit own InnateScipt)
+- Executive oversight of subordinate responsibilities (prune/add)
+- Team/department pipeline definitions with handoff chains in YAML
+- Area-scoped table for EM content (structured area tables replacing flat documents)
+- InnateScipt wrappers for existing tools (Kalshi, trading, ops Python scripts)
+- Orbis YAML foundation (starting_point coordinates, ship assignment, RPG persona)
+- Runtime stability fixes (execute-work-task paren bug, tick engine errors)
 
 ### Recently Validated (v1.4)
 
@@ -118,6 +132,9 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 - Ghosts generate valid Innate expressions with parse-round-trip validation before persistence
 - Standing orders: Nova (6 ops tools), Sylvia (editorial), Kathryn (trading + calendar)
 - All output attributed to the executing ghost via conversations table
+- **Tool registry is broken:** 75 static tools in tool-registry.json, ghosts hallucinate names that don't match (database_client vs query_db). Must be replaced.
+- **Runtime bugs found 2026-03-29:** 7 fixed (UTF-8 pg-escape, NULL handling, tilde SQL, type coercion, description column), 1 contained (execute-work-task paren scope bug)
+- **Financial tools in gotcha-workspace:** 4 Kalshi/trading Python scripts need InnateScipt wrappers
 
 **OpenClaw migration status:** 11 of 14 cron jobs migrated to ghost standing orders. Remaining 3 are OpenClaw-internal and will retire with OpenClaw itself.
 
@@ -187,4 +204,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 — after v1.4 Ghost Sovereignty milestone*
+*Last updated: 2026-03-29 — after v1.5 InnateScipt Capabilities milestone started*
