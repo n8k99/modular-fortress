@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: executing
-stopped_at: Completed 29-01-PLAN.md
-last_updated: "2026-03-30T18:25:43.910Z"
+status: verifying
+stopped_at: Completed 29-02-PLAN.md
+last_updated: "2026-03-30T18:31:38.753Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 Phase: 29 (orbis-foundation) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
@@ -66,6 +66,7 @@ Progress (v1.5): [██████████] 100%
 - [Phase 29]: Flat cond structure in parse-simple-yaml to avoid deep paren nesting
 - [Phase 29]: Serializer emission order: scalars, nested sections, top-level lists (responsibilities last)
 - [Phase 29]: write-ghost-yaml loads existing YAML before writing to preserve non-responsibility sections
+- [Phase 29]: Orbis fields as read-only YAML metadata; load-ghost-orbis returns plist for v1.6+ runtime access
 
 ### Pending Todos
 
@@ -92,9 +93,10 @@ None yet.
 | Phase 28 P03 | 6min | 2 tasks | 4 files |
 | Phase 28 P04 | 2min | 1 tasks | 2 files |
 | Phase 29 P01 | 7min | 2 tasks | 2 files |
+| Phase 29 P02 | 4min | 2 tasks | 11 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T18:25:43.897Z
-Stopped at: Completed 29-01-PLAN.md
+Last session: 2026-03-30T18:31:38.743Z
+Stopped at: Completed 29-02-PLAN.md
 Resume file: None

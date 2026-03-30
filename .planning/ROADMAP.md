@@ -318,7 +318,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
-- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
+- [x] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ### Phase 30: Team Pipelines
 **Goal**: Department and team pipelines are defined in YAML with explicit handoff chains, replacing hardcoded pipeline advancement
@@ -330,7 +330,7 @@ Plans:
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
 **Plans**: 2 plans
 Plans:
-- [ ] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
+- [x] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
 - [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
 
 ### Phase 31: Tool Migration
@@ -359,6 +359,6 @@ Plans:
 | 26. Runtime Stability | v1.5 | 3/3 | Complete    | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
-| 29. Orbis Foundation | v1.5 | 1/2 | In Progress|  |
+| 29. Orbis Foundation | v1.5 | 2/2 | Complete   | 2026-03-30 |
 | 30. Team Pipelines | v1.5 | 0/? | Not started | - |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |
