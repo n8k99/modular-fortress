@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Ghost Sovereignty
 status: executing
-stopped_at: Phase 25 plans verified
-last_updated: "2026-03-30T01:28:23.098Z"
-last_activity: 2026-03-30 -- Phase 25 execution started
+stopped_at: Completed 25-02-PLAN.md
+last_updated: "2026-03-30T01:37:52.363Z"
+last_activity: 2026-03-30
 progress:
   total_phases: 20
-  completed_phases: 14
+  completed_phases: 15
   total_plans: 31
-  completed_plans: 29
+  completed_plans: 31
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 ## Current Position
 
 Phase: 25 (ghost-expression-generation) — EXECUTING
-Plan: 1 of 2
-Status: Executing Phase 25
-Last activity: 2026-03-30 -- Phase 25 execution started
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-03-30
 
 Progress (v1.4): [..........] 0%
 
@@ -66,6 +66,8 @@ Progress (v1.4): [..........] 0%
 - [Phase 24]: Standard import-from for innate packages; template-context defaults to empty string for additive enrichment
 - [Phase 24]: Moved noosphere-resolver defpackage before action-planner in packages.lisp (dependency ordering)
 - [Phase 24]: Agent IDs use DB id column (sarah, kathryn) not compound names (sarah_lin)
+- [Phase 25]: JSON parser converts underscores to hyphens, expression keys accessed as :NAME :BODY :UPDATE
+- [Phase 25]: Innate generation instructions appended to both project-review and work-task system prompts
 
 ### Pending Todos
 
@@ -90,9 +92,10 @@ None yet.
 | Phase 23 P02 | 4min | 3 tasks | 3 files |
 | Phase 24 P01 | 2min | 2 tasks | 3 files |
 | Phase 24 P02 | 6min | 2 tasks | 1 files |
+| Phase 25 P02 | 4min | 2 tasks | 3 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T00:24:20.959Z
-Stopped at: Phase 25 plans verified
-Resume file: .planning/phases/25-ghost-expression-generation/25-01-PLAN.md
+Last session: 2026-03-30T01:37:52.349Z
+Stopped at: Completed 25-02-PLAN.md
+Resume file: None

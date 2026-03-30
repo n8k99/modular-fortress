@@ -313,7 +313,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 25-01-PLAN.md -- Builder functions, validation, slug generation, template CRUD, package wiring
-- [ ] 25-02-PLAN.md -- Cognition pipeline integration (action-planner prompts + action-executor extraction/persistence)
+- [x] 25-02-PLAN.md -- Cognition pipeline integration (action-planner prompts + action-executor extraction/persistence)
 
 ## Progress
 
@@ -327,4 +327,4 @@ Plans:
 | 22. Conversations & Tasks Direct | v1.4 | 3/3 | Complete    | 2026-03-29 |
 | 23. Noosphere Resolver | v1.4 | 2/2 | Complete    | 2026-03-29 |
 | 24. Template Evaluation & Execution | v1.4 | 2/2 | Complete   | 2026-03-29 |
-| 25. Ghost Expression Generation | v1.4 | 1/2 | In Progress|  |
+| 25. Ghost Expression Generation | v1.4 | 2/2 | Complete   | 2026-03-30 |
