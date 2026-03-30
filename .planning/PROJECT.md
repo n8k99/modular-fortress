@@ -125,16 +125,19 @@ GSD-dispatched projects must flow through to ghost execution and back without hu
 
 ## Context
 
-**Current state (post v1.4):** The full pipeline is sovereign — ghosts speak directly to PostgreSQL via libpq FFI (zero HTTP in tick path) and speak Innate natively. master_chronicle has 85+ tables with PARAT five-pillar structure. Innate interpreter v1.0 at `/opt/innatescript/` is connected via noosphere-resolver — ghosts evaluate .dpn Templates during cognition and compose new expressions via LLM generation.
+**Current state (post v1.5 Phase 30):** The full pipeline is sovereign — ghosts speak directly to PostgreSQL via libpq FFI (zero HTTP in tick path) and speak Innate natively. master_chronicle has 85+ tables with PARAT five-pillar structure. Innate interpreter v1.0 at `/opt/innatescript/` is connected via noosphere-resolver — ghosts evaluate .dpn Templates during cognition and compose new expressions via LLM generation.
 - Tick engine runs entirely over SQL: perception, conversations, tasks, energy, tiers — no dpn-api dependency
 - Noosphere resolver connects @, (), {} symbols to master_chronicle tables
 - Template evaluation enriches cognition with resolved expressions; commission delivery triggers real tools
 - Ghosts generate valid Innate expressions with parse-round-trip validation before persistence
 - Standing orders: Nova (6 ops tools), Sylvia (editorial), Kathryn (trading + calendar)
 - All output attributed to the executing ghost via conversations table
-- **Tool registry is broken:** 75 static tools in tool-registry.json, ghosts hallucinate names that don't match (database_client vs query_db). Must be replaced.
-- **Runtime bugs found 2026-03-29:** 7 fixed (UTF-8 pg-escape, NULL handling, tilde SQL, type coercion, description column), 1 contained (execute-work-task paren scope bug)
-- **Financial tools in gotcha-workspace:** 4 Kalshi/trading Python scripts need InnateScipt wrappers
+- Ghost YAML capabilities replace tool-registry.json for capability discovery (Phase 28)
+- Pipeline definitions live in master_chronicle area_content as JSONB metadata, not hardcoded defparameters (Phase 30)
+- Tick engine reloads pipeline definitions from DB each tick; 4 pipelines (engineering, investment, editorial, modular-fortress) migrated
+- Orbis spatial identity in ghost YAML (coordinates, ship assignment, RPG persona) — Phase 29
+- **Runtime bugs from 2026-03-29:** All fixed (Phase 26), paren scope bug resolved
+- **Financial tools in gotcha-workspace:** 4 Kalshi/trading Python scripts need InnateScipt wrappers (Phase 31)
 
 **OpenClaw migration status:** 11 of 14 cron jobs migrated to ghost standing orders. Remaining 3 are OpenClaw-internal and will retire with OpenClaw itself.
 
@@ -204,4 +207,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-29 — after v1.5 InnateScipt Capabilities milestone started*
+*Last updated: 2026-03-30 — after Phase 30 (Team Pipelines) completed*
