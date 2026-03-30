@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: active
-stopped_at: null
-last_updated: "2026-03-29"
-last_activity: 2026-03-29 -- v1.5 InnateScipt Capabilities started
+status: planning
+stopped_at: Phase 26 context gathered
+last_updated: "2026-03-30T06:36:19.776Z"
+last_activity: 2026-03-29 -- v1.5 roadmap created, 6 phases (26-31) mapped from 23 requirements
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 15
+  completed_phases: 10
+  total_plans: 19
+  completed_plans: 19
 ---
 
 # Project State
@@ -20,52 +20,37 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** v1.5 InnateScipt Capabilities — defining requirements
+**Current focus:** Phase 26 - Runtime Stability (v1.5 InnateScipt Capabilities)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-29 — Milestone v1.5 started
+Phase: 26 (first of 6 in v1.5, 26th overall)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-29 -- v1.5 roadmap created, 6 phases (26-31) mapped from 23 requirements
 
-Progress (v1.4): [..........] 0%
+Progress (v1.5): [..........] 0%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 45 (across v1.0-v1.3)
+- Total plans completed: 57 (across v1.0-v1.4)
 - Average duration: ~25 min
-- Total execution time: ~18.7 hours
+- Total execution time: ~23.7 hours
 
 **Recent Trend:**
 
-- v1.3 phases averaged 2.8 plans/phase
+- v1.4 phases averaged 2.4 plans/phase
 - Trend: Stable
 
 ## Accumulated Context
 
 ### Decisions
 
-- [v1.3]: PARAT five-pillar restructuring of master_chronicle
-- [v1.3]: vault_notes renamed to memories with view bridge
-- [v1.3]: agents table NOT renamed to ghosts (8 FK refs, too much blast radius)
-- [v1.4]: Direct PostgreSQL from Lisp before Innate integration (DB is prerequisite)
-- [v1.4]: Follow AF64 zero-deps convention for PostgreSQL client (no Quicklisp)
-- [Phase 21]: Used SB-ALIEN FFI to libpq.so.5 directly, maintaining AF64 zero-deps convention
-- [Phase 21]: Connection pool size 2, PQescapeLiteral for SQL injection prevention
-- [Phase 21]: handler-case per sub-query in db-perceive for error isolation; PostgreSQL EXTRACT(EPOCH) for cooldown instead of Lisp timestamp parsing
-- [Phase 21]: db-update-energy uses SQL RETURNING for atomic read-after-write; all tick-engine HTTP imports cleaned up after SQL migration
-- [Phase 22]: Cognition job DB functions as no-ops (broker manages in-memory); db-tasks after cognition-types for generate-uuid dependency
-- [Phase 22]: Used direct db-execute SQL for CLASSIFY mutations since db-update-task lacks department keyword
-- [Phase 22]: Removed empirical-rollups API calls entirely (no matching routes existed); extended db-tasks with project-id filter and scheduled-at for full migration coverage
-- [Phase 23]: No db-pool slot on noosphere-resolver -- uses *db-pool* global directly (AF64 convention)
-- [Phase 23]: Innatescript files loaded as separate --eval block before AF64 packages.lisp for cross-repo wiring
-- [Phase 23]: deliver-commission returns resistance for unknown agents per D-12 (user-locked decision)
-- [Phase 24]: Standard import-from for innate packages; template-context defaults to empty string for additive enrichment
-- [Phase 24]: Moved noosphere-resolver defpackage before action-planner in packages.lisp (dependency ordering)
-- [Phase 24]: Agent IDs use DB id column (sarah, kathryn) not compound names (sarah_lin)
+- [v1.4]: SB-ALIEN FFI to libpq (zero-deps, no Quicklisp) -- proven good
+- [v1.4]: CLOS resolver protocol for Innate -- extensible method dispatch
+- [v1.4]: LLM-generated expressions with parse-round-trip validation
 - [Phase 25]: JSON parser converts underscores to hyphens, expression keys accessed as :NAME :BODY :UPDATE
 - [Phase 25]: Innate generation instructions appended to both project-review and work-task system prompts
 
@@ -75,27 +60,18 @@ None yet.
 
 ### Blockers/Concerns
 
-- PostgreSQL client for SBCL: AF64 zero-deps convention means no Quicklisp. May need to vendor postmodern/cl-postgres or write minimal PG wire protocol client.
-- Innate interpreter 175/176 tests passing -- 1 failing test needs investigation before integration.
+- execute-work-task paren scope bug (STAB-01) -- contained but not fixed, blocks reliable tool execution
+- tool-registry.json hallucination problem -- ghosts guess tool names that don't match registry; Phase 28 (CAP) replaces this
 
 ### Quick Tasks Completed
 
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
-| 260329-nkq | Update noosphere-ghosts README.md and PROJECT_NOOSPHERE_GHOSTS.md to reflect current codebase | 2026-03-29 | f5d77cf | [260329-nkq](./quick/260329-nkq-update-noosphere-ghosts-readme-md-and-pr/) |
-| Phase 21 P03 | 3min | 2 tasks | 4 files |
-| Phase 22 P01 | 7min | 2 tasks | 6 files |
-| Phase 22 P02 | 8min | 2 tasks | 2 files |
-| Phase 22 P03 | 10min | 2 tasks | 11 files |
-| 260329-py3 | Build GitHub sync module for noosphere-ghosts (util/github.lisp) | 2026-03-29 | 9881944 | [260329-py3](./quick/260329-py3-build-github-sync-module-for-noosphere-g/) |
-| Phase 23 P01 | 2min | 2 tasks | 3 files |
-| Phase 23 P02 | 4min | 3 tasks | 3 files |
-| Phase 24 P01 | 2min | 2 tasks | 3 files |
-| Phase 24 P02 | 6min | 2 tasks | 1 files |
-| Phase 25 P02 | 4min | 2 tasks | 3 files |
+| 260329-nkq | Update noosphere-ghosts README.md and PROJECT_NOOSPHERE_GHOSTS.md | 2026-03-29 | f5d77cf | [260329-nkq](./quick/260329-nkq-update-noosphere-ghosts-readme-md-and-pr/) |
+| 260329-py3 | Build GitHub sync module for noosphere-ghosts | 2026-03-29 | 9881944 | [260329-py3](./quick/260329-py3-build-github-sync-module-for-noosphere-g/) |
 
 ## Session Continuity
 
-Last session: 2026-03-30T01:37:52.349Z
-Stopped at: Completed 25-02-PLAN.md
-Resume file: None
+Last session: 2026-03-30T06:36:19.765Z
+Stopped at: Phase 26 context gathered
+Resume file: .planning/phases/26-runtime-stability/26-CONTEXT.md
