@@ -66,8 +66,8 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 
 **Milestone Goal:** Replace the static tool registry with InnateScipt-defined ghost capabilities -- every ghost's YAML declares what it can do as live InnateScipt expressions, with executive oversight and team pipeline definitions.
 
-- [ ] **Phase 26: Runtime Stability** - Fix the execute-work-task paren bug and commit all tick engine fixes before building on top
-- [ ] **Phase 27: Area Content Tables** - Structured area-scoped content tables for Eckenrode Muziekopname replacing flat documents
+- [x] **Phase 26: Runtime Stability** - Fix the execute-work-task paren bug and commit all tick engine fixes before building on top
+- [x] **Phase 27: Area Content Tables** - Structured area-scoped content tables for Eckenrode Muziekopname replacing flat documents
 - [ ] **Phase 28: Ghost Capabilities** - YAML-defined InnateScipt responsibilities replace tool-registry.json for ghost capability declaration and cognition
 - [ ] **Phase 29: Orbis Foundation** - YAML coordinates, ship assignment, and RPG persona fields for ghost spatial identity
 - [ ] **Phase 30: Team Pipelines** - YAML-defined pipeline handoff chains replace hardcoded pipeline advancement logic
@@ -290,10 +290,6 @@ Plans:
 - [x] 27-01-PLAN.md -- Create area_content table and populate from EM documents
 - [x] 27-02-PLAN.md -- Extend noosphere resolver load-bundle for area content queries
 
-
-
-
-
 ### Phase 28: Ghost Capabilities
 **Goal**: Ghosts declare what they can do as InnateScipt expressions in their YAML, replacing the static tool registry for capability discovery and cognition
 **Depends on**: Phase 26
@@ -304,10 +300,11 @@ Plans:
   3. The action planner includes the ghost's InnateScipt capabilities in LLM cognition prompts so the LLM knows what tools/actions are available
   4. A ghost can add, edit, or remove its own responsibility expressions via cognition output, with parse-round-trip validation before persistence
   5. An executive ghost can modify a subordinate's responsibility expressions (add new capabilities, prune outdated ones)
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
-- [x] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
-- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+- [ ] 28-01-PLAN.md -- YAML parser, ghost-capabilities module, 9 agent YAML files
+- [ ] 28-02-PLAN.md -- Action planner capability injection in all 4 prompt builders
+- [ ] 28-03-PLAN.md -- Responsibility self-modification and executive override
 
 ### Phase 29: Orbis Foundation
 **Goal**: Ghosts have spatial identity in the Orbis world via YAML-defined coordinates, ship assignment, and RPG persona
@@ -317,10 +314,7 @@ Plans:
   1. Each ghost's YAML has starting_point with x/y coordinates derived from Pantheon Formation ship assignment
   2. Ghost YAML includes ship_assignment and rpg_persona fields that are loadable by the tick engine
   3. Trust and energy thresholds for Orbis access are defined in ghost YAML and readable at runtime
-**Plans**: 2 plans
-Plans:
-- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
-- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+**Plans**: [To be planned]
 
 ### Phase 30: Team Pipelines
 **Goal**: Department and team pipelines are defined in YAML with explicit handoff chains, replacing hardcoded pipeline advancement
@@ -330,10 +324,7 @@ Plans:
   1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
   2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
-**Plans**: 2 plans
-Plans:
-- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
-- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+**Plans**: [To be planned]
 
 ### Phase 31: Tool Migration
 **Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
@@ -344,10 +335,7 @@ Plans:
   2. The noosphere resolver can invoke Python scripts when evaluating an InnateScipt tool expression (e.g., a commission triggers script execution)
   3. tool-registry.json is deleted and no code path references it -- all tool discovery flows through InnateScipt capabilities
   4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
-**Plans**: 2 plans
-Plans:
-- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
-- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+**Plans**: [To be planned]
 
 ## Progress
 
@@ -360,7 +348,7 @@ Plans:
 | 21-25 | v1.4 | 12/12 | Complete | 2026-03-30 |
 | 26. Runtime Stability | v1.5 | 3/3 | Complete    | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
-| 28. Ghost Capabilities | v1.5 | 0/? | Not started | - |
+| 28. Ghost Capabilities | v1.5 | 0/3 | Planning    | - |
 | 29. Orbis Foundation | v1.5 | 0/? | Not started | - |
 | 30. Team Pipelines | v1.5 | 0/? | Not started | - |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |
