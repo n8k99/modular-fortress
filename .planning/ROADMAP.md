@@ -362,4 +362,4 @@ Plans:
 | 28. Ghost Capabilities | v1.5 | 4/4 | Complete    | 2026-03-30 |
 | 29. Orbis Foundation | v1.5 | 2/2 | Complete    | 2026-03-30 |
 | 30. Team Pipelines | v1.5 | 2/2 | Complete    | 2026-03-30 |
-| 31. Tool Migration | v1.5 | 3/3 | Complete   | 2026-03-30 |
+| 31. Tool Migration | v1.5 | 3/3 | Complete    | 2026-03-30 |
