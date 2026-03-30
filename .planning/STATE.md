@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: executing
-stopped_at: Completed 27-01-PLAN.md
-last_updated: "2026-03-30T07:57:42.763Z"
+status: verifying
+stopped_at: Completed 27-02-PLAN.md
+last_updated: "2026-03-30T16:59:07.754Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 Phase: 27 (area-content-tables) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
@@ -57,6 +57,7 @@ Progress (v1.5): [██████████] 100%
 - [Phase 26]: action-error entries are caught handler-case errors (not crashes), confirming STAB-01 paren fix works
 - [Phase 26]: Surgical 2-char paren fix: remove one paren from line 497, add one to line 612 — outer let* scope restored
 - [Phase 27]: Single transaction for DDL + data migration ensures atomicity
+- [Phase 27]: Area content bundles return data plists (not AST nodes); hardcoded *area-slug-map* for slug resolution
 
 ### Pending Todos
 
@@ -77,9 +78,10 @@ None yet.
 | Phase 26 P02 | 3min | 2 tasks | 0 files |
 | Phase 26 P03 | 4min | 2 tasks | 1 files |
 | Phase 27 P01 | 2min | 1 tasks | 1 files |
+| Phase 27-area-content-tables P02 | 4min | 2 tasks | 2 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T07:57:42.757Z
-Stopped at: Completed 27-01-PLAN.md
+Last session: 2026-03-30T16:59:07.743Z
+Stopped at: Completed 27-02-PLAN.md
 Resume file: None
