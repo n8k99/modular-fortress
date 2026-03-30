@@ -302,7 +302,7 @@ Plans:
   5. An executive ghost can modify a subordinate's responsibility expressions (add new capabilities, prune outdated ones)
 **Plans**: 3 plans
 Plans:
-- [ ] 28-01-PLAN.md -- YAML parser, ghost-capabilities module, 9 agent YAML files
+- [x] 28-01-PLAN.md -- YAML parser, ghost-capabilities module, 9 agent YAML files
 - [ ] 28-02-PLAN.md -- Action planner capability injection in all 4 prompt builders
 - [ ] 28-03-PLAN.md -- Responsibility self-modification and executive override
 
@@ -348,7 +348,7 @@ Plans:
 | 21-25 | v1.4 | 12/12 | Complete | 2026-03-30 |
 | 26. Runtime Stability | v1.5 | 3/3 | Complete    | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 2/2 | Complete    | 2026-03-30 |
-| 28. Ghost Capabilities | v1.5 | 0/3 | Planning    | - |
+| 28. Ghost Capabilities | v1.5 | 1/3 | In Progress|  |
 | 29. Orbis Foundation | v1.5 | 0/? | Not started | - |
 | 30. Team Pipelines | v1.5 | 0/? | Not started | - |
 | 31. Tool Migration | v1.5 | 0/? | Not started | - |

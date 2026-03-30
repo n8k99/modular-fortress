@@ -9,13 +9,13 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 
 ### Ghost Capabilities
 
-- [ ] **CAP-01**: Ghost YAML has responsibilities: section with InnateScipt expressions defining its capabilities
-- [ ] **CAP-02**: Tick engine evaluates ghost YAML capabilities instead of looking up tool-registry.json
+- [x] **CAP-01**: Ghost YAML has responsibilities: section with InnateScipt expressions defining its capabilities
+- [x] **CAP-02**: Tick engine evaluates ghost YAML capabilities instead of looking up tool-registry.json
 - [ ] **CAP-03**: Action planner injects ghost's InnateScipt capabilities into LLM cognition prompts
 - [ ] **CAP-04**: Ghost can write new InnateScipt expressions to its own responsibilities via cognition output
 - [ ] **CAP-05**: Ghost can edit/remove its own responsibility expressions via cognition output
 - [ ] **CAP-06**: Executive ghost can edit subordinate ghost responsibilities (add/prune capabilities)
-- [ ] **CAP-07**: Capability changes validated via InnateScipt parse-round-trip before persistence
+- [x] **CAP-07**: Capability changes validated via InnateScipt parse-round-trip before persistence
 
 ### Team Pipelines
 
@@ -82,13 +82,13 @@ Requirements for InnateScipt Capabilities milestone. Each maps to roadmap phases
 | AREA-01 | Phase 27 | Complete |
 | AREA-02 | Phase 27 | Complete |
 | AREA-03 | Phase 27 | Complete |
-| CAP-01 | Phase 28 | Pending |
-| CAP-02 | Phase 28 | Pending |
+| CAP-01 | Phase 28 | Complete |
+| CAP-02 | Phase 28 | Complete |
 | CAP-03 | Phase 28 | Pending |
 | CAP-04 | Phase 28 | Pending |
 | CAP-05 | Phase 28 | Pending |
 | CAP-06 | Phase 28 | Pending |
-| CAP-07 | Phase 28 | Pending |
+| CAP-07 | Phase 28 | Complete |
 | ORBIS-01 | Phase 29 | Pending |
 | ORBIS-02 | Phase 29 | Pending |
 | ORBIS-03 | Phase 29 | Pending |
