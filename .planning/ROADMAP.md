@@ -328,10 +328,9 @@ Plans:
   1. Department/team YAML files contain an assignments: section defining pipeline steps with ghost assignments per step
   2. The tick engine reads pipeline definitions from YAML and routes handoffs between ghosts according to the defined step sequence
   3. Each task in a pipeline tracks its current step and next ghost in task metadata, advancing automatically on step completion
-**Plans**: 2 plans
 Plans:
-- [x] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
-- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
+- [ ] 30-01-PLAN.md
+- [ ] 30-02-PLAN.md
 
 ### Phase 31: Tool Migration
 **Goal**: All existing Python tools are accessible as InnateScipt expressions, and tool-registry.json is retired
@@ -342,10 +341,9 @@ Plans:
   2. The noosphere resolver can invoke Python scripts when evaluating an InnateScipt tool expression (e.g., a commission triggers script execution)
   3. tool-registry.json is deleted and no code path references it -- all tool discovery flows through InnateScipt capabilities
   4. Tool execution results flow back through the cognition pipeline as conversation output attributed to the executing ghost
-**Plans**: 2 plans
 Plans:
-- [ ] 29-01-PLAN.md -- Extend YAML parser for nested sections and refactor write-ghost-yaml
-- [ ] 29-02-PLAN.md -- Populate all 9 ghost YAML files with Orbis spatial identity fields
+- [ ] 31-01-PLAN.md
+- [ ] 31-02-PLAN.md
 
 ## Progress
 
