@@ -68,9 +68,9 @@ See `.planning/milestones/v1.3-ROADMAP.md` for full phase details.
 
 - [x] **Phase 26: Runtime Stability** - Fix the execute-work-task paren bug and commit all tick engine fixes before building on top
 - [x] **Phase 27: Area Content Tables** - Structured area-scoped content tables for Eckenrode Muziekopname replacing flat documents
-- [ ] **Phase 28: Ghost Capabilities** - YAML-defined InnateScipt responsibilities replace tool-registry.json for ghost capability declaration and cognition
-- [ ] **Phase 29: Orbis Foundation** - YAML coordinates, ship assignment, and RPG persona fields for ghost spatial identity
-- [ ] **Phase 30: Team Pipelines** - YAML-defined pipeline handoff chains replace hardcoded pipeline advancement logic
+- [x] **Phase 28: Ghost Capabilities** - YAML-defined InnateScipt responsibilities replace tool-registry.json for ghost capability declaration and cognition
+- [x] **Phase 29: Orbis Foundation** - YAML coordinates, ship assignment, and RPG persona fields for ghost spatial identity
+- [x] **Phase 30: Team Pipelines** - YAML-defined pipeline handoff chains replace hardcoded pipeline advancement logic
 - [ ] **Phase 31: Tool Migration** - Existing Python tools wrapped as InnateScipt expressions, tool-registry.json retired
 
 ## Phase Details
