@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: InnateScipt Capabilities
-status: executing
-stopped_at: Completed 28-02-PLAN.md
-last_updated: "2026-03-30T17:37:04.925Z"
+status: verifying
+stopped_at: Completed 28-03-PLAN.md
+last_updated: "2026-03-30T17:45:36.301Z"
 last_activity: 2026-03-30
 progress:
   total_phases: 15
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 Phase: 28 (ghost-capabilities) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-30
 
 Progress (v1.5): [██████████] 100%
@@ -60,6 +60,8 @@ Progress (v1.5): [██████████] 100%
 - [Phase 27]: Area content bundles return data plists (not AST nodes); hardcoded *area-slug-map* for slug resolution
 - [Phase 28]: Custom YAML parser (zero-deps) for agent config; dots not hyphens/colons in InnateScipt expressions
 - [Phase 28]: YAML-first capability injection: try ghost-capabilities YAML, fall back to tool-registry.json when nil (D-11)
+- [Phase 28]: Refactored mutation interface from plist to hash-table matching AF64 JSON parser output
+- [Phase 28]: Separate *capability-mutation-instructions* defparameter for modularity
 
 ### Pending Todos
 
@@ -83,9 +85,10 @@ None yet.
 | Phase 27-area-content-tables P02 | 4min | 2 tasks | 2 files |
 | Phase 28 P01 | 4min | 2 tasks | 13 files |
 | Phase 28 P02 | 3min | 1 tasks | 1 files |
+| Phase 28 P03 | 6min | 2 tasks | 4 files |
 
 ## Session Continuity
 
-Last session: 2026-03-30T17:37:04.918Z
-Stopped at: Completed 28-02-PLAN.md
+Last session: 2026-03-30T17:45:36.292Z
+Stopped at: Completed 28-03-PLAN.md
 Resume file: None
