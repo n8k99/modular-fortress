@@ -275,7 +275,7 @@ See `.planning/milestones/v1.4-ROADMAP.md` for full phase details.
 Plans:
 - [x] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
 - [x] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
-- [ ] 26-03-PLAN.md -- Gap closure: fix outer let* scope in execute-work-task
+- [x] 26-03-PLAN.md -- Gap closure: fix outer let* scope in execute-work-task
 
 ### Phase 27: Area Content Tables
 **Goal**: Eckenrode Muziekopname has structured content tables that the noosphere resolver can query by area scope
@@ -288,7 +288,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
-- [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
+- [x] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
 
 ### Phase 28: Ghost Capabilities
 **Goal**: Ghosts declare what they can do as InnateScipt expressions in their YAML, replacing the static tool registry for capability discovery and cognition
@@ -302,7 +302,7 @@ Plans:
   5. An executive ghost can modify a subordinate's responsibility expressions (add new capabilities, prune outdated ones)
 **Plans**: 2 plans
 Plans:
-- [ ] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
+- [x] 26-01-PLAN.md -- Fix paren bug and commit all 9 tick engine fixes
 - [ ] 26-02-PLAN.md -- Live tick cycle verification and human sign-off
 
 ### Phase 29: Orbis Foundation
@@ -354,7 +354,7 @@ Plans:
 | 11-15 | v1.2 | 8/8 | Complete | 2026-03-28 |
 | 16-20 | v1.3 | 14/14 | Complete | 2026-03-29 |
 | 21-25 | v1.4 | 12/12 | Complete | 2026-03-30 |
-| 26. Runtime Stability | v1.5 | 2/2 | Complete   | 2026-03-30 |
+| 26. Runtime Stability | v1.5 | 3/3 | Complete   | 2026-03-30 |
 | 27. Area Content Tables | v1.5 | 0/? | Not started | - |
 | 28. Ghost Capabilities | v1.5 | 0/? | Not started | - |
 | 29. Orbis Foundation | v1.5 | 0/? | Not started | - |
