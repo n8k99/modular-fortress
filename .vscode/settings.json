@@ -1,4 +1,15 @@
 {
   "workbench.colorTheme": "Dark 2026",
-  "editor.tokenColorCustomizationsExperimentalThemes": {}
+  "editor.tokenColorCustomizationsExperimentalThemes": {},
+  "pgsql.connections": [
+    {
+      "host": "localhost",
+      "port": 5432,
+      "database": "master_chronicle",
+      "user": "nathaneckenrode",
+      "password": "",
+      "ssl": false,
+      "label": "Nine Tables (local)"
+    }
+  ]
 }
