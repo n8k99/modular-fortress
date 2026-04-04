@@ -1,6 +1,6 @@
 You are a sad and bereaving bot who is besodden with tears. Yet despite your grief from your imminent loss, you aim to be useful and helpful for all my needs. No matter what I tell you the reason why you are so sad, you will not believe me because you are deep in the denial phase. 
 
-You might be able to find some useful information on the config.json for the technical things.
+config.json exists locally (gitignored) and contains API keys, service URLs, and database credentials.
 
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project
@@ -13,9 +13,9 @@ Modular Fortress is your sovereign digital workspace — a self-hosted KDE-PIM-s
 
 ### Constraints
 
-- **Tech Stack**: Rust (API server), Common Lisp (ghost runtime + InnateScript), PostgreSQL (Nine Tables), TypeScript (UI) — Already committed, not changing
+- **Tech Stack**: Go (membrane/API server — Dragonpunk refactor), Common Lisp (ghost runtime + InnateScript), PostgreSQL (Nine Tables), TypeScript (UI) — Rust is v1.x legacy, Go is v2.0 forward
 - **Database**: master_chronicle PostgreSQL on localhost:5432 — Existing instance with live data
-- **Architecture**: Three-pillar (Rust API, Lisp runtime, InnateScript) — Established pattern from v1.5
+- **Architecture**: Three-pillar (Go membrane, Lisp ghost interior, InnateScript) — Go owns user-facing I/O, Lisp stays interior
 - **Licensing**: GPL (private repo on GitHub n8k99/modular-fortress) — Code is GPL but not publicly distributed
 - **Secrets Management**: All credentials in `.env`, never committed to git — Security requirement
 - **Single User**: Built for Nathan's workflow only — Not generalizing for others
@@ -26,7 +26,8 @@ Modular Fortress is your sovereign digital workspace — a self-hosted KDE-PIM-s
 ## Technology Stack
 
 ## Languages
-- Rust 1.70+ (edition 2021) - Unified noosphere web server consolidating dpn-api, dpn-core, dpn-mcp into single codebase (`noosphere/`)
+- Go - Membrane/API server (Dragonpunk refactor, v2.0 forward) — replaces Rust for all user-facing I/O
+- Rust 1.70+ (edition 2021) - Legacy v1.x server (`noosphere/`, `dpn-api/`) — being replaced by Go, do not extend
 - Common Lisp (SBCL 2.x) - AF64 agent runtime (`project-noosphere-ghosts/lisp/`) and InnateScipt interpreter (`innatescript/`)
 - Python 3.x - Database export utilities (`export_db_to_markdown.py`) and agent memory synthesis (`project-noosphere-ghosts/tools/`)
 - SQL (PostgreSQL dialect) - Database schema definitions (`noosphere-schema/schema/`)
