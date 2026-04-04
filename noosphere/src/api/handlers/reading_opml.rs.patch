@@ -1,0 +1,14 @@
+/// Import OPML subscription list
+pub async fn import_opml(
+    State(pool): State<DbPool>,
+    body: String,
+) -> Result<Json<Value>, ApiError> {
+    let count = dpn_core::import_opml(&pool, &body)
+        .await
+        .map_err(|e| ApiError::Database(e.to_string()))?;
+
+    Ok(Json(serde_json::json!({
+        success: true,
+        imported: count
+    })))
+}

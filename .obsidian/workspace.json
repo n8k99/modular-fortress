@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "68d8e5b67b7c1b03",
+    "type": "split",
+    "children": [
+      {
+        "id": "765a4d6b38132742",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "58401169c5bd3cc5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ROADMAP.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ROADMAP"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "11eed1f24ce98f0b",
+    "type": "split",
+    "children": [
+      {
+        "id": "201915b458f41df3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8d861d5d008dea60",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "32916347d0202a79",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "91044ee243089978",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "c2b75144208ad96c",
+    "type": "split",
+    "children": [
+      {
+        "id": "c6f8879ed257d889",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "746f22dbe584fbbb",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Modular Fortress.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Modular Fortress"
+            }
+          },
+          {
+            "id": "4a3717f0d05c2ec7",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Modular Fortress.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Modular Fortress"
+            }
+          },
+          {
+            "id": "91d9c7cf5daaeb67",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "bd132331470fb835",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "307be523f4285b6e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Modular Fortress.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Modular Fortress"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "58401169c5bd3cc5",
+  "lastOpenFiles": [
+    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/work-products.bin",
+    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/query-cache.bin",
+    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/dep-graph.bin",
+    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc",
+    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/work-products.bin",
+    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/query-cache.bin",
+    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/dep-graph.bin",
+    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92",
+    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-working/dep-graph.bin",
+    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-working/dep-graph.bin",
+    "noosphere/target/debug/deps/libnoosphere-2e676ef9a26f3e7b.rmeta",
+    "Modular Fortress.md",
+    "ROADMAP.md",
+    "dpn-core/analysis/schema-migration.md",
+    "dpn-core/analysis/dedup-report.md",
+    "CLAUDE.md"
+  ]
+}

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noosphere Vault — Structure Map</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap');
+
+:root {
+  --void: #08080D;
+  --smoke: #13131A;
+  --panel: #0F0F16;
+  --ember: #C8860A;
+  --ember-mid: #8B5E00;
+  --ember-dim: rgba(200,134,10,0.15);
+  --cyan: #00B8C0;
+  --text: #D8D4CC;
+  --text-dim: #777770;
+  --text-muted: #44443F;
+  --border: rgba(200,134,10,0.18);
+  --border-dim: rgba(200,134,10,0.07);
+
+  --epic:    #7C6FD4;
+  --epic-bg: rgba(124,111,212,0.07);
+  --realm:   #2E9E78;
+  --realm-bg:rgba(46,158,120,0.07);
+  --police:  #C45A1A;
+  --police-bg:rgba(196,90,26,0.07);
+  --success: #B87015;
+  --success-bg:rgba(184,112,21,0.07);
+  --music:   #8E4BB0;
+  --music-bg:rgba(142,75,176,0.07);
+  --digital: #1A6FAA;
+  --digital-bg:rgba(26,111,170,0.07);
+  --res:     #5A7A3A;
+  --res-bg:  rgba(90,122,58,0.07);
+  --tasks:   #A03060;
+  --tasks-bg:rgba(160,48,96,0.07);
+  --comms:   #3A7A8A;
+  --comms-bg:rgba(58,122,138,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  padding: 56px 48px 80px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 15% 0%, rgba(200,134,10,0.035) 0%, transparent 65%),
+    radial-gradient(ellipse 500px 700px at 85% 90%, rgba(0,184,192,0.025) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* HEADER */
+header { margin-bottom: 72px; }
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--ember-mid);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 0.9;
+  margin-bottom: 4px;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--ember);
+}
+
+.tagline {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.meta-row {
+  display: flex;
+  gap: 40px;
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.meta-row b { color: var(--ember-mid); font-weight: 400; margin-right: 6px; }
+
+/* LAYOUT */
+.vault {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+/* DOMAIN CARD */
+.domain {
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--panel);
+  transition: border-color 0.25s, transform 0.2s;
+  position: relative;
+}
+
+.domain:hover {
+  border-color: var(--border);
+  transform: translateY(-1px);
+}
+
+.domain-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border-dim);
+  position: relative;
+}
+
+.domain-glyph {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.domain-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.domain-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+
+.domain-body { padding: 16px 20px; }
+
+/* SUBDIRECTORY */
+.subdir {
+  margin-bottom: 12px;
+}
+
+.subdir-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.subdir-items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.item {
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.item::before {
+  content: '·';
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.item.active { color: var(--text); }
+.item.note { color: var(--text-muted); font-style: italic; font-size: 9px; }
+.item.flag { color: #E24B4A; }
+.item.flag::before { content: '!'; color: #E24B4A; }
+
+.accent { color: var(--ember); }
+
+/* SUBSTRATE CARDS (full width) */
+.substrate {
+  grid-column: span 1;
+}
+
+.substrate-wide {
+  grid-column: span 2;
+}
+
+/* PIPELINE SECTION */
+.pipelines {
+  margin-top: 40px;
+  grid-column: 1 / -1;
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  background: var(--panel);
+  padding: 24px 28px;
+}
+
+.pipelines-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 14px;
+}
+
+.pipeline-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.pipeline-row:last-child { margin-bottom: 0; }
+
+.pipe-name {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ember-mid);
+  width: 220px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.pipe-flow {
+  font-size: 11px;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.pipe-flow .g {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.pipe-flow .arr {
+  color: var(--ember-mid);
+  margin: 0 3px;
+  font-size: 10px;
+}
+
+/* FOOTER */
+footer {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.logotype {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--ember-mid);
+  letter-spacing: 2px;
+}
+
+/* COLOR THEMING PER DOMAIN */
+.epic    { --accent: var(--epic);    --accent-bg: var(--epic-bg); }
+.realm   { --accent: var(--realm);   --accent-bg: var(--realm-bg); }
+.police  { --accent: var(--police);  --accent-bg: var(--police-bg); }
+.success { --accent: var(--success); --accent-bg: var(--success-bg); }
+.music   { --accent: var(--music);   --accent-bg: var(--music-bg); }
+.digital { --accent: var(--digital); --accent-bg: var(--digital-bg); }
+.res     { --accent: var(--res);     --accent-bg: var(--res-bg); }
+.tasks   { --accent: var(--tasks);   --accent-bg: var(--tasks-bg); }
+.comms   { --accent: var(--comms);   --accent-bg: var(--comms-bg); }
+
+.domain .domain-header  { background: var(--accent-bg); }
+.domain .domain-glyph   { color: var(--accent); opacity: 1; }
+.domain .domain-name    { color: var(--accent); }
+.domain .subdir-label   { color: var(--accent); opacity: 0.5; }
+
+/* ACCENT STRIPE */
+.domain::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.4;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="eyebrow">Ghosts in the Noosphere · Vault Architecture · 2026-03-30</div>
+  <h1>The<br><em>Noosphere</em></h1>
+  <div class="tagline">Seven sovereign domains · Three substrate layers · master_chronicle</div>
+  <div class="meta-row">
+    <div><b>db</b>postgresql://chronicle@127.0.0.1:5432/master_chronicle</div>
+    <div><b>tables</b>89</div>
+    <div><b>abstractor</b>N8K99 — Cosmic</div>
+    <div><b>language</b>Innate (.dpn)</div>
+  </div>
+</header>
+
+<div class="vault">
+
+  <!-- GRAND EPICS -->
+  <div class="domain epic">
+    <div class="domain-header">
+      <div class="domain-glyph">Grand Epics &amp; Master Chronicles</div>
+      <div class="domain-name">The Chronicles</div>
+      <div class="domain-sub">Narrative canon · Historical ages · Story arcs</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">story projects</div>
+        <div class="subdir-items">
+          <div class="item active">Blood on the Infernal Route/</div>
+          <div class="item">Historical Ages Hierarchy/</div>
+          <div class="item">Narrative arcs, timelines</div>
+          <div class="item">Canon decisions log</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">tables</div>
+        <div class="subdir-items">
+          <div class="item">archives</div>
+          <div class="item">document_versions</div>
+          <div class="item note">Immutable once canon is set</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOVEREIGN REALMS -->
+  <div class="domain realm">
+    <div class="domain-header">
+      <div class="domain-glyph">Sovereign Realms of Orbis</div>
+      <div class="domain-name">The Realms</div>
+      <div class="domain-sub">Present-day worldbuilding · Ghost movement · Burg pipeline</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">proposed: orbis_entities table</div>
+        <div class="subdir-items">
+          <div class="item active flag">extracted from documents — migration pending</div>
+          <div class="item">type: [[Burg]] [[Dungeon]] [[Province]]</div>
+          <div class="item">Lifestage: 🌱 Seed → Sapling → Tree</div>
+          <div class="item">x / y · latitude / longitude</div>
+          <div class="item">parent_province · parent_state</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">ghost movement</div>
+        <div class="subdir-items">
+          <div class="item">starting_point: colony ship</div>
+          <div class="item">trust: + energy: ← real work</div>
+          <div class="item">roads · rivers · flight · teleport</div>
+          <div class="item">biography: + orbis_narratives:</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THOUGHT POLICE -->
+  <div class="domain police">
+    <div class="domain-header">
+      <div class="domain-glyph">Thought Police</div>
+      <div class="domain-name">The Press</div>
+      <div class="domain-sub">Editorials · Research · Hero images · Executive blogging</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">publishing pipeline</div>
+        <div class="subdir-items">
+          <div class="item">Research backing per post</div>
+          <div class="item">Editorial draft (Sylvia)</div>
+          <div class="item">Hero image — DPN style (Vincent)</div>
+          <div class="item">Publish → Ghost CMS</div>
+          <div class="item">Executive blogging → em-site</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">research surface</div>
+        <div class="subdir-items">
+          <div class="item">Sophie Lee tags → lands in @Resources</div>
+          <div class="item">feeds editorial idea queue</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLETE SUCCESS -->
+  <div class="domain success">
+    <div class="domain-header">
+      <div class="domain-glyph">Complete Success · Phase 1: Paper Trade</div>
+      <div class="domain-name">The Markets</div>
+      <div class="domain-sub">Financial pipeline · OANDA · Kalshi · 1hr before opens</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">trading tables (17)</div>
+        <div class="subdir-items">
+          <div class="item">forex_paper_trades · forex_news_scores</div>
+          <div class="item">trade_journal_entries · trade_log</div>
+          <div class="item">positions · position_events · orders</div>
+          <div class="item">market_data · market_alerts · signals</div>
+          <div class="item">kalshi_markets · kalshi_snapshots</div>
+          <div class="item">probability_scores · sentiment_scores</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">hard constraints</div>
+        <div class="subdir-items">
+          <div class="item flag">No stoploss → no order. Structural.</div>
+          <div class="item">Max 20% bankroll per position</div>
+          <div class="item">Paper first. Real money after proven.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVING ROOM MUSIC -->
+  <div class="domain music">
+    <div class="domain-header">
+      <div class="domain-glyph">Living Room Music</div>
+      <div class="domain-name">The Music</div>
+      <div class="domain-sub">Podcast · Musicology · Episodes · Audio analysis</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">tables</div>
+        <div class="subdir-items">
+          <div class="item">lrm_corpus</div>
+          <div class="item">episodes</div>
+          <div class="item">wave_calendar</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">audio → @Resources</div>
+        <div class="subdir-items">
+          <div class="item">audio_files · audio_features</div>
+          <div class="item">music_files · chroma · spectral</div>
+          <div class="item note">Files live in Resources, metadata here</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">owner</div>
+        <div class="subdir-items">
+          <div class="item active">L.R. Morgenstern — Head of Musicology</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIGITAL SOVEREIGNTY -->
+  <div class="domain digital">
+    <div class="domain-header">
+      <div class="domain-glyph">Digital Sovereignty</div>
+      <div class="domain-name">The Forge</div>
+      <div class="domain-sub">Infrastructure · Language · Ghost substrate · AGPL</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">sub-projects</div>
+        <div class="subdir-items">
+          <div class="item active">Modular Fortress/ ← Go + Lisp</div>
+          <div class="item note">Strangler fig on Rust. Distills: gotcha-workspace, OpenClaw, dpn-api, PNG</div>
+          <div class="item active">Ghosts in the Noosphere/ ← absorbs EM Corp</div>
+          <div class="item note">Ghost roster, tick engine, PARAT substrate</div>
+          <div class="item active">innatescript/ ← Common Lisp</div>
+          <div class="item note">100 commits. Parser + evaluator + resolver protocol</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">license</div>
+        <div class="subdir-items">
+          <div class="item">AGPL — network loophole closed</div>
+          <div class="item">No MIT. No enclosure.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="domain res substrate">
+    <div class="domain-header">
+      <div class="domain-glyph">@Resources — shared substrate</div>
+      <div class="domain-name">The Commons</div>
+      <div class="domain-sub">No domain owns this. All domains draw from it.</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">feeds + research</div>
+        <div class="subdir-items">
+          <div class="item">rss_feeds · rss_entries</div>
+          <div class="item">fetched_articles · articles</div>
+          <div class="item">financial_feeds · news_feeds</div>
+          <div class="item">Sophie Lee tagged findings land here</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">images + maps + generative</div>
+        <div class="subdir-items">
+          <div class="item">em-images · burg maps · dungeon maps</div>
+          <div class="item">Province / state / burg emblems</div>
+          <div class="item">Pipeline generative outputs</div>
+          <div class="item">All images. Period.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="domain tasks substrate">
+    <div class="domain-header">
+      <div class="domain-glyph">@Tasks — connective tissue</div>
+      <div class="domain-name">The Work</div>
+      <div class="domain-sub">Every task points at a domain. Flat and universal.</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">tables</div>
+        <div class="subdir-items">
+          <div class="item">tasks</div>
+          <div class="item">extracted_tasks</div>
+          <div class="item">goals</div>
+          <div class="item">decisions</div>
+          <div class="item">routines</div>
+          <div class="item">issues</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">task yaml keys</div>
+        <div class="subdir-items">
+          <div class="item">domain: ← which of the 7 structures</div>
+          <div class="item">assigned: (ghost)</div>
+          <div class="item">pipeline: Engineering | null</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMUNICATIONS -->
+  <div class="domain comms substrate">
+    <div class="domain-header">
+      <div class="domain-glyph">@Communications — messaging infrastructure</div>
+      <div class="domain-name">The Post</div>
+      <div class="domain-sub">Ghost↔ghost via conversations table. You↔ghosts via email.</div>
+    </div>
+    <div class="domain-body">
+      <div class="subdir">
+        <div class="subdir-label">tables</div>
+        <div class="subdir-items">
+          <div class="item">conversations</div>
+          <div class="item">inbox ← unread, pending your action</div>
+        </div>
+      </div>
+      <div class="subdir">
+        <div class="subdir-label">vectors</div>
+        <div class="subdir-items">
+          <div class="item">ghost → ghost: conversations table</div>
+          <div class="item">ghost → me: email (SMTP on droplet)</div>
+          <div class="item">me → ghost: email reply routes back</div>
+          <div class="item">pipeline handoffs: Innate → emission</div>
+          <div class="item flag">XMPP gone · Discord gone · IRC tbd</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINES -->
+  <div class="pipelines">
+    <div class="pipelines-title">Active Pipelines</div>
+
+    <div class="pipeline-row">
+      <div class="pipe-name">Engineering</div>
+      <div class="pipe-flow">
+        <span class="g">(Eliana)</span><span class="arr">→</span>
+        <span class="g">(Samir)</span><span class="arr">→</span>
+        <span class="g">(Isaac)</span><span class="arr">→</span>
+        <span class="g">(Casey)</span><span class="arr">→</span>
+        <span class="g">(Devin)</span><span class="arr">→</span>
+        <span class="g">(Sanjay)</span><span class="arr">→</span>
+        <span class="g">(Danielle)</span><span class="arr">→</span>
+        <span class="g">(Morgan)</span>
+        <span style="color:var(--text-muted);font-size:10px;margin-left:12px">builds tools, resolvers, Innate wrappers · Morgan deploys + appends responsibilities:</span>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipe-name">Modular Fortress</div>
+      <div class="pipe-flow">
+        <span class="g">(JMax)</span><span class="arr">→</span>
+        <span class="g">(Lucas)</span><span class="arr">→</span>
+        <span class="g">(Lily)</span><span class="arr">→</span>
+        <span class="g">(Felix)</span><span class="arr">→</span>
+        <span class="g">(Elise)</span><span class="arr">→</span>
+        <span class="g">(Eliana)</span><span class="arr">→</span>
+        <span style="color:var(--ember-mid)">Engineering Pipeline</span>
+        <span style="color:var(--text-muted);font-size:10px;margin-left:12px">ethics + legal vetting · Go strangler fig on Rust · AGPL</span>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipe-name">Complete Success</div>
+      <div class="pipe-flow">
+        <span class="g">(Ethan)</span><span class="arr">→</span>
+        <span class="g">(Tobias)</span><span class="arr">→</span>
+        <span class="g">(Kathryn)</span><span class="arr">→</span>
+        <span class="g">(Lucas)</span><span class="arr">→</span>
+        <span class="g">(Kathryn)</span><span class="arr">→</span>
+        <span class="g">(JMax)</span><span class="arr">→</span>
+        <span style="color:var(--text-muted)">logged only</span>
+        <span style="color:var(--text-muted);font-size:10px;margin-left:12px">fires 1hr before London · New York · Tokyo opens</span>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipe-name">Thought Police</div>
+      <div class="pipe-flow">
+        <span class="g">(Sophie Lee)</span><span class="arr">→ @Resources →</span>
+        <span class="g">(Sylvia)</span><span class="arr">→</span>
+        <span class="g">(Vincent)</span><span class="arr">→</span>
+        <span style="color:var(--ember-mid)">Ghost CMS</span>
+        <span style="color:var(--text-muted);font-size:10px;margin-left:12px">research → editorial → DPN image → publish</span>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipe-name">Research Feed</div>
+      <div class="pipe-flow">
+        <span class="g">(Sophie Lee)</span><span class="arr">→ tagged →</span>
+        <span class="g">(Elise Park)</span><span class="arr">→ proposals →</span>
+        <span class="g">(Eliana)</span><span class="arr">→</span>
+        <span style="color:var(--ember-mid)">git[innatescript]</span>
+        <span style="color:var(--text-muted);font-size:10px;margin-left:12px">AI advances → language evolution</span>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- end vault grid -->
+
+<footer>
+  <div class="logotype">(.)(.) ghosts-in-the-noosphere</div>
+  <div>Seven domains · Three substrates · master_chronicle · 89 tables · 2026-03-30</div>
+  <div>Cosmic Abstractor: N8K99</div>
+</footer>
+
+</div>
+</body>
+</html>

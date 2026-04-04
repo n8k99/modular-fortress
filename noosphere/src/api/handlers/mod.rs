@@ -1,0 +1,27 @@
+//! API handlers
+
+pub mod health;
+pub mod auth;
+pub mod documents;
+pub mod tasks;
+pub mod events;
+pub mod projects;
+pub mod reading;
+pub mod timeline;
+pub mod graph;
+pub mod xmpp;
+pub mod agent_requests;
+pub mod af64_agents;
+pub mod af64_conversations;
+pub mod af64_tasks;
+pub mod af64_perception;
+pub mod af64_tick_log;
+pub mod af64_fitness;
+pub mod af64_drives;
+pub mod af64_documents;
+pub mod af64_memory;
+pub mod decisions;
+pub mod areas;
+pub mod archives;
+pub mod resources;
+pub mod templates;

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BumpTop — with Droplet Door</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --desk: #1a1612;
+    --desk2: #221e19;
+    --grain: rgba(255,255,255,0.025);
+    --shadow-deep: rgba(0,0,0,0.8);
+    --shadow-soft: rgba(0,0,0,0.4);
+    --paper: #f0ead8;
+    --paper-dark: #d4c9a8;
+    --ink: #2a2218;
+    --accent: #c4773a;
+    --accent2: #7a9e6b;
+    --portal-glow: #4a8fff;
+    --portal-rim: #2255cc;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--desk);
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+    cursor: default;
+    user-select: none;
+  }
+
+  /* Wood grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: 
+      repeating-linear-gradient(
+        87deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.05) 3px,
+        rgba(0,0,0,0.05) 4px
+      ),
+      repeating-linear-gradient(
+        93deg,
+        transparent,
+        transparent 8px,
+        rgba(255,255,255,0.015) 8px,
+        rgba(255,255,255,0.015) 9px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(60,45,25,0.3) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #desktop {
+    position: relative;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+
+  /* ── FILE OBJECT ── */
+  .file-obj {
+    position: absolute;
+    cursor: grab;
+    transition: filter 0.1s;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .file-obj:active { cursor: grabbing; }
+
+  .file-obj.selected .file-inner {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .file-inner {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 6px 6px;
+    border-radius: 3px;
+    background: var(--paper);
+    box-shadow:
+      2px 4px 12px var(--shadow-deep),
+      0 1px 0 var(--paper-dark) inset;
+    transition: box-shadow 0.15s;
+  }
+
+  .file-obj:hover .file-inner {
+    box-shadow:
+      4px 8px 24px var(--shadow-deep),
+      0 1px 0 var(--paper-dark) inset;
+  }
+
+  .file-icon {
+    font-size: 28px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+  }
+
+  .file-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    color: var(--ink);
+    text-align: center;
+    word-break: break-all;
+    line-height: 1.3;
+    max-width: 68px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Stack indicator */
+  .file-obj.stacked .file-inner::before {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 3px; right: 3px; height: 100%;
+    background: var(--paper-dark);
+    border-radius: 3px;
+    z-index: -1;
+    box-shadow: 0 2px 6px var(--shadow-deep);
+  }
+
+  .file-obj.stacked .file-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 6px; right: 6px; height: 100%;
+    background: #c8bda0;
+    border-radius: 3px;
+    z-index: -2;
+    box-shadow: 0 2px 4px var(--shadow-deep);
+  }
+
+  /* Throw ghost */
+  .throw-ghost {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 9999;
+  }
+
+  /* ── WALL MARKERS ── */
+  .wall {
+    position: fixed;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .wall-left   { left: 0; top: 0; width: 8px; height: 100%; }
+  .wall-right  { right: 0; top: 0; width: 8px; height: 100%; }
+  .wall-top    { top: 0; left: 0; width: 100%; height: 8px; }
+  .wall-bottom { bottom: 0; left: 0; width: 100%; height: 8px; }
+
+  /* ── DROPLET DOOR ── */
+  #droplet-door {
+    position: fixed;
+    right: 60px;
+    bottom: 60px;
+    width: 160px;
+    height: 220px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .door-frame {
+    position: absolute;
+    inset: 0;
+    border-radius: 80px 80px 6px 6px;
+    background: linear-gradient(160deg, #1a2a4a, #0d1a33);
+    box-shadow:
+      0 0 0 3px var(--portal-rim),
+      0 0 20px rgba(74,143,255,0.4),
+      0 0 60px rgba(74,143,255,0.15),
+      inset 0 0 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+
+  #droplet-door:hover .door-frame {
+    box-shadow:
+      0 0 0 3px #6699ff,
+      0 0 40px rgba(74,143,255,0.7),
+      0 0 100px rgba(74,143,255,0.3),
+      inset 0 0 30px rgba(0,0,0,0.4);
+  }
+
+  .door-sky {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, #1a3a6a, #050d1a);
+  }
+
+  /* Stars in the door */
+  .door-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur) ease-in-out infinite var(--delay);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op); }
+    50% { opacity: 1; }
+  }
+
+  .door-horizon {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 55px;
+    background: linear-gradient(to top, #0a2040, transparent);
+  }
+
+  .door-water {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: linear-gradient(to top, #0d2a4a, #0a1e38);
+    overflow: hidden;
+  }
+
+  .water-shimmer {
+    position: absolute;
+    top: 8px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(74,143,255,0.6), transparent);
+    animation: shimmer 2s linear infinite;
+  }
+
+  .water-shimmer:nth-child(2) {
+    top: 16px;
+    animation-delay: 0.7s;
+    opacity: 0.5;
+  }
+
+  .water-shimmer:nth-child(3) {
+    top: 24px;
+    animation-delay: 1.4s;
+    opacity: 0.3;
+  }
+
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+
+  /* The droplet silhouette */
+  .droplet-silhouette {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 38px;
+  }
+
+  .droplet-silhouette::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #061228;
+    box-shadow: 0 0 8px rgba(0,0,0,0.8);
+  }
+
+  .droplet-silhouette::after {
+    content: '';
+    position: absolute;
+    bottom: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 20px solid #061228;
+  }
+
+  .door-label {
+    position: absolute;
+    bottom: -28px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: rgba(74,143,255,0.7);
+    white-space: nowrap;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Connection status dot */
+  .door-status {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #3a3;
+    box-shadow: 0 0 6px #3a3;
+    animation: pulse-status 2s ease-in-out infinite;
+  }
+
+  .door-status.offline {
+    background: #a33;
+    box-shadow: 0 0 6px #a33;
+    animation: none;
+  }
+
+  @keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── DROPLET PANEL ── */
+  #droplet-panel {
+    position: fixed;
+    right: 0; bottom: 0;
+    width: 420px;
+    height: 100%;
+    background: rgba(6, 12, 24, 0.97);
+    border-left: 1px solid rgba(74,143,255,0.3);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #droplet-panel.open {
+    transform: translateX(0);
+    box-shadow: -10px 0 60px rgba(0,0,0,0.8), -2px 0 0 rgba(74,143,255,0.2);
+  }
+
+  .panel-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid rgba(74,143,255,0.15);
+    flex-shrink: 0;
+  }
+
+  .panel-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .panel-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.02em;
+  }
+
+  .panel-close {
+    width: 28px; height: 28px;
+    border: 1px solid rgba(74,143,255,0.3);
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(74,143,255,0.7);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .panel-close:hover {
+    background: rgba(74,143,255,0.15);
+    color: #fff;
+  }
+
+  .panel-path {
+    font-size: 10px;
+    color: rgba(74,143,255,0.5);
+    letter-spacing: 0.08em;
+  }
+
+  /* SSH config bar */
+  .config-bar {
+    padding: 10px 20px;
+    background: rgba(74,143,255,0.05);
+    border-bottom: 1px solid rgba(74,143,255,0.1);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .config-input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(74,143,255,0.2);
+    border-radius: 3px;
+    color: rgba(255,255,255,0.8);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 5px 8px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .config-input:focus {
+    border-color: rgba(74,143,255,0.6);
+    background: rgba(255,255,255,0.08);
+  }
+
+  .config-btn {
+    padding: 5px 12px;
+    background: rgba(74,143,255,0.2);
+    border: 1px solid rgba(74,143,255,0.4);
+    border-radius: 3px;
+    color: rgba(74,143,255,0.9);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .config-btn:hover {
+    background: rgba(74,143,255,0.35);
+    color: #fff;
+  }
+
+  /* File browser */
+  .file-browser {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+
+  .file-browser::-webkit-scrollbar { width: 4px; }
+  .file-browser::-webkit-scrollbar-track { background: transparent; }
+  .file-browser::-webkit-scrollbar-thumb { background: rgba(74,143,255,0.2); border-radius: 2px; }
+
+  .browser-row {
+    display: flex;
+    align-items: center;
+    padding: 6px 20px;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .browser-row:hover {
+    background: rgba(74,143,255,0.08);
+  }
+
+  .browser-row.dir { color: rgba(74,143,255,0.85); }
+  .browser-row.file { color: rgba(255,255,255,0.65); }
+  .browser-row.loading { color: rgba(255,255,255,0.3); font-style: italic; }
+
+  .row-icon { font-size: 14px; flex-shrink: 0; }
+  .row-name { font-size: 11px; font-family: 'Space Mono', monospace; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row-meta { font-size: 9px; color: rgba(255,255,255,0.25); white-space: nowrap; font-family: 'Space Mono', monospace; }
+
+  /* Pull-to-desktop affordance */
+  .browser-row:hover .row-pull {
+    opacity: 1;
+  }
+
+  .row-pull {
+    font-size: 9px;
+    opacity: 0;
+    color: rgba(74,143,255,0.5);
+    transition: opacity 0.15s;
+  }
+
+  /* Terminal */
+  .panel-terminal {
+    flex-shrink: 0;
+    border-top: 1px solid rgba(74,143,255,0.12);
+    background: rgba(0,0,0,0.4);
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terminal-header {
+    padding: 6px 12px;
+    font-size: 9px;
+    color: rgba(74,143,255,0.4);
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid rgba(74,143,255,0.08);
+    flex-shrink: 0;
+  }
+
+  .terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+
+  .terminal-output::-webkit-scrollbar { width: 3px; }
+  .terminal-output::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+  .terminal-output .t-prompt { color: rgba(74,143,255,0.6); }
+  .terminal-output .t-cmd { color: rgba(255,255,255,0.8); }
+  .terminal-output .t-out { color: rgba(255,255,255,0.45); }
+  .terminal-output .t-err { color: rgba(255,100,100,0.7); }
+  .terminal-output .t-ok { color: rgba(100,200,100,0.7); }
+
+  .terminal-input-row {
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-top: 1px solid rgba(74,143,255,0.08);
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .t-prompt-label {
+    color: rgba(74,143,255,0.5);
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .terminal-cmd-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    outline: none;
+    caret-color: rgba(74,143,255,0.8);
+  }
+
+  /* Context menu */
+  #ctx-menu {
+    position: fixed;
+    background: #1a1612;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 4px 0;
+    min-width: 140px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+    z-index: 999;
+    display: none;
+    font-size: 11px;
+  }
+
+  .ctx-item {
+    padding: 6px 14px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .ctx-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctx-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 3px 0; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: rgba(20,16,12,0.95);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    z-index: 9999;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Physics wobble animation */
+  @keyframes wobble-land {
+    0% { transform: rotate(var(--end-rot)) scale(1.05); }
+    25% { transform: rotate(calc(var(--end-rot) - 3deg)) scale(0.98); }
+    50% { transform: rotate(calc(var(--end-rot) + 2deg)) scale(1.01); }
+    75% { transform: rotate(calc(var(--end-rot) - 1deg)); }
+    100% { transform: rotate(var(--end-rot)) scale(1); }
+  }
+
+  /* Drag shadow */
+  .dragging {
+    filter: drop-shadow(0 12px 30px rgba(0,0,0,0.9)) drop-shadow(0 4px 8px rgba(0,0,0,0.6)) !important;
+    z-index: 500 !important;
+    transition: none !important;
+  }
+
+  /* Pinned wall badge */
+  .wall-badge {
+    position: fixed;
+    font-size: 8px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .wall-badge.left { left: 14px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+  .wall-badge.right { right: 14px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+  .wall-badge.top { top: 14px; left: 50%; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+
+<div id="desktop">
+  <div class="wall wall-left"></div>
+  <div class="wall wall-right"></div>
+  <div class="wall wall-top"></div>
+  <div class="wall wall-bottom"></div>
+
+  <div class="wall-badge top">Desktop</div>
+</div>
+
+<!-- Droplet Door -->
+<div id="droplet-door">
+  <div class="door-frame">
+    <div class="door-sky"></div>
+    <div class="door-stars" id="door-stars"></div>
+    <div class="door-horizon"></div>
+    <div class="door-water">
+      <div class="water-shimmer"></div>
+      <div class="water-shimmer"></div>
+      <div class="water-shimmer"></div>
+    </div>
+    <div class="droplet-silhouette"></div>
+    <div class="door-status" id="door-status"></div>
+  </div>
+  <div class="door-label">droplet door</div>
+</div>
+
+<!-- Droplet Panel -->
+<div id="droplet-panel">
+  <div class="panel-header">
+    <div class="panel-title-row">
+      <span class="panel-title">Droplet</span>
+      <button class="panel-close" id="panel-close">✕</button>
+    </div>
+    <div class="panel-path" id="panel-path">~/</div>
+  </div>
+  <div class="config-bar">
+    <input class="config-input" id="ssh-host" placeholder="user@your.droplet.ip" type="text">
+    <button class="config-btn" id="connect-btn">connect</button>
+  </div>
+  <div class="file-browser" id="file-browser">
+    <div class="browser-row loading">
+      <span class="row-icon">·</span>
+      <span class="row-name">enter host above to connect</span>
+    </div>
+  </div>
+  <div class="panel-terminal">
+    <div class="terminal-header">TERMINAL — DROPLET</div>
+    <div class="terminal-output" id="terminal-output">
+      <div><span class="t-out">BumpTop Droplet Door v0.1 — Dragonpunk Edition</span></div>
+      <div><span class="t-out">SSH channel ready. Pull files to desktop to copy.</span></div>
+    </div>
+    <div class="terminal-input-row">
+      <span class="t-prompt-label">$</span>
+      <input class="terminal-cmd-input" id="terminal-input" placeholder="ls, pwd, cat file..." autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div id="ctx-menu">
+  <div class="ctx-item" id="ctx-open">Open</div>
+  <div class="ctx-item" id="ctx-rename">Rename</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-send">Send to Droplet</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-delete">Remove</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+const state = {
+  files: [],
+  dragging: null,
+  dragOffX: 0,
+  dragOffY: 0,
+  velX: 0,
+  velY: 0,
+  lastX: 0,
+  lastY: 0,
+  selected: null,
+  ctxTarget: null,
+  panelOpen: false,
+  connected: false,
+  currentPath: '~',
+  sshHost: '',
+  cmdHistory: [],
+  cmdIdx: -1,
+};
+
+const W = () => window.innerWidth;
+const H = () => window.innerHeight;
+
+// ── SEED FILES ──
+const seedFiles = [
+  { name: 'notes.txt',       icon: '📄', x: 0.12, y: 0.18, rot: -8  },
+  { name: 'burg_pipeline.dpn', icon: '📜', x: 0.20, y: 0.35, rot: 5  },
+  { name: 'master_chronicle', icon: '🗂️', x: 0.08, y: 0.55, rot: -3  },
+  { name: 'noosphere.lisp',  icon: '🔮', x: 0.30, y: 0.15, rot: 12  },
+  { name: 'ghost_tick.rs',   icon: '⚙️', x: 0.50, y: 0.22, rot: -6  },
+  { name: 'Boughrest.md',    icon: '🌱', x: 0.42, y: 0.45, rot: 3   },
+  { name: 'emblem.png',      icon: '🖼️', x: 0.65, y: 0.35, rot: -10 },
+  { name: 'README.md',       icon: '📋', x: 0.18, y: 0.72, rot: 7   },
+  { name: 'sylvia.json',     icon: '🤖', x: 0.38, y: 0.65, rot: -4  },
+  { name: 'vincent.cfg',     icon: '🎨', x: 0.55, y: 0.58, rot: 15  },
+  { name: 'Akar_Ok.md',      icon: '🏰', x: 0.72, y: 0.62, rot: -7  },
+];
+
+// ── STARS IN DOOR ──
+function populateStars() {
+  const container = document.getElementById('door-stars');
+  for (let i = 0; i < 40; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 70}%;
+      --dur: ${1.5 + Math.random() * 3}s;
+      --delay: ${-Math.random() * 3}s;
+      --min-op: ${0.1 + Math.random() * 0.3};
+    `;
+    container.appendChild(star);
+  }
+}
+
+// ── CREATE FILE OBJECT ──
+function createFileObj(data, id) {
+  const el = document.createElement('div');
+  el.className = 'file-obj';
+  el.dataset.id = id;
+
+  const inner = document.createElement('div');
+  inner.className = 'file-inner';
+
+  const icon = document.createElement('div');
+  icon.className = 'file-icon';
+  icon.textContent = data.icon;
+
+  const label = document.createElement('div');
+  label.className = 'file-label';
+  label.textContent = data.name;
+
+  inner.appendChild(icon);
+  inner.appendChild(label);
+  el.appendChild(inner);
+
+  const x = (data.x || Math.random() * 0.7 + 0.05) * W();
+  const y = (data.y || Math.random() * 0.6 + 0.1) * H();
+  const rot = data.rot || (Math.random() * 30 - 15);
+
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  el.style.transform = `rotate(${rot}deg)`;
+  el.dataset.rot = rot;
+  el.dataset.vx = '0';
+  el.dataset.vy = '0';
+
+  el.addEventListener('mousedown', onFileMouseDown);
+  el.addEventListener('contextmenu', onFileCtx);
+  el.addEventListener('dblclick', onFileDblClick);
+
+  document.getElementById('desktop').appendChild(el);
+  return el;
+}
+
+function initFiles() {
+  seedFiles.forEach((f, i) => createFileObj(f, 'f' + i));
+  // Randomly stack a few
+  const allEls = document.querySelectorAll('.file-obj');
+  allEls[2].classList.add('stacked');
+  allEls[7].classList.add('stacked');
+}
+
+// ── DRAG ──
+function onFileMouseDown(e) {
+  if (e.button !== 0) return;
+  e.preventDefault();
+
+  const el = e.currentTarget;
+  state.dragging = el;
+  state.dragOffX = e.clientX - parseInt(el.style.left);
+  state.dragOffY = e.clientY - parseInt(el.style.top);
+  state.lastX = e.clientX;
+  state.lastY = e.clientY;
+  state.velX = 0;
+  state.velY = 0;
+
+  el.classList.add('dragging');
+  el.style.zIndex = 200;
+
+  selectFile(el);
+  hideCtxMenu();
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (!state.dragging) return;
+  const el = state.dragging;
+
+  state.velX = e.clientX - state.lastX;
+  state.velY = e.clientY - state.lastY;
+  state.lastX = e.clientX;
+  state.lastY = e.clientY;
+
+  el.style.left = (e.clientX - state.dragOffX) + 'px';
+  el.style.top  = (e.clientY - state.dragOffY) + 'px';
+
+  // Tilt during drag
+  const tilt = Math.max(-25, Math.min(25, state.velX * 2));
+  el.style.transform = `rotate(${tilt}deg)`;
+
+  // Highlight door if hovering over it
+  const door = document.getElementById('droplet-door');
+  const dr = door.getBoundingClientRect();
+  const hovDoor = e.clientX > dr.left && e.clientX < dr.right &&
+                  e.clientY > dr.top  && e.clientY < dr.bottom;
+  door.style.filter = hovDoor ? 'brightness(1.4)' : '';
+});
+
+document.addEventListener('mouseup', (e) => {
+  if (!state.dragging) return;
+  const el = state.dragging;
+
+  el.classList.remove('dragging');
+  state.dragging = null;
+
+  // Check drop on door
+  const door = document.getElementById('droplet-door');
+  const dr = door.getBoundingClientRect();
+  const onDoor = e.clientX > dr.left && e.clientX < dr.right &&
+                 e.clientY > dr.top  && e.clientY < dr.bottom;
+  door.style.filter = '';
+
+  if (onDoor) {
+    sendToDroplet(el);
+    return;
+  }
+
+  // Physics throw
+  let x = parseInt(el.style.left);
+  let y = parseInt(el.style.top);
+  const margin = 12;
+  const ww = W() - 80, wh = H() - 80;
+
+  let vx = state.velX * 4;
+  let vy = state.velY * 4;
+  const steps = 12;
+  let finalX = x, finalY = y;
+
+  for (let i = 0; i < steps; i++) {
+    finalX += vx;
+    finalY += vy;
+    vx *= 0.75;
+    vy *= 0.75;
+
+    if (finalX < margin) { finalX = margin; vx *= -0.5; }
+    if (finalY < margin + 8) { finalY = margin + 8; vy *= -0.5; }
+    if (finalX > ww) { finalX = ww; vx *= -0.5; }
+    if (finalY > wh) { finalY = wh; vy *= -0.5; }
+  }
+
+  const finalRot = parseFloat(el.dataset.rot || 0) + vx * 1.5;
+  const clampedRot = Math.max(-35, Math.min(35, finalRot));
+
+  el.dataset.rot = clampedRot;
+  el.style.setProperty('--end-rot', clampedRot + 'deg');
+  el.style.transition = 'left 0.4s cubic-bezier(0.17,0.67,0.35,1), top 0.4s cubic-bezier(0.17,0.67,0.35,1)';
+  el.style.left = finalX + 'px';
+  el.style.top  = finalY + 'px';
+  el.style.animation = 'wobble-land 0.4s ease forwards';
+  el.style.transform = `rotate(${clampedRot}deg)`;
+
+  setTimeout(() => {
+    el.style.transition = '';
+    el.style.animation  = '';
+    el.style.zIndex     = '';
+  }, 500);
+
+  // Check wall stacking
+  checkWallStack(el, finalX, finalY);
+});
+
+function checkWallStack(el, x, y) {
+  if (x < 30) {
+    // Near left wall — find and group nearby
+    document.querySelectorAll('.file-obj').forEach(other => {
+      if (other === el) return;
+      const ox = parseInt(other.style.left);
+      if (ox < 50 && Math.abs(parseInt(other.style.top) - y) < 100) {
+        other.classList.add('stacked');
+      }
+    });
+  }
+}
+
+// ── SELECT ──
+function selectFile(el) {
+  if (state.selected) state.selected.classList.remove('selected');
+  state.selected = el;
+  if (el) el.classList.add('selected');
+}
+
+// ── CONTEXT MENU ──
+function onFileCtx(e) {
+  e.preventDefault();
+  state.ctxTarget = e.currentTarget;
+  selectFile(e.currentTarget);
+
+  const menu = document.getElementById('ctx-menu');
+  menu.style.display = 'block';
+  menu.style.left = e.clientX + 'px';
+  menu.style.top  = e.clientY + 'px';
+}
+
+function hideCtxMenu() {
+  document.getElementById('ctx-menu').style.display = 'none';
+}
+
+document.addEventListener('click', hideCtxMenu);
+
+document.getElementById('ctx-open').addEventListener('click', () => {
+  if (state.ctxTarget) onFileDblClick({ currentTarget: state.ctxTarget });
+});
+
+document.getElementById('ctx-rename').addEventListener('click', () => {
+  if (!state.ctxTarget) return;
+  const label = state.ctxTarget.querySelector('.file-label');
+  const old = label.textContent;
+  const n = prompt('Rename:', old);
+  if (n && n.trim()) { label.textContent = n.trim(); showToast(`Renamed to ${n.trim()}`); }
+});
+
+document.getElementById('ctx-send').addEventListener('click', () => {
+  if (state.ctxTarget) sendToDroplet(state.ctxTarget);
+});
+
+document.getElementById('ctx-delete').addEventListener('click', () => {
+  if (state.ctxTarget) {
+    const name = state.ctxTarget.querySelector('.file-label').textContent;
+    state.ctxTarget.style.transition = 'opacity 0.2s, transform 0.2s';
+    state.ctxTarget.style.opacity = '0';
+    state.ctxTarget.style.transform += ' scale(0.7)';
+    setTimeout(() => state.ctxTarget.remove(), 220);
+    showToast(`Removed ${name}`);
+  }
+});
+
+function onFileDblClick(e) {
+  const el = e.currentTarget;
+  const name = el.querySelector('.file-label').textContent;
+  showToast(`Opening ${name}…`);
+  el.style.transition = 'transform 0.15s';
+  el.style.transform = (el.style.transform || '') + ' scale(1.08)';
+  setTimeout(() => {
+    el.style.transform = el.style.transform.replace(' scale(1.08)', '');
+  }, 200);
+}
+
+// ── DESKTOP CLICK ──
+document.getElementById('desktop').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('desktop') ||
+      e.target.classList.contains('wall')) {
+    selectFile(null);
+  }
+});
+
+document.getElementById('desktop').addEventListener('dblclick', (e) => {
+  if (e.target === document.getElementById('desktop')) {
+    spawnFile(e.clientX, e.clientY);
+  }
+});
+
+function spawnFile(x, y) {
+  const icons = ['📄','📜','🗒️','📊','🔧','📦','🖼️','🎵','📁'];
+  const names = ['untitled', 'new_file', 'draft', 'temp', 'sketch'];
+  const id = 'f' + Date.now();
+  const data = {
+    icon: icons[Math.floor(Math.random() * icons.length)],
+    name: names[Math.floor(Math.random() * names.length)],
+    x: x / W(),
+    y: y / H(),
+    rot: Math.random() * 20 - 10,
+  };
+  const el = createFileObj(data, id);
+  el.style.transform += ' scale(0)';
+  requestAnimationFrame(() => {
+    el.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+    el.style.transform = `rotate(${data.rot}deg) scale(1)`;
+    setTimeout(() => el.style.transition = '', 350);
+  });
+  showToast('New file created');
+}
+
+// ── DROPLET DOOR ──
+document.getElementById('droplet-door').addEventListener('click', togglePanel);
+
+function togglePanel() {
+  state.panelOpen = !state.panelOpen;
+  const panel = document.getElementById('droplet-panel');
+  panel.classList.toggle('open', state.panelOpen);
+}
+
+document.getElementById('panel-close').addEventListener('click', (e) => {
+  e.stopPropagation();
+  state.panelOpen = false;
+  document.getElementById('droplet-panel').classList.remove('open');
+});
+
+// ── SSH SIMULATION ──
+document.getElementById('connect-btn').addEventListener('click', () => {
+  const host = document.getElementById('ssh-host').value.trim();
+  if (!host) { showToast('Enter a host first'); return; }
+  state.sshHost = host;
+  simulateConnect(host);
+});
+
+document.getElementById('ssh-host').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('connect-btn').click();
+});
+
+function simulateConnect(host) {
+  const browser = document.getElementById('file-browser');
+  browser.innerHTML = '<div class="browser-row loading"><span class="row-icon">⟳</span><span class="row-name">connecting…</span></div>';
+  appendTerminal(`ssh ${host}`, 'cmd');
+
+  setTimeout(() => {
+    state.connected = true;
+    document.getElementById('door-status').classList.remove('offline');
+    appendTerminal(`Connected to ${host}`, 'ok');
+    appendTerminal(`Welcome to Ubuntu 22.04 LTS`, 'out');
+    loadDirectory('~');
+  }, 900);
+}
+
+const mockFS = {
+  '~': [
+    { name: '.', type: 'dir' },
+    { name: 'projects', type: 'dir', size: '' },
+    { name: 'noosphere', type: 'dir', size: '' },
+    { name: 'scripts', type: 'dir', size: '' },
+    { name: 'README.md', type: 'file', size: '2.1K' },
+    { name: '.env', type: 'file', size: '512B' },
+    { name: 'crontab.txt', type: 'file', size: '1.2K' },
+  ],
+  '~/projects': [
+    { name: '..', type: 'dir' },
+    { name: 'innatescript', type: 'dir', size: '' },
+    { name: 'dpn-api', type: 'dir', size: '' },
+    { name: 'dpn-tui', type: 'dir', size: '' },
+    { name: 'ghost_tick', type: 'dir', size: '' },
+  ],
+  '~/noosphere': [
+    { name: '..', type: 'dir' },
+    { name: 'master_chronicle.sql', type: 'file', size: '48K' },
+    { name: 'conversations.json', type: 'file', size: '12K' },
+    { name: 'innate_scripts', type: 'dir', size: '' },
+    { name: 'ghosts.toml', type: 'file', size: '3.4K' },
+  ],
+  '~/scripts': [
+    { name: '..', type: 'dir' },
+    { name: 'burg_pipeline.dpn', type: 'file', size: '1.8K' },
+    { name: 'deploy.sh', type: 'file', size: '892B' },
+    { name: 'backup.sh', type: 'file', size: '1.1K' },
+  ],
+  '~/projects/innatescript': [
+    { name: '..', type: 'dir' },
+    { name: 'lisp', type: 'dir', size: '' },
+    { name: 'scripts', type: 'dir', size: '' },
+    { name: 'docs', type: 'dir', size: '' },
+    { name: 'tests', type: 'dir', size: '' },
+    { name: 'README.md', type: 'file', size: '4.2K' },
+  ],
+};
+
+function loadDirectory(path) {
+  state.currentPath = path;
+  document.getElementById('panel-path').textContent = path + '/';
+  appendTerminal(`ls ${path}`, 'cmd');
+
+  const entries = mockFS[path] || [
+    { name: '..', type: 'dir' },
+    { name: '(empty)', type: 'file', size: '' },
+  ];
+
+  const browser = document.getElementById('file-browser');
+  browser.innerHTML = '';
+
+  entries.forEach(entry => {
+    const row = document.createElement('div');
+    row.className = 'browser-row ' + (entry.type === 'dir' ? 'dir' : 'file');
+
+    const icon = document.createElement('span');
+    icon.className = 'row-icon';
+    icon.textContent = entry.type === 'dir' ? '📁' : fileIcon(entry.name);
+
+    const name = document.createElement('span');
+    name.className = 'row-name';
+    name.textContent = entry.name;
+
+    const meta = document.createElement('span');
+    meta.className = 'row-meta';
+    meta.textContent = entry.size || '';
+
+    const pull = document.createElement('span');
+    pull.className = 'row-pull';
+    pull.textContent = '← pull';
+
+    row.appendChild(icon);
+    row.appendChild(name);
+    row.appendChild(meta);
+    if (entry.type === 'file') row.appendChild(pull);
+
+    row.addEventListener('click', () => {
+      if (entry.type === 'dir') {
+        if (entry.name === '..') {
+          // Go up
+          const parts = path.split('/');
+          parts.pop();
+          loadDirectory(parts.join('/') || '~');
+        } else {
+          loadDirectory(path + '/' + entry.name);
+        }
+      } else if (entry.name !== '(empty)') {
+        pullFileToDesktop(entry.name);
+      }
+    });
+
+    browser.appendChild(row);
+  });
+
+  // Log ls output
+  const names = entries.filter(e => e.name !== '.').map(e => e.name).join('  ');
+  appendTerminal(names, 'out');
+}
+
+function fileIcon(name) {
+  if (name.endsWith('.md'))   return '📄';
+  if (name.endsWith('.dpn'))  return '📜';
+  if (name.endsWith('.lisp')) return '🔮';
+  if (name.endsWith('.rs'))   return '⚙️';
+  if (name.endsWith('.sh'))   return '📋';
+  if (name.endsWith('.json')) return '🗂️';
+  if (name.endsWith('.sql'))  return '🗄️';
+  if (name.endsWith('.toml') || name.endsWith('.cfg')) return '🔧';
+  if (name.endsWith('.png') || name.endsWith('.jpg')) return '🖼️';
+  if (name.startsWith('.'))   return '🔒';
+  return '📄';
+}
+
+function pullFileToDesktop(name) {
+  showToast(`Pulling ${name} from droplet…`);
+  appendTerminal(`scp ${state.sshHost}:${state.currentPath}/${name} .`, 'cmd');
+
+  setTimeout(() => {
+    const id = 'remote-' + Date.now();
+    const data = {
+      icon: fileIcon(name),
+      name: name,
+      x: 0.1 + Math.random() * 0.5,
+      y: 0.2 + Math.random() * 0.5,
+      rot: Math.random() * 20 - 10,
+    };
+    const el = createFileObj(data, id);
+
+    // Animate in from right
+    el.style.left = (W() * 0.85) + 'px';
+    el.style.opacity = '0';
+    requestAnimationFrame(() => {
+      el.style.transition = 'left 0.5s cubic-bezier(0.17,0.67,0.35,1), opacity 0.3s';
+      el.style.left = (data.x * W()) + 'px';
+      el.style.opacity = '1';
+      setTimeout(() => el.style.transition = '', 550);
+    });
+
+    appendTerminal(`${name}  100%  done`, 'ok');
+    showToast(`${name} pulled to desktop`);
+  }, 600);
+}
+
+function sendToDroplet(el) {
+  const name = el.querySelector('.file-label').textContent;
+  appendTerminal(`scp ${name} ${state.sshHost || 'droplet'}:~/`, 'cmd');
+
+  el.style.transition = 'transform 0.4s ease-in, opacity 0.4s ease-in';
+  el.style.transform += ' scale(0.6) translateY(40px)';
+  el.style.opacity = '0';
+
+  setTimeout(() => {
+    el.remove();
+    appendTerminal(`${name}  100%  done`, 'ok');
+    showToast(`${name} → droplet`);
+    if (state.panelOpen && state.connected) {
+      loadDirectory(state.currentPath);
+    }
+  }, 450);
+}
+
+// ── TERMINAL ──
+function appendTerminal(text, cls) {
+  const out = document.getElementById('terminal-output');
+  const line = document.createElement('div');
+  if (cls === 'cmd') {
+    line.innerHTML = `<span class="t-prompt">$ </span><span class="t-cmd">${text}</span>`;
+  } else {
+    line.innerHTML = `<span class="t-${cls}">${text}</span>`;
+  }
+  out.appendChild(line);
+  out.scrollTop = out.scrollHeight;
+}
+
+const cmdResponses = {
+  'pwd': () => state.currentPath,
+  'whoami': () => 'deploy',
+  'uptime': () => 'up 12 days, 4:22, load: 0.12 0.08 0.07',
+  'df -h': () => 'Filesystem  Size  Used  Avail  Use%\n/dev/vda1   25G   8.2G  16G    34%',
+  'free -h': () => 'Mem:  2.0Gi  812Mi  1.2Gi\nSwap: 1.0Gi  0     1.0Gi',
+  'ls': () => { if (state.connected) loadDirectory(state.currentPath); return null; },
+  'cd ~': () => { if (state.connected) loadDirectory('~'); return null; },
+};
+
+document.getElementById('terminal-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const input = e.target;
+    const cmd = input.value.trim();
+    if (!cmd) return;
+    input.value = '';
+    state.cmdHistory.unshift(cmd);
+    state.cmdIdx = -1;
+
+    appendTerminal(cmd, 'cmd');
+
+    if (!state.connected && cmd !== '') {
+      appendTerminal('not connected — enter host and connect', 'err');
+      return;
+    }
+
+    if (cmd.startsWith('cd ')) {
+      const dir = cmd.slice(3).trim();
+      const newPath = dir === '~' ? '~' : (state.currentPath + '/' + dir);
+      if (mockFS[newPath]) loadDirectory(newPath);
+      else appendTerminal(`cd: ${dir}: No such file or directory`, 'err');
+      return;
+    }
+
+    const respFn = cmdResponses[cmd];
+    if (respFn) {
+      const r = respFn();
+      if (r) r.split('\n').forEach(l => appendTerminal(l, 'out'));
+    } else {
+      appendTerminal(`${cmd}: command simulated`, 'out');
+    }
+  }
+
+  if (e.key === 'ArrowUp') {
+    state.cmdIdx = Math.min(state.cmdIdx + 1, state.cmdHistory.length - 1);
+    e.target.value = state.cmdHistory[state.cmdIdx] || '';
+    e.preventDefault();
+  }
+  if (e.key === 'ArrowDown') {
+    state.cmdIdx = Math.max(state.cmdIdx - 1, -1);
+    e.target.value = state.cmdIdx >= 0 ? state.cmdHistory[state.cmdIdx] : '';
+    e.preventDefault();
+  }
+});
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── INIT ──
+populateStars();
+initFiles();
+
+// Offline state initially
+document.getElementById('door-status').classList.add('offline');
+
+// Tip
+setTimeout(() => showToast('Double-click desktop to spawn a file'), 1200);
+</script>
+</body>
+</html>

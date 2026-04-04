@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>(.)(.) noosphere</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#08080D;--smoke:rgba(19,19,26,0.85);--panel:rgba(15,15,22,0.92);
+  --ember:#C8860A;--ember-mid:#8B5E00;--ember-dim:rgba(200,134,10,0.12);
+  --cyan:#00B8C0;--text:#D8D4CC;--text-dim:#777770;--text-muted:#44443F;
+  --border:rgba(200,134,10,0.18);--border-dim:rgba(200,134,10,0.07);
+}
+html,body{height:100%;overflow:hidden;background:var(--void);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px}
+
+/* ── TOP BAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:32px;background:rgba(8,8,13,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border-dim);display:flex;align-items:center;padding:0 12px;z-index:100}
+#logo{font-size:14px;color:var(--ember-mid);cursor:pointer;width:40px;text-align:center}
+#logo:hover+#logo-full{opacity:1}
+#logo-full{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;color:var(--ember-mid);letter-spacing:2px;opacity:0;transition:opacity .3s;position:absolute;left:52px;pointer-events:none}
+#scene-name{flex:1;text-align:center;font-size:10px;color:var(--text-muted);letter-spacing:1px}
+#topright{display:flex;gap:12px;align-items:center}
+#topright span{cursor:pointer;font-size:11px;color:var(--text-muted);transition:color .15s}
+#topright span:hover{color:var(--ember)}
+.notif-dot{width:5px;height:5px;background:#C45A1A;border-radius:50%;position:absolute;top:-1px;right:-2px}
+
+/* ── ICON STRIP (left) ── */
+#iconstrip{position:fixed;left:0;top:32px;bottom:0;width:40px;background:rgba(8,8,13,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-right:1px solid var(--border-dim);display:flex;flex-direction:column;align-items:center;padding:8px 0;z-index:90;gap:2px}
+.icon-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-muted);cursor:pointer;border-left:2px solid transparent;border-radius:0;transition:all .12s;position:relative}
+.icon-btn:hover{color:var(--text);background:var(--ember-dim)}
+.icon-btn.active{color:var(--ember);border-left-color:var(--ember);background:var(--ember-dim)}
+.icon-sep{width:20px;height:1px;background:var(--border-dim);margin:4px 0}
+.icon-btn .tip{position:absolute;left:42px;background:rgba(8,8,13,0.95);border:1px solid var(--border);color:var(--text);font-size:10px;padding:4px 10px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;letter-spacing:0.5px;z-index:200}
+.icon-btn:hover .tip{opacity:1}
+#iconstrip-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:2px}
+
+/* ── CENTER STAGE ── */
+#stage{position:fixed;top:32px;left:40px;right:0;bottom:0;overflow:hidden}
+.scene{display:none;width:100%;height:100%;overflow:hidden;position:relative}
+.scene.active{display:flex}
+
+/* ── RIGHT SIDEBAR (overlay) ── */
+#rsidebar{position:fixed;top:32px;right:0;bottom:0;width:0;background:var(--panel);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-left:1px solid var(--border-dim);overflow:hidden;transition:width .25s cubic-bezier(0.16,1,0.3,1);z-index:80;box-shadow:-8px 0 40px rgba(0,0,0,0.5)}
+#rsidebar.open{width:300px}
+#rs-handle{position:fixed;top:50%;right:0;width:4px;height:60px;transform:translateY(-50%);background:var(--ember-dim);cursor:pointer;z-index:81;border-radius:2px 0 0 2px;transition:background .15s}
+#rs-handle:hover{background:var(--ember-mid)}
+#rs-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-dim)}
+#rs-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted)}
+#rs-close{cursor:pointer;color:var(--text-muted);font-size:14px;transition:color .15s}
+#rs-close:hover{color:var(--ember)}
+#rs-body{padding:14px;overflow-y:auto;height:calc(100% - 42px)}
+#rs-body::-webkit-scrollbar{width:3px}
+#rs-body::-webkit-scrollbar-thumb{background:var(--border-dim)}
+.rs-section{margin-bottom:16px}
+.rs-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ember-mid);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border-dim)}
+.rs-row{display:flex;justify-content:space-between;padding:3px 0;font-size:10px}
+.rs-row .k{color:var(--text-muted)}.rs-row .v{color:var(--text-dim)}
+.rs-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;margin-bottom:2px}
+.rs-role{font-size:10px;color:var(--text-muted);margin-bottom:10px}
+.ebar{height:3px;background:var(--border-dim);border-radius:1px;margin-top:3px;margin-bottom:8px;overflow:hidden}
+.efill{height:100%;border-radius:1px}
+
+/* ── BOTTOM CHAT ── */
+#chatbar{position:fixed;left:40px;right:0;bottom:0;z-index:90;transition:height .2s cubic-bezier(0.16,1,0.3,1);overflow:hidden}
+#chatbar.collapsed{height:34px}
+#chatbar.expanded{height:200px}
+#chatbar-inner{height:100%;background:rgba(8,8,13,0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border-dim);display:flex;flex-direction:column}
+#chat-msgs{flex:1;overflow-y:auto;padding:6px 14px;display:flex;flex-direction:column;gap:3px}
+#chat-msgs::-webkit-scrollbar{width:2px}
+#chat-msgs::-webkit-scrollbar-thumb{background:var(--border-dim)}
+.msg{display:flex;gap:8px;align-items:baseline;font-size:11px}
+.msg-who{font-size:10px;font-weight:500;flex-shrink:0;cursor:pointer}
+.msg-time{font-size:9px;color:var(--text-muted);flex-shrink:0}
+.msg-text{color:var(--text-dim);line-height:1.4}
+#chat-input-row{padding:5px 12px;border-top:1px solid var(--border-dim);display:flex;gap:8px;align-items:center;flex-shrink:0}
+#chat-channel{background:var(--ember-dim);border:1px solid var(--border-dim);color:var(--ember);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;cursor:pointer;letter-spacing:1px;flex-shrink:0}
+#chat-input{flex:1;background:transparent;border:none;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;padding:4px 0}
+#chat-input::placeholder{color:var(--text-muted)}
+
+/* ── FORGE WORKSHOP (scene) ── */
+#forge{gap:0;height:100%}
+.fcol{flex:1;border-right:1px solid var(--border-dim);overflow-y:auto;padding:20px;background:rgba(8,8,13,0.3)}
+.fcol:last-child{border-right:none}
+.fcol::-webkit-scrollbar{width:3px}
+.fcol::-webkit-scrollbar-thumb{background:var(--border-dim)}
+.ch{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ember-mid);margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--border-dim)}
+.date-h{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:2px}
+.date-s{font-size:10px;color:var(--text-muted);margin-bottom:14px}
+.note p{font-size:11px;line-height:1.8;color:var(--text-dim);margin-bottom:8px}
+.note .t{color:var(--ember-mid)}
+.prev{margin-top:12px;padding:7px 10px;background:rgba(15,15,22,0.5);border:1px solid var(--border-dim);cursor:pointer;display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+.prev:hover{border-color:var(--border)}
+
+.inbox-item{padding:10px;border:1px solid var(--border-dim);margin-bottom:6px;cursor:pointer;background:rgba(15,15,22,0.4);transition:border-color .12s}
+.inbox-item:hover{border-color:var(--border)}
+.irow{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.iav{width:20px;height:20px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+.ititle{font-size:11px;flex:1}
+.itime{font-size:9px;color:var(--text-muted)}
+.itags{display:flex;gap:4px}
+.itag{font-size:8px;padding:1px 5px;border:1px solid var(--border-dim);color:var(--text-muted)}
+
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.dot.g{background:#2E9E78}.dot.a{background:var(--ember)}.dot.r{background:#9E2E2E}
+.hlabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.hval{font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.ecobar{display:flex;height:6px;gap:1px;margin:4px 0 2px;border-radius:1px;overflow:hidden}
+.ecoseg{height:100%}
+.prow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-dim);font-size:10px}
+.prow:last-child{border-bottom:none}
+.pstatus{font-size:9px;padding:1px 5px;border:1px solid}
+.pstatus.fl{color:#2E9E78;border-color:rgba(46,158,120,0.3)}
+.pstatus.id{color:var(--text-muted);border-color:var(--border-dim)}
+.pstatus.pn{color:var(--ember-mid);border-color:rgba(200,134,10,0.3)}
+.ev{font-size:10px;color:var(--text-muted);padding:3px 0;border-bottom:1px solid var(--border-dim);line-height:1.5}
+.ev:last-child{border-bottom:none}
+.ev .eg{color:var(--ember-mid)}
+
+/* ── PIPELINE SCENE ── */
+#pipeline{flex-direction:column;padding:24px;overflow-y:auto;background:rgba(8,8,13,0.3)}
+.psec{margin-bottom:28px}
+.pst{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ember-mid);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border-dim)}
+.pflow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:8px}
+.pnode{padding:8px 12px;border:1px solid var(--border-dim);background:rgba(15,15,22,0.5);min-width:85px;text-align:center;cursor:pointer;transition:all .12s}
+.pnode:hover{border-color:var(--border)}
+.pnode.act{border-color:var(--ember);background:var(--ember-dim)}
+.pnode .pnn{font-size:10px;color:var(--text)}.pnode.act .pnn{color:var(--ember)}
+.pnode .pnr{font-size:8px;color:var(--text-muted);margin-top:1px}
+.parr{color:var(--ember-mid);padding:0 5px;font-size:12px}
+
+/* ── NOVA'S BRIDGE ── */
+#nova{flex-direction:column;padding:24px;overflow-y:auto;background:rgba(8,8,13,0.3)}
+.gpgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gpc{background:rgba(15,15,22,0.5);border:1px solid var(--border-dim);padding:14px}
+.gpct{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ember-mid);margin-bottom:10px}
+.gps{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-dim);font-size:10px}
+.gps:last-child{border-bottom:none}
+.gps .k{color:var(--text-muted)}.gps .v{color:var(--text-dim)}
+.alog{margin-top:4px}
+.aentry{padding:5px 0;border-bottom:1px solid var(--border-dim);font-size:10px;color:var(--text-dim);line-height:1.5}
+.aentry:last-child{border-bottom:none}
+.aentry .at{color:var(--text-muted);font-size:9px;margin-right:5px}
+
+/* ── DOMAIN VIEW ── */
+#domains{flex-direction:column;padding:24px;overflow-y:auto;background:rgba(8,8,13,0.3)}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dcard{background:rgba(15,15,22,0.5);border:1px solid var(--border-dim);padding:12px;cursor:pointer;transition:border-color .12s}
+.dcard:hover{border-color:var(--border)}
+.dcard .dn{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;margin-bottom:3px}
+.dcard .ds{font-size:9px;color:var(--text-muted)}
+.dcard .dc{font-size:9px;color:var(--ember-mid);margin-top:5px}
+
+/* ── ORBIS PLACEHOLDER ── */
+#orbis{align-items:center;justify-content:center;flex-direction:column;background:rgba(8,8,13,0.3)}
+.orb-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text-dim);margin-bottom:4px}
+.orb-sub{font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:24px}
+.orb-map{width:500px;height:280px;border:1px solid var(--border-dim);background:rgba(15,15,22,0.5);position:relative;overflow:hidden}
+.orb-label{position:absolute;font-size:8px;color:var(--text-muted);letter-spacing:2px}
+.orb-token{position:absolute;width:8px;height:8px;border-radius:1px;cursor:pointer;transition:transform .15s}
+.orb-token:hover{transform:scale(1.8)}
+
+/* ── PLACEHOLDER TABS ── */
+.pholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;background:rgba(8,8,13,0.3)}
+.pholder .pht{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text-dim)}
+.pholder .phs{font-size:10px;color:var(--text-muted);margin-top:6px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="logo">(.)(.)</div>
+  <div id="logo-full">ghosts-in-the-noosphere</div>
+  <div id="scene-name">Forge Workshop</div>
+  <div id="topright">
+    <span style="position:relative">⚙<div class="tip" style="display:none">Dashboard</div></span>
+    <span style="position:relative">🔔<div class="notif-dot"></div></span>
+    <span style="width:20px;height:20px;background:var(--ember-dim);border:1px solid var(--border-dim);display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--ember)">N</span>
+  </div>
+</div>
+
+<!-- ICON STRIP -->
+<div id="iconstrip">
+  <div class="icon-btn active" onclick="switchScene('forge')">⚒<span class="tip">Forge Workshop</span></div>
+  <div class="icon-btn" onclick="switchScene('pipeline')">⟶<span class="tip">Pipeline Workbench</span></div>
+  <div class="icon-btn" onclick="switchScene('orbis')">◎<span class="tip">Orbis Map</span></div>
+  <div class="icon-btn" onclick="switchScene('nova')">◈<span class="tip">Nova's Bridge</span></div>
+  <div class="icon-btn" onclick="switchScene('domains')">⊞<span class="tip">Domain View</span></div>
+  <div class="icon-sep"></div>
+  <div class="icon-btn" onclick="switchTab('journal')">📓<span class="tip">Journal</span></div>
+  <div class="icon-btn" onclick="switchTab('email')">✉<span class="tip">Email</span></div>
+  <div class="icon-btn" onclick="switchTab('reader')">☰<span class="tip">Reader</span></div>
+  <div id="iconstrip-bottom">
+    <div class="icon-sep"></div>
+    <div class="icon-btn" onclick="toggleChat()">💬<span class="tip">Chat</span></div>
+    <div class="icon-btn">⚙<span class="tip">Settings</span></div>
+  </div>
+</div>
+
+<!-- CENTER STAGE -->
+<div id="stage">
+
+  <!-- FORGE WORKSHOP -->
+  <div class="scene active" id="forge">
+    <div class="fcol">
+      <div class="ch">Daily Notes</div>
+      <div class="date-h">Monday</div>
+      <div class="date-s">March 30, 2026 · Week 13</div>
+      <div class="note">
+        <p>Massive v2.0 design session. Nine tables schema finalized. <span class="t">The Forge</span> is the meta-domain — agents, memories, pipelines, N8K99 notes all in one table.</p>
+        <p>Control surface vision: Foundry VTT chrome + BumpTop physics + 3D room. <span class="t">/home</span> as a literal room. Doors to the droplet and friends.</p>
+        <p>Setup wizard: one script, PostgreSQL, 9 tables, T.A.S.K.S. bootstrap ghost says hello. <span class="t">AGPL</span> — no enclosure. Stallman + Winer.</p>
+      </div>
+      <div class="prev"><span>2026-03-29 · Sunday</span><span>▸</span></div>
+      <div class="prev"><span>2026-03-28 · Saturday</span><span>▸</span></div>
+    </div>
+    <div class="fcol">
+      <div class="ch">Pending Your Attention</div>
+      <div class="inbox-item" onclick="showGhost('nova')">
+        <div class="irow"><div class="iav" style="background:rgba(0,184,192,0.15);color:#00B8C0">N</div><div class="ititle">Morning briefing — 3 items</div><div class="itime">8m</div></div>
+        <div class="itags"><span class="itag">T.A.S.K.S.</span><span class="itag">report</span></div>
+      </div>
+      <div class="inbox-item" onclick="showTask()">
+        <div class="irow"><div class="iav" style="background:rgba(46,158,120,0.15);color:#2E9E78">E</div><div class="ititle">Approval: orbis_entities extraction</div><div class="itime">34m</div></div>
+        <div class="itags"><span class="itag">The Forge</span><span class="itag">approval</span></div>
+      </div>
+      <div class="inbox-item" onclick="showGhost('kathryn')">
+        <div class="irow"><div class="iav" style="background:rgba(184,112,21,0.15);color:#B87015">K</div><div class="ititle">London open in 52 minutes</div><div class="itime">1h</div></div>
+        <div class="itags"><span class="itag">The Markets</span><span class="itag">surf report</span></div>
+      </div>
+      <div class="inbox-item" onclick="showGhost('sophie')">
+        <div class="irow"><div class="iav" style="background:rgba(142,75,176,0.15);color:#8E4BB0">S</div><div class="ititle">2 articles tagged — HJB + ClawTeam</div><div class="itime">2h</div></div>
+        <div class="itags"><span class="itag">The Commons</span><span class="itag">research</span></div>
+      </div>
+    </div>
+    <div class="fcol">
+      <div class="ch">System Health</div>
+      <div class="hlabel">Tick Engine</div>
+      <div class="hval"><span class="dot g"></span>Ticking — 30s</div>
+      <div class="hlabel">Ghost Ecology</div>
+      <div class="ecobar">
+        <div class="ecoseg" style="flex:12;background:#2E9E78;opacity:0.7"></div>
+        <div class="ecoseg" style="flex:38;background:var(--ember);opacity:0.5"></div>
+        <div class="ecoseg" style="flex:13;background:var(--text-muted);opacity:0.5"></div>
+      </div>
+      <div style="display:flex;gap:10px;font-size:9px;color:var(--text-muted);margin-bottom:14px"><span style="color:#2E9E78">▪ 12 active</span><span style="color:var(--ember-mid)">▪ 38 idle</span><span>▪ 13 dormant</span></div>
+      <div class="hlabel">Pipelines</div>
+      <div class="prow"><span>Engineering</span><span class="pstatus fl">3 flowing</span></div>
+      <div class="prow"><span>Complete Success</span><span class="pstatus pn">firing soon</span></div>
+      <div class="prow"><span>Modular Fortress</span><span class="pstatus id">idle</span></div>
+      <div class="prow" style="margin-bottom:14px"><span>Thought Police</span><span class="pstatus fl">1 flowing</span></div>
+      <div class="hlabel">Recent</div>
+      <div class="ev"><span class="eg">Samir</span> stage 4 complete · task-api-refactor · 18m</div>
+      <div class="ev"><span class="eg">Ethan</span> OANDA pairs fetched · 42m</div>
+      <div class="ev"><span class="eg">Sophie</span> 2 articles → Research Feed · 2h</div>
+      <div class="ev"><span class="eg">Nova</span> tick #4847 · nominal · 42s</div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="scene" id="pipeline">
+    <div class="psec">
+      <div class="pst">Engineering Pipeline</div>
+      <div class="pflow">
+        <div class="pnode" onclick="showGhost('eliana')"><div class="pnn">Eliana</div><div class="pnr">CTO</div></div><div class="parr">→</div>
+        <div class="pnode act" onclick="showGhost('samir')"><div class="pnn">Samir</div><div class="pnr">Architect</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Isaac</div><div class="pnr">AI</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Casey</div><div class="pnr">UX</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Devin</div><div class="pnr">Perf</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Sanjay</div><div class="pnr">Data</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Danielle</div><div class="pnr">ML</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Morgan</div><div class="pnr">Systems</div></div>
+      </div>
+    </div>
+    <div class="psec">
+      <div class="pst">Complete Success — Paper Trade</div>
+      <div class="pflow">
+        <div class="pnode act"><div class="pnn">Ethan</div><div class="pnr">Fundamentals</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Tobias</div><div class="pnr">Analysis</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Kathryn</div><div class="pnr">Thesis</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Lucas</div><div class="pnr">Risk</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Kathryn</div><div class="pnr">Position</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">JMax</div><div class="pnr">Approve</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Log</div><div class="pnr">paper</div></div>
+      </div>
+    </div>
+    <div class="psec">
+      <div class="pst">Modular Fortress — Vetting</div>
+      <div class="pflow">
+        <div class="pnode"><div class="pnn">JMax</div><div class="pnr">Legal</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Lucas</div><div class="pnr">Compliance</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Lily</div><div class="pnr">Ethics</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Felix</div><div class="pnr">AI Ethics</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Elise</div><div class="pnr">HCI</div></div><div class="parr">→</div>
+        <div class="pnode"><div class="pnn">Eliana</div><div class="pnr">Approve</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORBIS -->
+  <div class="scene" id="orbis">
+    <div class="orb-title">Orbis</div>
+    <div class="orb-sub">Ghost positions · Drunkard's Walk · 4 active on map</div>
+    <div class="orb-map">
+      <div class="orb-label" style="top:10px;left:14px">ZHULMAR DOMINION</div>
+      <div class="orb-label" style="top:30%;left:20%">Archonate of the Silver Coast</div>
+      <div class="orb-label" style="top:60%;left:55%">Kingdom of Emerald Vales</div>
+      <div class="orb-label" style="top:20%;right:15%">Protectorate of the Gelanthari</div>
+      <div class="orb-token" style="top:42%;left:48%;background:#00B8C0" title="Nova" onclick="showGhost('nova')"></div>
+      <div class="orb-token" style="top:56%;left:33%;background:#2E9E78" title="Eliana" onclick="showGhost('eliana')"></div>
+      <div class="orb-token" style="top:28%;left:62%;background:#B87015" title="Kathryn" onclick="showGhost('kathryn')"></div>
+      <div class="orb-token" style="top:67%;left:54%;background:#8E4BB0" title="Sophie" onclick="showGhost('sophie')"></div>
+      <div style="position:absolute;bottom:8px;right:12px;font-size:9px;color:var(--text-muted)">4 shown · 59 off-map</div>
+    </div>
+  </div>
+
+  <!-- NOVA -->
+  <div class="scene" id="nova">
+    <div style="margin-bottom:16px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#00B8C0">Nova</div>
+      <div style="font-size:10px;color:var(--text-muted)">T.A.S.K.S. · COO · Operations · prime</div>
+    </div>
+    <div class="gpgrid">
+      <div class="gpc">
+        <div class="gpct">Identity</div>
+        <div class="gps"><span class="k">role</span><span class="v">Chief Operating Officer</span></div>
+        <div class="gps"><span class="k">domain</span><span class="v">The Forge</span></div>
+        <div class="gps"><span class="k">reports to</span><span class="v">Nathan</span></div>
+        <div class="gps"><span class="k">location</span><span class="v">ISS Crucible Forge</span></div>
+        <div class="gps"><span class="k">tier</span><span class="v" style="color:var(--ember)">prime</span></div>
+      </div>
+      <div class="gpc">
+        <div class="gpct">Vitals</div>
+        <div style="font-size:9px;color:var(--text-muted);display:flex;justify-content:space-between"><span>trust</span><span>0.94</span></div>
+        <div class="ebar"><div class="efill" style="width:94%;background:var(--ember)"></div></div>
+        <div style="font-size:9px;color:var(--text-muted);display:flex;justify-content:space-between"><span>energy</span><span>0.71</span></div>
+        <div class="ebar"><div class="efill" style="width:71%;background:var(--cyan)"></div></div>
+        <div class="gps" style="margin-top:6px"><span class="k">status</span><span class="v" style="color:#2E9E78">active</span></div>
+        <div class="gps"><span class="k">movement</span><span class="v">teleport</span></div>
+      </div>
+      <div class="gpc" style="grid-column:1/-1">
+        <div class="gpct">Recent Actions</div>
+        <div class="alog">
+          <div class="aentry"><span class="at">08:47</span>Posted morning briefing. 3 items flagged.</div>
+          <div class="aentry"><span class="at">08:30</span>Tick #4847 complete. Engineering nominal.</div>
+          <div class="aentry"><span class="at">07:55</span>Sophie Lee research tags routed to @Resources.</div>
+          <div class="aentry"><span class="at">07:00</span>Weekly executive summary compressed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOMAINS -->
+  <div class="scene" id="domains">
+    <div style="font-size:9px;letter-spacing:3px;color:var(--ember-mid);margin-bottom:16px">THE NINE TABLES</div>
+    <div class="dgrid">
+      <div class="dcard"><div class="dn" style="color:#7C6FD4">The Chronicles</div><div class="ds">Grand Epics · Canon</div><div class="dc">~500 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#2E9E78">The Realms</div><div class="ds">Sovereign Realms of Orbis</div><div class="dc">~5,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#C45A1A">The Press</div><div class="ds">Thought Police · Editorial</div><div class="dc">~200 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#B87015">The Markets</div><div class="ds">Complete Success · Trading</div><div class="dc">~20,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#8E4BB0">The Music</div><div class="ds">Living Room Music</div><div class="dc">~1,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#1A6FAA">The Forge</div><div class="ds">Digital Sovereignty</div><div class="dc">~250,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#5A7A3A">The Commons</div><div class="ds">@Resources · Shared</div><div class="dc">~50,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#A03060">The Work</div><div class="ds">@Tasks · Connective</div><div class="dc">~5,000 entries</div></div>
+      <div class="dcard"><div class="dn" style="color:#3A7A8A">The Post</div><div class="ds">@Communications</div><div class="dc">~15,000 entries</div></div>
+    </div>
+  </div>
+
+  <!-- TAB PLACEHOLDERS -->
+  <div class="scene" id="journal"><div class="pholder"><div class="pht">Journal</div><div class="phs">Vault notes · Long-form · Weekly summaries</div></div></div>
+  <div class="scene" id="email"><div class="pholder"><div class="pht">Email</div><div class="phs">Ghost reports · Inbox · SMTP</div></div></div>
+  <div class="scene" id="reader"><div class="pholder"><div class="pht">Reader</div><div class="phs">RSS · Research · Sophie's queue · ★ to share</div></div></div>
+</div>
+
+<!-- RIGHT SIDEBAR -->
+<div id="rs-handle" onclick="toggleRS()"></div>
+<div id="rsidebar">
+  <div id="rs-head">
+    <div id="rs-title">Context</div>
+    <div id="rs-close" onclick="closeRS()">✕</div>
+  </div>
+  <div id="rs-body">
+    <div id="rs-default">
+      <div class="rs-section">
+        <div class="rs-label">System</div>
+        <div class="rs-row"><span class="k">active</span><span class="v" style="color:#2E9E78">12</span></div>
+        <div class="rs-row"><span class="k">idle</span><span class="v" style="color:var(--ember-mid)">38</span></div>
+        <div class="rs-row"><span class="k">dormant</span><span class="v">13</span></div>
+        <div class="rs-row"><span class="k">tick</span><span class="v">#4,847</span></div>
+        <div class="rs-row"><span class="k">interval</span><span class="v">30s</span></div>
+        <div class="rs-row"><span class="k">uptime</span><span class="v">31 days</span></div>
+      </div>
+      <div class="rs-section">
+        <div class="rs-label">LLM Budget</div>
+        <div class="rs-row"><span class="k">today</span><span class="v">$4.20</span></div>
+        <div class="rs-row"><span class="k">remaining</span><span class="v" style="color:#2E9E78">$195.80</span></div>
+      </div>
+    </div>
+    <div id="rs-ghost" style="display:none"></div>
+    <div id="rs-task" style="display:none">
+      <div class="rs-section">
+        <div class="rs-label">Task</div>
+        <div style="font-size:12px;color:var(--text);margin-bottom:8px">Extract orbis_entities</div>
+        <div class="rs-row"><span class="k">status</span><span class="v" style="color:var(--ember-mid)">pending approval</span></div>
+        <div class="rs-row"><span class="k">domain</span><span class="v">The Forge</span></div>
+        <div class="rs-row"><span class="k">assigned</span><span class="v">Morgan</span></div>
+        <div class="rs-row"><span class="k">pipeline</span><span class="v">Engineering</span></div>
+        <div class="rs-row"><span class="k">blocked by</span><span class="v">your approval</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT BAR -->
+<div id="chatbar" class="collapsed">
+  <div id="chatbar-inner">
+    <div id="chat-msgs"></div>
+    <div id="chat-input-row">
+      <div id="chat-channel" onclick="cycleChannel()">ALL</div>
+      <input id="chat-input" placeholder="Message the noosphere..." onkeydown="if(event.key==='Enter')sendMsg()" onfocus="expandChat()" />
+    </div>
+  </div>
+</div>
+
+<script>
+const ghosts={
+  nova:{name:'Nova',role:'T.A.S.K.S. · COO',color:'#00B8C0',trust:0.94,energy:0.71,domain:'The Forge',pipeline:'monitoring',location:'ISS Crucible Forge',task:'Morning briefing delivered. Monitoring tick engine.',tier:'prime'},
+  eliana:{name:'Eliana',role:'CTO · Engineering',color:'#2E9E78',trust:0.88,energy:0.65,domain:'The Forge',pipeline:'Engineering — directing',location:'x:1251 y:889',task:'Reviewing orbis_entities proposal.',tier:'working'},
+  samir:{name:'Samir',role:'Senior Engineer',color:'#44A870',trust:0.80,energy:0.72,domain:'The Forge',pipeline:'Engineering — stage 4',location:'x:1260 y:885',task:'Stage 4 complete. Handing off to Casey.',tier:'working'},
+  kathryn:{name:'Kathryn',role:'CSO · Markets',color:'#B87015',trust:0.85,energy:0.58,domain:'The Markets',pipeline:'Complete Success',location:'x:1365 y:470',task:'London open preflight. Surf report queued.',tier:'working'},
+  sophie:{name:'Sophie Lee',role:'Researcher',color:'#8E4BB0',trust:0.72,energy:0.81,domain:'The Commons',pipeline:'Research Feed',location:'x:1180 y:520',task:'Tagged HJB + ClawTeam for Research Feed.',tier:'base'}
+};
+
+const channels={all:'ALL',nova:'T.A.S.K.S.',eng:'ENG'};
+let chatCh='all';
+const msgs={
+  all:[
+    {who:'Nova',color:'#00B8C0',time:'08:47',text:'Morning briefing posted. 3 items need your attention.'},
+    {who:'Samir',color:'#44A870',time:'08:31',text:'Stage 4 complete for task-api-refactor. Handing off to Casey.'},
+    {who:'Ethan',color:'#B87015',time:'08:15',text:'EUR/USD showing confluence. Routing to Tobias.'},
+    {who:'Sophie',color:'#8E4BB0',time:'07:58',text:'Starred 2 articles — HJB equations and ClawTeam repo.'},
+    {who:'Nova',color:'#00B8C0',time:'07:30',text:'Tick #4847 complete. No anomalies.'},
+  ],
+  nova:[
+    {who:'Nova',color:'#00B8C0',time:'08:47',text:'Morning briefing posted. 3 items need your attention.'},
+    {who:'Nova',color:'#00B8C0',time:'07:30',text:'Tick #4847. All systems nominal.'},
+    {who:'Nova',color:'#00B8C0',time:'06:00',text:'Weekly compression complete. 7 dailies → 1 weekly.'},
+  ],
+  eng:[
+    {who:'Eliana',color:'#2E9E78',time:'08:40',text:'orbis_entities scoped. Waiting on Nathan approval.'},
+    {who:'Samir',color:'#44A870',time:'08:31',text:'Stage 4 done. Passing to Isaac.'},
+    {who:'Morgan',color:'#3A8A6A',time:'08:10',text:'Droplet nominal. 89 tables stable.'},
+  ]
+};
+
+const sceneNames={forge:'Forge Workshop',pipeline:'Pipeline Workbench',orbis:'Orbis Map',nova:"Nova's Bridge",domains:'Domain View',journal:'Journal',email:'Email',reader:'Reader'};
+
+function switchScene(id){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.icon-btn').forEach(b=>b.classList.remove('active'));
+  const s=document.getElementById(id);if(s)s.classList.add('active');
+  if(event&&event.currentTarget)event.currentTarget.classList.add('active');
+  document.getElementById('scene-name').textContent=sceneNames[id]||id;
+}
+
+function switchTab(id){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.icon-btn').forEach(b=>b.classList.remove('active'));
+  const s=document.getElementById(id);if(s)s.classList.add('active');
+  if(event&&event.currentTarget)event.currentTarget.classList.add('active');
+  document.getElementById('scene-name').textContent=sceneNames[id]||id;
+}
+
+function renderMsgs(){
+  const el=document.getElementById('chat-msgs');
+  el.innerHTML='';
+  (msgs[chatCh]||[]).forEach(m=>{
+    const d=document.createElement('div');d.className='msg';
+    const key=m.who.toLowerCase().replace(' ','');
+    d.innerHTML=`<span class="msg-who" style="color:${m.color}" onclick="showGhost('${key}')">${m.who}</span><span class="msg-time">${m.time}</span><span class="msg-text">${m.text}</span>`;
+    el.appendChild(d);
+  });
+  el.scrollTop=el.scrollHeight;
+}
+
+function cycleChannel(){
+  const keys=Object.keys(channels);
+  const i=(keys.indexOf(chatCh)+1)%keys.length;
+  chatCh=keys[i];
+  document.getElementById('chat-channel').textContent=channels[chatCh];
+  renderMsgs();
+}
+
+function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const v=inp.value.trim();if(!v)return;
+  (msgs[chatCh]||msgs.all).push({who:'You',color:'#D8D4CC',time:'now',text:v});
+  renderMsgs();inp.value='';
+}
+
+function expandChat(){document.getElementById('chatbar').classList.remove('collapsed');document.getElementById('chatbar').classList.add('expanded');renderMsgs()}
+function toggleChat(){const cb=document.getElementById('chatbar');if(cb.classList.contains('expanded')){cb.classList.remove('expanded');cb.classList.add('collapsed')}else{expandChat()}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('chatbar').classList.remove('expanded');document.getElementById('chatbar').classList.add('collapsed')}});
+
+function toggleRS(){const rs=document.getElementById('rsidebar');rs.classList.toggle('open')}
+function closeRS(){document.getElementById('rsidebar').classList.remove('open')}
+function openRS(){document.getElementById('rsidebar').classList.add('open')}
+
+function showGhost(id){
+  const g=ghosts[id]||ghosts.nova;
+  const el=document.getElementById('rs-ghost');
+  el.style.display='block';
+  document.getElementById('rs-default').style.display='none';
+  document.getElementById('rs-task').style.display='none';
+  el.innerHTML=`
+    <div class="rs-section">
+      <div class="rs-name" style="color:${g.color}">${g.name}</div>
+      <div class="rs-role">${g.role}</div>
+      <div class="rs-label">Status</div>
+      <div style="font-size:9px;color:var(--text-muted);display:flex;justify-content:space-between"><span>trust</span><span>${g.trust}</span></div>
+      <div class="ebar"><div class="efill" style="width:${g.trust*100}%;background:var(--ember)"></div></div>
+      <div style="font-size:9px;color:var(--text-muted);display:flex;justify-content:space-between"><span>energy</span><span>${g.energy}</span></div>
+      <div class="ebar"><div class="efill" style="width:${g.energy*100}%;background:var(--cyan)"></div></div>
+      <div class="rs-row" style="margin-top:8px"><span class="k">domain</span><span class="v">${g.domain}</span></div>
+      <div class="rs-row"><span class="k">pipeline</span><span class="v">${g.pipeline}</span></div>
+      <div class="rs-row"><span class="k">location</span><span class="v">${g.location}</span></div>
+      <div class="rs-row"><span class="k">tier</span><span class="v" style="color:var(--ember)">${g.tier}</span></div>
+      <div class="rs-label" style="margin-top:12px">Current</div>
+      <div style="font-size:11px;color:var(--text-dim);line-height:1.6">${g.task}</div>
+    </div>`;
+  openRS();
+}
+
+function showTask(){
+  document.getElementById('rs-default').style.display='none';
+  document.getElementById('rs-ghost').style.display='none';
+  document.getElementById('rs-task').style.display='block';
+  openRS();
+}
+
+renderMsgs();
+</script>
+</body>
+</html>

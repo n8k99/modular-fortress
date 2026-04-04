@@ -1,0 +1,23 @@
+log_level: info
+encode_logged_query: false
+
+user:
+  name: root
+  password: "noosphere2026"
+
+listener:
+  host: 127.0.0.1
+  port: 5435
+  read_timeout_millis: 28800000
+  write_timeout_millis: 28800000
+  allow_cleartext_passwords: true
+
+data_dir: /root/doltgres/databases
+cfg_dir: /root/doltgres/.doltcfg
+privilege_file: /root/doltgres/.doltcfg/privileges.db
+auth_file: /root/doltgres/.doltcfg/auth.db
+branch_control_file: /root/doltgres/.doltcfg/branch_control.db
+
+behavior:
+  read_only: false
+  dolt_transaction_commit: false

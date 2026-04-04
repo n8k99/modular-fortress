@@ -1,0 +1,27 @@
+# GSD planning artifacts
+.planning/
+
+# Database dumps
+*.dump
+*.sql.gz
+
+# Local SQLite cache
+*.db
+*.db-shm
+*.db-wal
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Rust build artifacts
+target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
