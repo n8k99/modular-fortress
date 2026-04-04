@@ -5,174 +5,225 @@
 ## Languages
 
 **Primary:**
-- Common Lisp (SBCL) - AF64 tick engine runtime, InnateScipt interpreter
-- Rust 2021 edition - Database infrastructure (dpn-core), REST API (dpn-api)
+- Rust 1.70+ (edition 2021) - Unified noosphere web server consolidating dpn-api, dpn-core, dpn-mcp into single codebase (`noosphere/`)
+- Common Lisp (SBCL 2.x) - AF64 agent runtime (`project-noosphere-ghosts/lisp/`) and InnateScipt interpreter (`innatescript/`)
 
 **Secondary:**
-- SQL (PostgreSQL dialect) - Schema definitions in `noosphere-schema/schema/`
-- JSON - Configuration (`config.json`), API payloads
-- YAML - Ghost capability definitions (referenced in AF64 runtime)
+- Python 3.x - Database export utilities (`export_db_to_markdown.py`) and agent memory synthesis (`project-noosphere-ghosts/tools/`)
+- SQL (PostgreSQL dialect) - Database schema definitions (`noosphere-schema/schema/`)
+- JavaScript/HTML/CSS - Frontend dashboard UI (`noosphere/static/noosphere-ops.html`, mockups)
 
 ## Runtime
 
 **Environment:**
-- SBCL (Steel Bank Common Lisp) - AF64 tick engine and InnateScipt
-- Tokio async runtime (Rust) - dpn-core and dpn-api
+- Rust async runtime: tokio 1.x with full features (powers all I/O operations in noosphere server)
+- Common Lisp: SBCL (Steel Bank Common Lisp) 2.x
+- Python 3.x interpreter (standard library + psycopg2)
 
 **Package Manager:**
-- ASDF (Common Lisp) - Build system for `af64.asd`, `innatescript.asd`
-- Cargo (Rust) - Dependency management for dpn-core and dpn-api
-- Lockfiles: `Cargo.lock` present in both Rust projects
+- Rust: Cargo
+  - `noosphere/Cargo.toml` - Unified server
+  - `dpn-api/Cargo.toml` - Legacy API (being consolidated)
+  - `dpn-core/Cargo.toml` - Shared library (being consolidated)
+  - Lockfiles: `Cargo.lock` present in all three projects
+- Common Lisp: ASDF (system definitions, zero external dependencies per AF64 convention)
+  - `project-noosphere-ghosts/lisp/af64.asd` - AF64 agent runtime
+  - `innatescript/innatescript.asd` - InnateScipt interpreter
+- Python: No requirements.txt (uses psycopg2, requests from system packages)
 
 ## Frameworks
 
 **Core:**
-- Axum 0.7 - REST API framework in `dpn-api/src/main.rs`
-- ASDF 3.x (bundled with SBCL) - Common Lisp build system
+- Axum 0.7 with macros feature - Rust web framework (`noosphere/src/main.rs`, `dpn-api/`)
+- Tower 0.4 - Service middleware abstraction
+- Tower-HTTP 0.5 - CORS (`cors`), request tracing (`trace`), static file serving (`fs`)
+- SQLx 0.8 - Async PostgreSQL client with compile-time query verification
+  - Features: `["postgres", "runtime-tokio-native-tls", "json", "chrono", "uuid"]`
+  - Enables type-safe database queries checked at compile time
 
 **Testing:**
-- Hand-rolled test harness - InnateScipt uses custom `test-framework.lisp`
-- Tokio-test 0.4 - Rust async testing in dpn-core
+- tokio-test 0.4 - Async runtime test utilities for Rust
+- Hand-rolled test harness - InnateScipt uses custom macros (`deftest`, `check`, `combine-results`)
+- No external test frameworks per AF64 zero-dependency convention
 
 **Build/Dev:**
-- Cargo build system - Rust compilation
-- ASDF system definitions - Common Lisp compilation
+- Cargo - Rust compilation and dependency management
+- ASDF 3.3+ - Common Lisp system definition (bundled with SBCL)
+- rlwrap - REPL line editing wrapper (system package, not Lisp dependency)
 
 ## Key Dependencies
 
-**Critical (Rust):**
-- sqlx 0.8 - PostgreSQL async client with compile-time query verification (`dpn-core/Cargo.toml`)
-- tokio 1.x - Async runtime for all Rust services (`features = ["full"]`)
-- serde 1.x + serde_json 1.x - JSON serialization/deserialization
-- axum 0.7 - Web framework for dpn-api REST endpoints
-- tower-http 0.5 - CORS, tracing middleware for dpn-api
+**Critical (Rust - noosphere/Cargo.toml):**
+- `sqlx = "0.8"` with `["postgres", "runtime-tokio-native-tls", "json", "chrono", "uuid"]` - Database access layer
+- `tokio = "1"` with `["full"]` - Async runtime powering all I/O
+- `axum = "0.7"` with `["macros"]` - HTTP routing and request handling
+- `serde = "1"` with `["derive"]` - Serialization/deserialization
+- `serde_json = "1"` - JSON encoding/decoding for API
+- `chrono = "0.4"` with `["serde"]` - Date/time handling
+- `tower-http = "0.5"` with `["cors", "trace", "fs"]` - CORS middleware, request tracing, static file serving
 
 **Infrastructure (Rust):**
-- reqwest 0.12 - HTTP client for external APIs (embedding services, RSS)
-- feed-rs 2.1 + scraper 0.21 - RSS/Atom parsing with HTML scraping
-- anyhow 1.x + thiserror 1.x - Error handling
-- tracing 0.1 + tracing-subscriber 0.3 - Structured logging
-- chrono 0.4 - Date/time handling with serde support
-- uuid 1.x - UUID generation (`v4` feature for conversation threads)
-- rusqlite 0.31 - Local SQLite cache (`~/.dpn/cache.db`, bundled)
-- dotenvy 0.15 - Environment variable loading
+- `reqwest = "0.12"` with `["json"]` - HTTP client for external APIs, RSS fetching, embedding services
+- `feed-rs = "2.1"` - RSS/Atom feed parsing
+- `scraper = "0.21"` - HTML parsing for feed auto-discovery
+- `url = "2.5"` - URL manipulation and validation
+- `ical = "0.11"` - ICS calendar file parsing
+- `rusqlite = "0.31"` with `["bundled"]` - Embedded SQLite for local caching at `~/.dpn/cache.db`
+- `tracing = "0.1"` - Structured logging
+- `tracing-subscriber = "0.3"` with `["env-filter"]` - Logging configuration and filtering
+- `anyhow = "1"` - Ergonomic error handling
+- `thiserror = "1"` - Custom error type derivation
+- `dotenvy = "0.15"` - `.env` file loading
+- `once_cell = "1.21.3"` - Lazy static initialization
+- `dirs = "5"` - Platform-specific directory paths
+- `regex = "1"` - Pattern matching
+- `rand = "0.8"` - Random number generation
+- `uuid = "1"` with `["v4", "serde"]` - UUID generation for conversation threads
+- `jsonwebtoken = "9"` - JWT authentication (future multi-user support)
+- `async-trait = "0.1"` - Trait support for async methods
 
-**Critical (Common Lisp):**
-- uiop (ASDF utility) - Process spawning, file I/O, cross-platform paths
-- cl-json (hand-rolled in `af64.utils.json`) - JSON parsing/encoding
-- curl (system dependency) - HTTP requests via `uiop:run-program` in `af64.utils.http`
+**Python Dependencies:**
+- `psycopg2` - PostgreSQL adapter for `export_db_to_markdown.py`
+- `requests` - HTTP client for Ollama API in `nightly-memory-synthesis.py`
 
-**AF64 Runtime Modules:**
-- `af64.utils.pg` - PostgreSQL connection pooling via libpq system library
-- `af64.runtime.api` - REST API client calling dpn-api endpoints
-- `af64.runtime.provider-adapters` - AI provider abstraction layer
-- `af64.runtime.noosphere-resolver` - InnateScipt resolver for Noosphere data
-- `af64.runtime.innate-builder` - Template validation and CRUD
-- `af64.runtime.ghost-capabilities` - YAML capability loader
+**Common Lisp Dependencies:**
+- None - All code hand-rolled per AF64 convention
+- Uses SBCL built-ins: `uiop` (file I/O, process spawning), `asdf` (build system)
+- System dependencies called via `uiop:run-program`: curl (HTTP), libpq (PostgreSQL)
 
 ## Configuration
 
 **Environment:**
-- `config.json` - Centralized configuration (API keys, database credentials, service URLs)
-- Environment variables:
-  - `DPN_API_URL` - dpn-api base URL (e.g., `http://localhost:8080`)
-  - `DPN_API_KEY` - Authentication for dpn-api
-  - Database credentials sourced from `config.json` `database.master_chronicle`
-- `master_chronicle.dump` - PostgreSQL database dump (443 MB, downloaded 2026-04-03)
+- `.env` file support via dotenvy (Rust)
+- `DATABASE_URL` - PostgreSQL connection string (default: `postgresql://nebulab_user:nebulab_dev_password@localhost:5432/master_chronicle`)
+- `RUST_LOG` - Logging level (default: `noosphere=debug,tower_http=debug`)
+- `HOST` - Server bind address (default: `0.0.0.0`)
+- `PORT` - Server port (default: `8888`)
+- `OPENAI_API_KEY` - OpenAI embeddings API key (optional)
+
+**Centralized Configuration:**
+- `config.json` at repository root - API keys, service URLs, database credentials
+  - AI service keys: Anthropic, OpenAI, Perplexity, Ollama
+  - Integration keys: Discord, GitHub, Ghost CMS, n8n, Figma, Printful
+  - Database configurations: master_chronicle, orbis_narratives
+  - Service endpoints: Obsidian API, core server, Ollama
+  - Warning: Contains live secrets, tracked in git
 
 **Build:**
-- `dpn-core/Cargo.toml` - Rust library manifest
-- `dpn-api/Cargo.toml` - Rust binary manifest
-- `project-noosphere-ghosts/lisp/af64.asd` - AF64 system definition
-- `innatescript/innatescript.asd` - InnateScipt system definition
+- `noosphere/Cargo.toml` - Unified server configuration
+- `dpn-core/Cargo.toml` - Shared library (being consolidated into noosphere)
+- `dpn-api/Cargo.toml` - Legacy API (being consolidated into noosphere)
+- `project-noosphere-ghosts/lisp/af64.asd` - AF64 runtime system definition
+- `innatescript/innatescript.asd` - InnateScipt interpreter system definition
 
 ## Platform Requirements
 
 **Development:**
-- SBCL (Common Lisp implementation) - Not in PATH during analysis, must be installed
-- Rust toolchain 2021 edition - For dpn-core and dpn-api compilation
-- PostgreSQL 14+ - master_chronicle database (local or via SSH tunnel)
-- libpq.so.5 - PostgreSQL C client library (required by AF64 `af64.utils.pg`)
-- curl - System binary for HTTP requests in Common Lisp code
-- rlwrap (optional) - Line editing for Lisp REPL
+- Rust 1.70+ with Cargo
+- SBCL 2.x (Steel Bank Common Lisp)
+- Python 3.x
+- PostgreSQL 16+ client tools (pg_restore version 16.13 confirmed via Homebrew)
+- rlwrap (optional, for REPL line editing)
+- libpq.so.5 (PostgreSQL C client library for AF64 Common Lisp FFI)
+- curl (system binary for AF64 HTTP requests)
 
 **Production:**
-- DigitalOcean droplet at `144.126.251.126` - Primary deployment target
-- SSH tunnel to PostgreSQL - Connection via `db.eckenrodemuziekopname.com:5432`
-- Local PostgreSQL database - `master_chronicle` on `localhost:5432`
+- PostgreSQL 16.9 server (confirmed from dump header and QUICKSTART.md)
+- Database: `master_chronicle` (83 tables, 464MB dump file, 2,554 tasks, 9,846 conversations)
+- Database users: `nebulab_user`, `chronicle`, `executive`
+- Connection pool size: 10 (configured in `config.json`)
+- Server port: 8888 (noosphere web server)
+- Optional: Local Ollama at `http://localhost:11434` (llama3.1:8b model for AI embeddings and memory synthesis)
+
+**Deployment Target:**
+- DigitalOcean droplet at `144.126.251.126`
+- Remote database: `db.eckenrodemuziekopname.com:5432`
 
 ## Database Systems
 
 **Primary:**
-- PostgreSQL 14+ - `master_chronicle` database
-  - Tables: 50+ (agents, tasks, conversations, documents, decisions, etc.)
-  - Connection pooling: 10 connections (configured in `config.json`)
+- PostgreSQL 16.9 - `master_chronicle` database
+  - Size: 464MB (dump file)
+  - Tables: 83 tables
+  - Records: 2,554 tasks, 9,846 conversations (per QUICKSTART.md)
+  - Extensions: `vector` (for embeddings), `pg_trgm` (for text search)
+  - Configuration: `pg_trgm.similarity_threshold = 0.1`, `idle_in_transaction_session_timeout = 10s`
   - Accessed via:
-    - sqlx (Rust async client in dpn-core)
-    - libpq (C library via FFI in AF64 `af64.utils.pg`)
+    - SQLx (Rust async client in noosphere)
+    - psycopg2 (Python export script)
+    - libpq (Common Lisp FFI in AF64)
 
 **Secondary:**
-- SQLite 3 - Local cache at `~/.dpn/cache.db` via rusqlite (dpn-core)
-  - Offline-first storage for pending changes
-  - Sync queue for master_chronicle synchronization
+- SQLite 3 - Local cache at `~/.dpn/cache.db`
+  - Client: rusqlite 0.31 with bundled SQLite (no system dependency)
+  - Purpose: Offline-first storage, sync queue for master_chronicle
 
 **Schema Management:**
-- `noosphere-schema/schema/` - 15 SQL files defining table structure
-  - 00_extensions.sql - PostgreSQL extensions
-  - 01-15_*.sql - Modular table definitions ("The Chronicles", "The Forge", etc.)
-  - 14_triggers.sql - Database triggers
-- `master_chronicle.dump` - Full database backup (443 MB, pg_dump format)
+- `noosphere-schema/schema/` - SQL files defining table structure
+- `master_chronicle.dump` - Full database backup (pg_dump format, 464MB, downloaded 2026-04-03)
 
 ## External HTTP Dependencies
 
-**AI Providers (config.json api_keys):**
+**AI Providers (from config.json):**
 - Anthropic Claude API - `https://api.anthropic.com/v1/messages`
+  - API key: `sk-ant-api03-...` (config.json)
 - OpenAI API - `https://api.openai.com/v1/chat/completions`
-- Perplexity API - Enabled in `ai_service.perplexity`
-- Ollama (local) - `http://localhost:11434` (llama3.1:8b model)
+  - API key: `sk-proj-EmUb...` (config.json)
+  - Embeddings: `text-embedding-3-small` model
+- Perplexity API - Research/search augmentation
+  - API key: `pplx-WY26...` (config.json)
+- Ollama (local) - `http://localhost:11434`
+  - Models: llama3.1:8b (default), nomic-embed-text (embeddings)
+  - Used by: Burgs pipeline, memory synthesis, local AI fallback
 
 **Infrastructure APIs:**
-- Ghost CMS - `https://eckenrodemuziekopname.com` (admin + content API)
-- Discord - Bot token + webhooks for 20+ channels (tech_dev_office, personas, etc.)
-- GitHub - GraphQL API + REST API (token: `ghp_4z1jN...`)
+- Ghost CMS - `https://eckenrodemuziekopname.com` (blog publishing)
+- Discord API - Bot token + 20+ webhooks (config.json)
+- GitHub API - GraphQL + REST (token: `ghp_4z1jN...`)
 - n8n workflows - Local (`http://localhost:5678`) + droplet (`https://n8n.eckenrodemuziekopname.com`)
-
-**Data Services:**
-- Obsidian Local REST API - `http://localhost:27123` (vault at `/Volumes/Elements/Nebulab`)
-- News API - API key `5cf576ab...`
-- Google APIs - Sheets, Gemini image generation, Telegram integration
-- Figma API - Personal access token for design file access
-- Printful API - Product fulfillment (store_id: 13913738)
+- Obsidian Local REST API - `http://localhost:27123`
 
 ## Build Process
 
-**Rust:**
+**Rust (Unified Server):**
 ```bash
-cd dpn-core && cargo build --release
-cd dpn-api && cargo build --release
+cd noosphere
+cargo build --release
+cargo run  # Starts on http://localhost:8888
 ```
 
-**Common Lisp:**
+**Common Lisp (AF64 Runtime):**
 ```bash
-sbcl --load project-noosphere-ghosts/lisp/af64.asd
+cd project-noosphere-ghosts/lisp
+sbcl --load af64.asd
 sbcl --eval '(asdf:load-system "af64")' --eval '(af64:run-tick)'
 ```
 
-**InnateScipt:**
+**Common Lisp (InnateScipt Interpreter):**
 ```bash
-sbcl --load innatescript/innatescript.asd
-sbcl --eval '(asdf:load-system "innatescript")'
+cd innatescript
+./run-tests.sh  # Runs test suite
+./run-repl.sh   # Starts REPL
+```
+
+**Python (Database Export):**
+```bash
+python3 export_db_to_markdown.py  # Exports all tables to markdown/
 ```
 
 ## Deployment
 
-**Target:**
-- DigitalOcean droplet (144.126.251.126)
-- Synced via rsync at 00:07 (dpn-core freshly synced)
+**Current State:**
+- Noosphere server: `http://localhost:8888` (confirmed running in QUICKSTART.md)
+- API endpoints: `/api/health`, `/api/system/stats`, `/api/ghosts`, `/api/tasks`, `/api/conversations`, `/api/pipelines`
+- Dashboard: `/static/noosphere-ops.html` (mock data, needs wiring to live API)
+- Database: Connected to master_chronicle (83 tables, 2,554 tasks, 9,846 conversations)
 
-**Database:**
-- PostgreSQL dump: `master_chronicle.dump` (464 MB)
-- Restore: `pg_restore -d master_chronicle master_chronicle.dump`
+**Deployment Process:**
+- Build release binary: `cargo build --release`
+- Target: DigitalOcean droplet (144.126.251.126)
+- Database restore: `pg_restore -d master_chronicle master_chronicle.dump`
+- Service management: Manual restart
 
 ---
 

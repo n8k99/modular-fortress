@@ -6,305 +6,269 @@
 
 ```
 modular-fortress/
-├── project-noosphere-ghosts/   # Common Lisp ghost runtime
-│   ├── lisp/                   # Core runtime modules
-│   │   ├── runtime/            # 31 runtime modules (tick-engine, broker, etc.)
-│   │   ├── util/               # Utilities (json, pg, http, github)
-│   │   ├── tools/              # Tool implementations
-│   │   └── tests/              # Test suite
-│   ├── config/                 # Agent YAML declarations
-│   │   ├── agents/             # Per-agent capabilities (eliana.yaml, etc.)
-│   │   ├── af64.env            # Runtime environment variables
-│   │   └── provider-config.json # LLM provider configuration
-│   ├── migrations/             # SQL migration scripts
-│   ├── sql/                    # SQL query templates
-│   └── tools/                  # Utility scripts (onboard.lisp)
-├── dpn-core/                   # Rust infrastructure library
-│   ├── src/
-│   │   ├── db/                 # Database models (11 modules)
-│   │   ├── memory/             # Agent memory storage
-│   │   ├── embeddings/         # Embedding generation
-│   │   ├── context/            # Context injection
-│   │   ├── cache/              # SQLite local cache
-│   │   ├── dedup/              # Document deduplication
-│   │   └── [other modules]     # ics, events, tasks, reading, etc.
-│   ├── analysis/               # Data analysis tools
-│   └── target/                 # Rust build artifacts
-├── dpn-api/                    # Rust REST API server
-│   ├── src/
-│   │   ├── handlers/           # HTTP route handlers (27 modules)
-│   │   ├── auth.rs             # Bearer token auth middleware
-│   │   ├── error.rs            # Error types
-│   │   └── main.rs             # Axum server entry point
-│   └── target/                 # Rust build artifacts
-├── innatescript/               # Innate scripting language
-│   ├── src/                    # Tokenizer, parser, evaluator (not Rust, likely Lisp)
-│   ├── docs/                   # Language documentation
-│   └── tests/                  # Innate test suite
-├── noosphere-schema/           # Database schema definitions
-│   ├── schema/                 # 15 SQL files (9 domain + 3 infra + extensions)
-│   ├── migrate/                # Migration tooling
-│   ├── mockups/                # Schema mockups
-│   └── prompts/                # Design prompts
-├── gotcha-secrets/             # API credentials (NOT committed to repo)
-│   ├── calendar/               # Google Calendar credentials
-│   ├── kalshi/                 # Kalshi API keys
-│   ├── oanda/                  # OANDA trading credentials
-│   ├── venice/                 # Venice API keys
-│   └── xmpp/                   # XMPP credentials
-├── specs/                      # Project specifications
-├── config.json                 # Master configuration (API keys, services)
-├── master_chronicle.dump       # PostgreSQL database dump (443 MB)
-├── CLAUDE.md                   # Project instructions for Claude
-└── Modular Fortress.md         # Project overview document
+├── dpn-api/                   # REST API server (Rust, Axum)
+├── dpn-core/                  # Shared library crate (Rust)
+├── noosphere/                 # Unified server + UI (Rust, Axum)
+├── project-noosphere-ghosts/  # AF64 tick engine (Common Lisp)
+├── innatescript/              # Scripting language (Common Lisp)
+├── noosphere-schema/          # PostgreSQL schema definitions
+├── gotcha-secrets/            # External API credentials (gitignored)
+├── specs/                     # Technical specifications
+├── markdown/                  # Exported database markdown dumps
+├── .planning/                 # GSD planning artifacts
+├── config.json                # Service configuration and API keys
+├── master_chronicle.dump      # PostgreSQL database dump (443MB)
+└── CLAUDE.md                  # Project instructions
 ```
 
 ## Directory Purposes
 
-**project-noosphere-ghosts/:**
-- Purpose: Ghost agent runtime engine
-- Contains: 40+ Common Lisp modules, ASDF system definition, agent YAML configs
-- Key files:
-  - `lisp/af64.asd` - ASDF system definition with module load order
-  - `lisp/main.lisp` - Entry point (exports `af64:run-tick`)
-  - `lisp/packages.lisp` - Package definitions (16 packages)
-  - `lisp/runtime/tick-engine.lisp` - Main tick loop (400+ lines)
-  - `lisp/runtime/cognition-broker.lisp` - LLM request broker with cognitive winter
-  - `lisp/runtime/noosphere-resolver.lisp` - CLOS resolver for Innate
-  - `lisp/runtime/action-executor.lisp` - Tool call execution and database updates
-  - `config/agents/*.yaml` - Ghost capability declarations (9 agents)
+**dpn-api/**
+- Purpose: RESTful API server with authentication
+- Contains: Axum HTTP server, auth middleware, API handlers for all domains
+- Key files: `src/main.rs`, `src/auth.rs`, `src/handlers/*.rs`
+- Entry point: `cargo run --release`
+- Port: 8080
+- Pattern: Handler-per-domain with shared dpn-core dependency
 
-**dpn-core/:**
-- Purpose: Rust infrastructure library for database and memory
-- Contains: 15+ module directories, Cargo.toml
-- Key files:
-  - `src/lib.rs` - Public API surface (140+ exports)
-  - `src/db/mod.rs` - Database connection pooling
-  - `src/db/memories.rs` - Memory storage (renamed from vault_notes)
-  - `src/memory/inheritance.rs` - Hierarchical memory scopes
-  - `src/embeddings/generator.rs` - OpenAI embedding generation
-  - `src/context/injection.rs` - Smart context building
-  - `src/cache/sqlite.rs` - Local SQLite cache for offline-first
+**dpn-core/**
+- Purpose: Shared business logic and database access layer
+- Contains: Database models, sync engine, embeddings, wikilinks, RSS reader, memory, context injection, deduplication, notifications, pipelines
+- Key files: `src/lib.rs`, `src/db/*.rs`, `src/memory/*.rs`, `src/embeddings/*.rs`, `src/sync/*.rs`, `src/reading/*.rs`
+- Entry point: Library crate (no binary)
+- Pattern: Feature-based module organization with re-exports in `lib.rs`
 
-**dpn-api/:**
-- Purpose: REST API server (Axum framework)
-- Contains: 27 handler modules, auth middleware
-- Key files:
-  - `src/main.rs` - Axum server setup (195 lines)
-  - `src/handlers/af64_*.rs` - Ghost runtime endpoints (10 modules)
-  - `src/handlers/documents.rs` - Document CRUD
-  - `src/handlers/tasks.rs` - Task management
-  - `src/auth.rs` - Bearer token authentication
+**noosphere/**
+- Purpose: Unified web server and operations dashboard
+- Contains: Axum server, static assets, UI handlers, MCP protocol (Model Context Protocol)
+- Key files: `src/main.rs`, `src/lib.rs`, `src/api/*.rs`, `static/noosphere-ops.html`
+- Entry point: `cargo run` (port 8888)
+- Pattern: Minimal consolidation of dpn-api + dpn-mcp with dashboard focus
 
-**innatescript/:**
-- Purpose: Domain-specific scripting language for ghosts
-- Contains: Parser, evaluator, resolver protocol
-- Key files: (structure inferred, not Rust based on lack of .rs files)
-  - Likely `src/parser.lisp`, `src/evaluator.lisp`, `src/resolver.lisp`
-  - `docs/` - Language specification and examples
+**project-noosphere-ghosts/**
+- Purpose: AF64 tick-based artificial life engine
+- Contains: 30 Common Lisp modules, ASDF system definition, persona config, migrations, SQL utilities, tool wrappers
+- Key files: `lisp/af64.asd`, `lisp/main.lisp`, `lisp/runtime/*.lisp`, `config/provider-config.json`, `config/em-field-mapping.lisp`
+- Entry point: `sbcl --eval '(asdf:load-system :af64)' --eval '(af64:run-tick N)'`
+- Pattern: Zero Quicklisp dependencies, hand-rolled HTTP/JSON/PostgreSQL clients
 
-**noosphere-schema/:**
-- Purpose: PostgreSQL schema for 9-table polymorphic design
-- Contains: SQL DDL files, migration scripts
-- Key files:
-  - `schema/07_the_forge.sql` - Agents, memories, tick engine (107 lines)
-  - `schema/08_the_commons.sql` - Shared resources (59 lines)
-  - `schema/09_the_work.sql` - Tasks and goals (70 lines)
-  - `schema/10_the_post.sql` - Conversations
-  - `schema/12_the_index.sql` - Materialized view for wikilink resolution
-  - `schema/14_triggers.sql` - Database triggers
-  - `noosphere-bundle.md` - Full schema documentation
+**innatescript/**
+- Purpose: Declarative scripting language for ghost routines
+- Contains: Lexer, parser, evaluator, resolver protocol, REPL, test framework
+- Key files: `innatescript.asd`, `src/packages.lisp`, `src/types.lisp`, `src/parser/*.lisp`, `src/eval/*.lisp`, `tests/*.lisp`
+- Entry point: `sbcl --eval '(asdf:load-system "innatescript")' --eval '(innate:repl)'`
+- Pattern: Hand-rolled recursive descent parser, two-pass evaluation, zero external dependencies
 
-**gotcha-secrets/:**
-- Purpose: Sensitive API credentials (not in git)
-- Contains: Calendar, trading, XMPP credentials
-- Security: `.gitignore` excludes this directory
+**noosphere-schema/**
+- Purpose: PostgreSQL schema definitions for all 12 domain tables
+- Contains: 16 SQL files defining polymorphic tables, indexes, triggers, functions
+- Key files: `schema/00_extensions.sql` through `schema/15_the_ledger.sql`
+- Entry point: Apply via `psql -U user -d master_chronicle -f schema/*.sql`
+- Pattern: Polymorphic tables with `kind` discriminator + JSONB `meta` field
+
+**gotcha-secrets/**
+- Purpose: External service API keys (gitignored)
+- Contains: Subdirectories for calendar, kalshi, oanda, venice, xmpp credentials
+- Key files: `.env` files, JSON credential files (all gitignored)
+- Pattern: Isolated credential storage separate from config.json
+
+**specs/**
+- Purpose: Technical specifications and design documents
+- Contains: High-level architecture docs, domain models, feature specs
+- Pattern: Markdown documentation for planning and reference
+
+**markdown/**
+- Purpose: Exported database content as markdown files
+- Contains: Subdirectories for agent areas, daily memory, documents, drives, fitness
+- Key files: `agent_areas/*.md`, `agent_daily_memory/*.md`, `agent_drives/*.md`
+- Pattern: One markdown file per database row, used for LLM context injection
+
+**.planning/**
+- Purpose: GSD planning artifacts (milestones, phases, research, codebase docs)
+- Contains: `codebase/` (ARCHITECTURE.md, STRUCTURE.md, etc.), archived planning docs
+- Key files: `.planning/codebase/ARCHITECTURE.md`, `.planning/codebase/STRUCTURE.md`
+- Pattern: GSD workflow coordination and codebase mapping
 
 ## Key File Locations
 
 **Entry Points:**
-- Ghost Runtime: `project-noosphere-ghosts/lisp/main.lisp` → `(af64:run-tick)`
-- API Server: `dpn-api/src/main.rs` → `#[tokio::main] async fn main()`
-- Database Schema: `noosphere-schema/schema/*.sql` (15 files, run in order)
+- `noosphere/src/main.rs`: Noosphere web server (port 8888)
+- `dpn-api/src/main.rs`: dpn-api REST server (port 8080)
+- `project-noosphere-ghosts/lisp/main.lisp`: AF64 tick engine entry
+- `innatescript/src/innate.lisp`: Innate interpreter top-level API
 
 **Configuration:**
-- Master Config: `config.json` (770 lines, API keys, service URLs)
-- Ghost Config: `project-noosphere-ghosts/config/af64.env` (runtime vars)
-- Provider Config: `project-noosphere-ghosts/config/provider-config.json` (LLM routing)
-- Agent Capabilities: `project-noosphere-ghosts/config/agents/*.yaml` (9 files)
+- `config.json`: Service URLs, API keys, database credentials, LLM provider settings, team rosters
+- `project-noosphere-ghosts/config/provider-config.json`: LLM provider chain configuration
+- `project-noosphere-ghosts/config/af64.env`: Runtime environment variables (generated by onboarding wizard)
+- `dpn-api/.env`: Database URL, JWT secret, API keys
+- `noosphere/.env`: Database URL
 
 **Core Logic:**
-- Tick Engine: `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp`
-- Cognition Broker: `project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp`
-- Action Executor: `project-noosphere-ghosts/lisp/runtime/action-executor.lisp`
-- Perception: `project-noosphere-ghosts/lisp/runtime/perception.lisp`
-- Noosphere Resolver: `project-noosphere-ghosts/lisp/runtime/noosphere-resolver.lisp`
+- `dpn-core/src/lib.rs`: Re-exports for all dpn-core modules
+- `dpn-core/src/db/*.rs`: Database access (documents, tasks, events, projects, memories, areas, archives, resources, templates)
+- `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp`: AF64 tick orchestration
+- `project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp`: LLM request queue and provider chain
+- `project-noosphere-ghosts/lisp/runtime/perception.lisp`: Agent environment scanning
+- `project-noosphere-ghosts/lisp/runtime/action-executor.lisp`: Side-effect execution (DB writes, tool calls)
+- `innatescript/src/eval/evaluator.lisp`: Two-pass Innate script evaluation
 
 **Testing:**
-- Lisp Tests: `project-noosphere-ghosts/lisp/tests/test-pg.lisp`
-- Rust Tests: `dpn-core/src/db/tests.rs` (unit tests)
+- `dpn-core/tests/`: Rust integration tests (none present yet)
+- `innatescript/tests/`: Hand-rolled Lisp test suite (`test-framework.lisp`, `test-*.lisp`)
+- `innatescript/run-tests.sh`: Test runner script
 
 ## Naming Conventions
 
 **Files:**
-- Lisp: `kebab-case.lisp` (e.g., `tick-engine.lisp`, `cognition-broker.lisp`)
-- Rust: `snake_case.rs` (e.g., `af64_agents.rs`, `stagehand.rs`)
-- SQL: `##_the_domain.sql` (e.g., `07_the_forge.sql`, `08_the_commons.sql`)
-- YAML: `lowercase.yaml` (e.g., `eliana.yaml`, `nova.yaml`)
+- Rust: snake_case (e.g., `documents.rs`, `vault_notes.rs`, `af64_agents.rs`)
+- Lisp: kebab-case (e.g., `tick-engine.lisp`, `cognition-broker.lisp`, `action-planner.lisp`)
+- SQL: numbered with prefix (e.g., `00_extensions.sql`, `07_the_forge.sql`)
+- Markdown: descriptive with underscores (e.g., `agent_areas_1.md`, `ARCHITECTURE.md`)
 
 **Directories:**
-- Rust crates: `kebab-case` (e.g., `dpn-core`, `dpn-api`)
-- Lisp modules: `lowercase` (e.g., `runtime`, `util`, `tools`)
-- Schema files: `lowercase` (e.g., `schema`, `migrate`, `mockups`)
-
-**Packages (Lisp):**
-- Pattern: `:af64.subsystem.module` (e.g., `:af64.runtime.tick-engine`, `:af64.utils.json`)
-- Exports: `defpackage` with `:export` list at top of file
-
-**Functions (Lisp):**
-- Pattern: `kebab-case` (e.g., `run-tick`, `broker-submit-job`, `db-perceive`)
-- Predicates: `-p` suffix (e.g., `task-ready-p`, `job-expired-p`)
-
-**Structs (Rust):**
-- Pattern: `PascalCase` (e.g., `DbPool`, `CognitionJob`, `MemoryEntry`)
-- Methods: `snake_case` (e.g., `get_agent`, `list_tasks`, `update_state`)
-
-**Database Tables:**
-- Pattern: `the_domain` (e.g., `the_forge`, `the_commons`, `the_work`)
-- Columns: `snake_case` (e.g., `agent_id`, `created_at`, `meta`)
-
-**Database Kinds:**
-- Pattern: `snake_case` (e.g., `agent`, `memory_daily`, `cognition_job`)
-- Stored in `kind` column of polymorphic tables
+- Rust: kebab-case (e.g., `dpn-api`, `dpn-core`)
+- Lisp: kebab-case (e.g., `project-noosphere-ghosts`, `innatescript`)
+- Modules: lowercase (e.g., `src/db/`, `src/memory/`, `lisp/runtime/`)
 
 ## Where to Add New Code
 
-**New Ghost Behavior:**
-- Primary code: `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` (add tool handler)
-- Tests: `project-noosphere-ghosts/lisp/tests/test-[feature].lisp`
-- Config: `project-noosphere-ghosts/config/agents/[ghost].yaml` (add responsibility)
+**New REST API Endpoint:**
+- Implementation: `dpn-api/src/handlers/[domain].rs` (or create new file)
+- Route registration: `dpn-api/src/main.rs` (add route in protected or public router)
+- Database logic: `dpn-core/src/db/[table].rs` (or create new module)
+- Tests: `dpn-api/tests/` (if integration tests exist) or manual via curl
 
-**New API Endpoint:**
-- Implementation: `dpn-api/src/handlers/[domain].rs` (add handler function)
-- Route: `dpn-api/src/main.rs` (register in Axum router)
-- Model: `dpn-core/src/db/[domain].rs` (add database query function)
+**New AF64 Runtime Module:**
+- Implementation: `project-noosphere-ghosts/lisp/runtime/[module-name].lisp`
+- Package definition: Add to `project-noosphere-ghosts/lisp/packages.lisp`
+- System definition: Add to `project-noosphere-ghosts/lisp/af64.asd` `:components`
+- Tests: Not currently implemented (manual verification via REPL)
 
-**New Database Kind:**
-- Schema: `noosphere-schema/schema/##_the_[domain].sql` (add to kind taxonomy comment)
-- Index: Add domain-specific index if needed
-- Model: `dpn-core/src/db/[domain].rs` (add Rust struct if needed)
+**New Innate Language Feature:**
+- Parser change: `innatescript/src/parser/parser.lisp` (add grammar rules)
+- Tokenizer: `innatescript/src/parser/tokenizer.lisp` (add token types if needed)
+- AST node: `innatescript/src/types.lisp` (add struct definition)
+- Evaluator: `innatescript/src/eval/evaluator.lisp` (add evaluation logic)
+- Tests: `innatescript/tests/test-[feature].lisp`
 
-**New Innate Feature:**
-- Parser: `innatescript/src/parser.lisp` (extend AST nodes)
-- Evaluator: `innatescript/src/evaluator.lisp` (add evaluation rule)
-- Resolver: `project-noosphere-ghosts/lisp/runtime/noosphere-resolver.lisp` (add table resolver)
+**New Database Domain:**
+- Schema: `noosphere-schema/schema/[NN]_the_[domain].sql`
+- dpn-core model: `dpn-core/src/db/[domain].rs`
+- API handlers: `dpn-api/src/handlers/[domain].rs`
+- Route registration: `dpn-api/src/main.rs`
 
-**New Memory Scope:**
-- Implementation: `dpn-core/src/memory/inheritance.rs` (extend `MemoryInheritance`)
-- Database: Add scope column to relevant table (e.g., `project_id`, `area_id`)
+**New dpn-core Feature:**
+- Implementation: `dpn-core/src/[module]/` (create directory if new module)
+- Re-export: `dpn-core/src/lib.rs` (add `pub use` statements)
+- Documentation: Add doc comments to public functions
+- Tests: `dpn-core/tests/` (integration tests) or `#[cfg(test)] mod tests` in module file
 
-**New LLM Provider:**
-- Adapter: `project-noosphere-ghosts/lisp/runtime/provider-adapters.lisp` (add provider class)
-- Config: `project-noosphere-ghosts/config/provider-config.json` (add provider entry)
+**Utilities:**
+- Rust shared helpers: `dpn-core/src/[appropriate_module]/` (no separate utils directory)
+- Lisp utilities: `project-noosphere-ghosts/lisp/util/*.lisp` (json.lisp, pg.lisp, http.lisp)
+- SQL utilities: `project-noosphere-ghosts/sql/` (helper queries)
+- Python tools: `project-noosphere-ghosts/tools/` (though not currently present)
 
 ## Special Directories
 
-**target/ (Rust build artifacts):**
-- Purpose: Compiled Rust binaries and intermediate files
+**dpn-api/target/ and dpn-core/target/ and noosphere/target/**
+- Purpose: Rust build artifacts
 - Generated: Yes (by `cargo build`)
-- Committed: No (excluded in `.gitignore`)
+- Committed: No (gitignored)
 
-**~/.af64/ (Ghost runtime state):**
-- Purpose: Broker state, telemetry logs
-- Generated: Yes (by ghost runtime)
-- Committed: No (local machine state)
-- Files: `broker-state.json`, `telemetry.jsonl`, `tick-reports/`
+**project-noosphere-ghosts/config/**
+- Purpose: Runtime configuration files (provider config, persona mappings, field mappings)
+- Generated: Partially (onboarding wizard creates `af64.env`)
+- Committed: Partially (`provider-config.json` template yes, `af64.env` no)
 
-**~/.dpn/ (Local cache):**
-- Purpose: SQLite offline-first cache
-- Generated: Yes (by dpn-core)
-- Committed: No (local machine cache)
-- Files: `cache.db`
+**noosphere-schema/migrate/**
+- Purpose: Migration tracking or old migration files
+- Generated: No
+- Committed: Yes (but no files currently present)
 
-**master_chronicle.dump:**
-- Purpose: PostgreSQL database snapshot
-- Generated: Yes (by `pg_dump`)
-- Committed: Maybe (443 MB, synced from droplet at 00:07)
-- Note: Contains actual noosphere substrate
+**noosphere-schema/mockups/**
+- Purpose: UI/UX mockups or schema mockups
+- Generated: No
+- Committed: Yes (markdown files with operational mockups)
 
-**gotcha-secrets/:**
-- Purpose: API credentials for external services
-- Generated: No (manual setup)
-- Committed: No (excluded in `.gitignore`)
-- Security: Never commit this directory
+**markdown/**
+- Purpose: Database exports for LLM context (agent memory, areas, documents, drives, fitness)
+- Generated: Yes (by `export_db_to_markdown.py`)
+- Committed: No (gitignored, regenerated on demand)
 
-**migrations/ (SQL migration scripts):**
-- Purpose: Database schema evolution
-- Generated: No (manually written)
-- Committed: Yes
-- Pattern: `###_migration_name.sql` (e.g., `001_blocked_by_array_migration.sql`)
+**.planning/**
+- Purpose: GSD workflow artifacts (milestones, phases, research, codebase documentation)
+- Generated: Partially (by GSD commands)
+- Committed: Yes (archived files show `D` status, indicating deletion from previous cleanup)
 
-## Dependency Graph
+**doltgres-data/**
+- Purpose: Doltgres database storage (experimental versioned database)
+- Generated: Yes (by Doltgres runtime)
+- Committed: No (gitignored)
 
-**project-noosphere-ghosts depends on:**
-- dpn-api (HTTP client via `http-request` in `util/http.lisp`)
-- PostgreSQL (direct connection via `util/pg.lisp`)
-- innatescript (loaded as ASDF dependency, not explicitly listed in `af64.asd`)
+## Architecture Boundaries
 
-**dpn-api depends on:**
-- dpn-core (Rust crate dependency)
-- PostgreSQL (via dpn-core)
+**Rust ↔ Lisp:**
+- Lisp runtime calls Rust API via HTTP (dpn-api endpoints)
+- No direct FFI between Rust and Lisp
+- Lisp has direct PostgreSQL access via libpq FFI (bypassing Rust layer)
 
-**dpn-core depends on:**
-- PostgreSQL (via `sqlx` crate)
-- SQLite (via `rusqlite` crate for cache)
-- OpenAI API (for embeddings)
+**dpn-core ↔ dpn-api:**
+- dpn-api depends on dpn-core as Cargo library dependency
+- dpn-core exposes all database logic as public functions
+- dpn-api provides HTTP/JSON interface on top
 
-**innatescript depends on:**
-- Nothing (standalone Common Lisp library)
+**noosphere ↔ dpn-core:**
+- noosphere depends on dpn-core (same pattern as dpn-api)
+- Consolidates some dpn-api functionality with dashboard focus
+- Separate port (8888 vs 8080) for different use cases
 
-**Inter-project communication:**
-- Ghost → API: HTTP POST/GET/PATCH to `http://localhost:8080/api/*`
-- API → Database: SQL via `sqlx` connection pool
-- Ghost → Database: SQL via Lisp `cl-postgres` (direct connection)
-- Ghost → Innate: Function calls to `innate.eval:evaluate`
+**AF64 Runtime ↔ Innate:**
+- AF64 runtime loads innatescript as ASDF dependency (planned, not yet implemented)
+- Innate provides interpreter for `.dpn` scripts
+- AF64 provides resolver implementation for Innate's pluggable protocol
 
-## Build System
+**All Components ↔ PostgreSQL:**
+- Rust: sqlx connection pool (10 connections)
+- Lisp: Direct libpq FFI calls (no connection pooling)
+- Schema: Managed via SQL files in noosphere-schema/
+- Migrations: Ad-hoc SQL application (no structured migration tool)
 
-**Common Lisp (ASDF):**
-- System Definition: `project-noosphere-ghosts/lisp/af64.asd`
-- Load Command: `(asdf:load-system :af64)`
-- Build: No compilation step, SBCL loads `.lisp` files
+## Import Organization
 
-**Rust (Cargo):**
-- Workspace: No workspace, two independent crates (dpn-core, dpn-api)
-- Build: `cargo build --release` in each directory
-- Binaries: `dpn-api/target/release/dpn-api`
+**Rust (dpn-api/dpn-core):**
+1. Standard library (`use std::*`)
+2. External crates (`use axum::*`, `use sqlx::*`, `use serde::*`)
+3. Internal crate modules (`use crate::*`)
+4. dpn-core re-exports (`use dpn_core::*`)
 
-**Database:**
-- No build system, manual `psql` execution
-- Migration: Run numbered schema files in order
+**Lisp (AF64/Innate):**
+1. System packages (`(:use :common-lisp)`)
+2. Internal project packages (`(:import-from :af64.perception ...)`)
+3. No external dependencies (zero Quicklisp)
+4. Manual `use-package` in REPL if needed
 
-## Project Meta
+## Migration Patterns
 
-**License:** AGPL (stated in `Modular Fortress.md`)
+**Database Schema Changes:**
+1. Create new SQL file in `project-noosphere-ghosts/migrations/`
+2. Apply manually via `psql`
+3. Update relevant Rust models in `dpn-core/src/db/`
+4. Update API handlers if needed
+5. No automated migration tracking (yet)
 
-**Target Platform:** macOS (Darwin 25.3.0), Linux (droplet deployment)
+**API Changes:**
+1. Update dpn-core function signature
+2. Update dpn-api handlers using that function
+3. Update Lisp runtime if calling that endpoint
+4. No versioning strategy (all changes breaking)
 
-**Runtime Requirements:**
-- SBCL (Common Lisp compiler)
-- Rust 1.70+ (for dpn-core, dpn-api)
-- PostgreSQL 14+
-- SQLite 3
-
-**Development Setup:**
-1. Clone repo
-2. Install SBCL, Rust, PostgreSQL
-3. Copy `config.json` and set API keys
-4. Load database schema from `noosphere-schema/schema/*.sql`
-5. Load ghost runtime: `(asdf:load-system :af64)`
-6. Start API server: `cargo run --release` in `dpn-api/`
-7. Run tick: `(af64:run-tick)` in SBCL REPL
+**Lisp Module Changes:**
+1. Modify `.lisp` file in `project-noosphere-ghosts/lisp/runtime/`
+2. Reload system via `(asdf:load-system :af64)`
+3. Test via REPL or full tick invocation
+4. No test automation (manual verification)
 
 ---
 

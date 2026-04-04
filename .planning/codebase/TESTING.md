@@ -4,379 +4,426 @@
 
 ## Test Framework
 
-**Runner (Common Lisp):**
-- Hand-rolled test harness (91 lines in `innatescript/tests/test-framework.lisp`)
-- Pattern: Practical Common Lisp chapter 9 (`deftest`/`check`/`combine-results`)
-- Config: None — pure Lisp macros
+**Runner:**
+- Rust: `cargo test` (built-in test framework)
+- `tokio-test` version 0.4 for async test utilities
+- Config: `Cargo.toml` `[dev-dependencies]` section
 
-**Runner (Rust):**
-- `cargo test` (built-in test framework)
-- `tokio-test` for async test utilities
-- Config: `[dev-dependencies]` section in `Cargo.toml`
-
-**Assertion Library (Lisp):**
-- Custom macros: `assert-equal`, `assert-true`, `assert-nil`, `assert-signals`
-- No external dependencies
-
-**Assertion Library (Rust):**
-- Standard `assert!`, `assert_eq!`, `assert_ne!` macros
-- No additional libraries
+**Assertion Library:**
+- Standard Rust macros: `assert!`, `assert_eq!`, `assert_ne!`
+- Custom error messages supported: `assert!(cond, "message: {:?}", val)`
+- No additional assertion libraries
 
 **Run Commands:**
 ```bash
-# Common Lisp (innatescript, af64)
-./run-tests.sh                # Run all tests
-./run-tests.sh tokenizer      # Run tests matching "tokenizer"
+# Run all tests
+cargo test
 
-# Rust (dpn-core, dpn-api)
-cargo test                    # Run all tests
-cargo test --lib              # Library tests only
-cargo test integration        # Tests matching "integration"
+# Run tests in noosphere crate
+cd /Volumes/Elements/Modular\ Fortress/noosphere && cargo test
+
+# Run specific test
+cargo test test_create_pool
+
+# Run with single thread (for database tests)
+cargo test -- --test-threads=1
+
+# Show output even on success
+cargo test -- --nocapture
 ```
 
 ## Test File Organization
 
-**Location (Common Lisp):**
-- Co-located in `tests/` directory at project root
-- Separate ASDF system (e.g., `:innatescript/tests` depends on `:innatescript`)
-- Pattern: One test file per source module (e.g., `test-tokenizer.lisp` for `parser/tokenizer.lisp`)
+**Location:**
+- Co-located in module: `tests.rs` within module directories
+- Pattern: `noosphere/src/core/db/tests.rs` for database tests
+- Pattern: `dpn-core/src/db/tests.rs` (identical copy)
+- No separate `tests/` integration directory detected
 
-**Location (Rust):**
-- Inline: `#[cfg(test)]` modules at bottom of source files
-- Integration tests: `tests/` directory (not currently used in these projects)
+**Naming:**
+- Test files: `tests.rs` within feature modules
+- Test modules: `#[cfg(test)] mod tests { ... }` for inline tests
 
-**Naming (Lisp):**
-- Prefix `test-` for test files (e.g., `test-parser.lisp`, `test-evaluator.lisp`)
-- Test packages mirror source packages with `.tests` suffix (e.g., `:innate.tests.tokenizer`)
-
-**Naming (Rust):**
-- No separate test files — tests inline in source
-
-**Structure (Lisp):**
+**Structure:**
 ```
-innatescript/
-├── src/
-│   ├── packages.lisp
-│   ├── types.lisp
-│   ├── parser/
-│   │   ├── tokenizer.lisp
-│   │   └── parser.lisp
-│   └── eval/
-│       ├── resolver.lisp
-│       └── evaluator.lisp
-└── tests/
-    ├── packages.lisp          # Test package definitions
-    ├── test-framework.lisp    # Test harness
-    ├── smoke-test.lisp        # Harness verification
-    ├── test-tokenizer.lisp
-    ├── test-parser.lisp
-    ├── test-resolver.lisp
-    └── test-evaluator.lisp
+noosphere/src/core/db/
+├── connection.rs
+├── memories.rs
+├── documents.rs
+├── tasks.rs
+├── events.rs
+├── projects.rs
+├── mod.rs
+└── tests.rs          # All db module tests (326 lines)
 ```
 
-**Structure (Rust):**
-- No separate test directory structure — tests live inline
+**Co-location Pattern:**
+- Database tests in `src/core/db/tests.rs`
+- No handler tests detected
+- No cache tests detected
+- No API endpoint tests detected
 
 ## Test Structure
 
-**Suite Organization (Lisp):**
-```lisp
-;;;; test-tokenizer.lisp — tests for the Innate tokenizer (Phase 3)
-;;;; Covers TOK-01 through TOK-18
-
-(in-package :innate.tests.tokenizer)
-
-;;; ─── Task 1: Single-character token tests (TOK-01 through TOK-10) ───
-
-(deftest test-single-bracket-tokens
-  (let ((lbrak (tokenize "[")))
-    (assert-equal 1 (length lbrak) "lbracket: one token")
-    (assert-equal :lbracket (token-type (first lbrak)) "lbracket type")))
-
-(deftest test-single-punctuation-tokens
-  (assert-equal :colon (token-type (first (tokenize ":"))) "colon")
-  (assert-equal :comma (token-type (first (tokenize ","))) "comma"))
-```
-
-**Patterns (Lisp):**
-- File header comments document phase and task coverage
-- Section dividers group related tests (e.g., `;;; ─── Task 1: ... ───`)
-- `deftest` macro defines named tests
-- `let` bindings for setup (e.g., tokenizing input)
-- Multiple assertions per test allowed
-- Descriptive string labels for each assertion
-
-**Suite Organization (Rust):**
+**Suite Organization:**
 ```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
+//! Tests for the db module
+//!
+//! These tests require an active SSH tunnel to the PostgreSQL database:
+//! ssh -L 5433:127.0.0.1:5432 root@144.126.251.126 -N -f
+//!
+//! Run tests with: cargo test -- --test-threads=1
 
-    #[tokio::test]
-    async fn test_connection() {
-        let pool = create_pool(DEFAULT_DATABASE_URL).await.unwrap();
-        let result = test_connection(&pool).await;
-        assert!(result.is_ok());
-    }
+use super::connection::{create_pool, test_connection, DEFAULT_DATABASE_URL};
+use super::memories;
+use super::documents;
+
+#[tokio::test]
+async fn test_create_pool() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await;
+    assert!(pool.is_ok(), "Failed to create pool: {:?}", pool.err());
 }
 ```
 
-**Patterns (Rust):**
-- `#[cfg(test)]` module at file bottom
-- `use super::*;` imports parent module
-- `#[test]` attribute for sync tests
-- `#[tokio::test]` attribute for async tests
-- Inline setup in test body
+**Patterns:**
+- File header with prerequisites (SSH tunnel instructions)
+- Import from parent module: `use super::*;`
+- Each test function marked `#[tokio::test]` for async
+- Setup in test body (no separate setup functions)
+- Multiple assertions per test allowed
+- Descriptive failure messages
+
+**Test Organization:**
+- Grouped by table/feature with section comments
+- Example: `// ============================================================================`
+- Example: `// Documents Canonical/Dedup Tests`
+- Example: `// ============================================================================`
 
 ## Mocking
 
-**Framework (Lisp):** Stub resolver pattern
+**Framework:** None detected
 
 **Patterns:**
-- `stub-resolver` struct with in-memory hash tables
-- Provides `stub-add-entity`, `stub-add-wikilink`, `stub-add-bundle` functions
-- Fulfills resolver protocol without external substrate
-- Used for testing evaluator in isolation
-
-**Pattern (Lisp stub resolver):**
-```lisp
-(let ((resolver (make-stub-resolver)))
-  (stub-add-entity resolver "count" "42")
-  (let* ((env (make-eval-env :resolver resolver))
-         (result (evaluate ast env)))
-    (assert-equal "42" (innate-result-value result))))
-```
-
-**Framework (Rust):** Not currently used
+- Tests use real PostgreSQL connections
+- No mocking of database layer
+- No HTTP client mocking
+- No external service mocking
 
 **What to Mock:**
-- Lisp: External substrate calls (database, API) via resolver protocol
-- Rust: Not actively mocked — tests use real database connections
+- Not currently implemented
 
 **What NOT to Mock:**
-- Lisp: Core interpreter logic (tokenizer, parser, evaluator)
-- Rust: Core business logic
+- Core business logic
+- Database queries (uses real database)
 
 ## Fixtures and Factories
 
-**Test Data (Lisp):**
-- Inline strings for small inputs (e.g., `(tokenize "[foo]")`)
-- File reading for larger inputs (e.g., `burg_pipeline.dpn`)
-- Helper functions prefixed `%` (e.g., `%read-file-to-string`)
+**Test Data:**
+- No fixture files detected
+- Use live database data
+- Query existing data for test IDs/paths
 
-**Pattern (Lisp file fixtures):**
-```lisp
-(defun %read-file-to-string (path)
-  "Read entire file at PATH into a string."
-  (with-open-file (stream path :direction :input)
-    (let ((contents (make-string (file-length stream))))
-      (read-sequence contents stream)
-      contents)))
+**Pattern (query-first testing):**
+```rust
+#[tokio::test]
+async fn test_get_memory_by_path() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
 
-(deftest test-burg-pipeline-tokenizes
-  (let* ((source (%read-file-to-string "burg_pipeline.dpn"))
-         (tokens (tokenize source)))
-    (assert-true (> (length tokens) 0) "token list is non-empty")))
+    // First get any note to find a valid path
+    let notes = memories::list_light(&pool, 1, 0).await.expect("list_light failed");
+    assert!(!notes.is_empty(), "Need at least one memory to test");
+
+    let test_path = &notes[0].path;
+
+    // Now fetch by that path
+    let note = memories::get_by_path(&pool, test_path).await;
+    assert!(note.is_ok(), "get_by_path failed: {:?}", note.err());
+}
 ```
 
-**Location (Lisp):**
-- Test data files in project root (e.g., `burg_pipeline.dpn`)
-- No separate `fixtures/` directory
-
-**Location (Rust):**
-- No fixtures currently used
+**Location:**
+- No separate fixtures directory
+- No test data files
+- Relies on existing database content
 
 ## Coverage
 
 **Requirements:** No enforced coverage targets
 
 **View Coverage:**
-- Lisp: Manual review — no coverage tooling
-- Rust: `cargo tarpaulin` (not configured in these projects)
+```bash
+# Not configured, but would use:
+cargo tarpaulin --out Html
+cargo llvm-cov --html
+```
+
+**Current Coverage:**
+- Database layer: Partial (memories, documents, tasks tested)
+- API handlers: None detected
+- Cache layer: None detected
+- Business logic: Minimal
 
 ## Test Types
 
-**Unit Tests (Lisp):**
-- Scope: Individual functions and modules
-- Approach: Test tokenizer, parser, resolver, evaluator in isolation
-- Example: `test-tokenizer.lisp` tests `tokenize` function with various inputs
+**Unit Tests:**
+- Scope: Individual database functions
+- Approach: Test each query function in isolation
+- Location: Inline in `tests.rs` files
 
-**Unit Tests (Rust):**
-- Scope: Individual functions
-- Approach: Inline `#[test]` functions in source files
-- Example: `test_connection` in `db/connection.rs`
-
-**Integration Tests (Lisp):**
-- Scope: End-to-end interpreter pipeline
-- Approach: Parse and evaluate complete `.dpn` files
-- Example: `test-burg-pipeline-tokenizes` reads full file and verifies token output
-
-**Integration Tests (Rust):**
-- Scope: Not actively used
-- Approach: Would live in `tests/` directory (not present)
+**Integration Tests:**
+- Scope: Full database operations end-to-end
+- Approach: Test query → result validation
+- Example: `test_list_canonical_documents()` tests list + verify structure
 
 **E2E Tests:**
-- Not used in either Lisp or Rust projects
+- Not implemented
+- No HTTP endpoint tests
+- No full workflow tests
 
 ## Common Patterns
 
-**Async Testing (Rust):**
+**Async Testing:**
 ```rust
 #[tokio::test]
-async fn test_create_pool() {
-    let pool = create_pool(DEFAULT_DATABASE_URL).await;
-    assert!(pool.is_ok());
+async fn test_get_tasks_due_on() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
+
+    let today = chrono::Local::now().date_naive();
+    let tasks = tasks::get_tasks_due_on(&pool, today).await;
+
+    assert!(tasks.is_ok(), "get_tasks_due_on failed: {:?}", tasks.err());
 }
 ```
 
-**Error Testing (Lisp):**
-```lisp
-(deftest test-string-unterminated
-  (assert-signals innate-parse-error
-    (tokenize "\"hello")
-    "unterminated string signals parse error"))
+**Error Testing:**
+```rust
+#[tokio::test]
+async fn test_get_versions() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
+
+    // This should succeed even if the column doesn't exist (returns empty vec)
+    let versions = documents::get_versions(&pool, 1).await;
+    assert!(versions.is_ok(), "get_versions should not error: {:?}", versions.err());
+}
 ```
 
-**Pattern:** Use `assert-signals` macro to verify condition is signaled
+**Conditional Assertions:**
+```rust
+#[tokio::test]
+async fn test_get_open_tasks_due_on() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
+    let today = chrono::Local::now().date_naive();
 
-**Positive/Negative Testing (Lisp):**
-```lisp
-(deftest test-wikilink-vs-nested-brackets
-  ;; Positive case: [[Burg]] is wikilink
-  (let ((toks (tokenize "[[Burg]]")))
-    (assert-equal :wikilink (token-type (first toks))))
-  ;; Negative case: [[sylvia[command]]] is nested brackets
-  (let ((toks (tokenize "[[sylvia[command]]]")))
-    (assert-equal 8 (length toks) "not a wikilink")))
+    let tasks = tasks::get_open_tasks_due_on(&pool, today).await;
+    assert!(tasks.is_ok());
+
+    let tasks = tasks.unwrap();
+    // Verify all returned tasks are open
+    for task in &tasks {
+        assert!(task.is_open(), "All tasks should be open, but got status: {}", task.status);
+    }
+}
 ```
 
-## Test Harness Implementation
+**Data Validation:**
+```rust
+#[tokio::test]
+async fn test_get_all_titles_canonical() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
 
-**Hand-Rolled Framework (91 lines):**
-- `innatescript/tests/test-framework.lisp`
-- Three core macros: `assert-equal`, `assert-true`, `assert-nil`, `assert-signals`
-- One registration macro: `deftest`
-- One runner function: `run-tests`
+    let titles = documents::get_all_titles_canonical(&pool).await;
+    assert!(titles.is_ok());
 
-**Key Features:**
-- Global test registry: `*test-registry*` alist
-- Failure counter: `*test-failures*` per test
-- Selective execution: `(run-tests "prefix")` runs matching tests
-- Exit code: Returns `T` if all pass, `NIL` if any fail
+    let titles = titles.unwrap();
+    assert!(!titles.is_empty(), "Expected titles but got empty list");
 
-**Pattern (deftest macro):**
-```lisp
-(defmacro deftest (name &body body)
-  "Define a named test. Registers it in *test-registry*.
-   NAME is a symbol. BODY is a sequence of assertions."
-  `(progn
-     (defun ,name ()
-       (let ((*current-test* ,(symbol-name name)))
-         (format t "  ~a ... " ,(symbol-name name))
-         (let ((*test-failures* 0))
-           ,@body
-           (if (zerop *test-failures*)
-               (format t "PASS~%")
-               (format t "FAIL (~a failure~:p)~%" *test-failures*))
-           (zerop *test-failures*))))
-     (pushnew (cons ,(symbol-name name) #',name) *test-registry*
-              :key #'car :test #'string=)
-     ',name))
+    // We have ~47K documents, so should have many titles
+    assert!(titles.len() > 1000, "Expected >1000 titles, got {}", titles.len());
+
+    // Verify tuple structure
+    let (id, title) = &titles[0];
+    assert!(*id > 0, "ID should be positive");
+    assert!(!title.is_empty(), "Title should not be empty");
+}
 ```
 
-## ASDF System Organization
+**Date Testing:**
+```rust
+use chrono::NaiveDate;
 
-**Test System (Lisp):**
-- Separate system definition (e.g., `:innatescript/tests`)
-- Depends on main system (e.g., `:depends-on ("innatescript")`)
-- Pathname pointing to `tests/` directory
+#[tokio::test]
+async fn test_get_overdue_tasks() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await.expect("Pool creation failed");
+    let today = chrono::Local::now().date_naive();
 
-**Pattern (ASDF):**
-```lisp
-(defsystem "innatescript/tests"
-  :description "Test suite for the Innate interpreter"
-  :depends-on ("innatescript")
-  :pathname "tests/"
-  :components
-  ((:file "packages")
-   (:file "test-framework"  :depends-on ("packages"))
-   (:file "smoke-test"      :depends-on ("packages" "test-framework"))
-   (:file "test-tokenizer"  :depends-on ("packages" "test-framework"))))
+    let tasks = tasks::get_overdue_tasks(&pool, today).await;
+    assert!(tasks.is_ok());
+
+    let tasks = tasks.unwrap();
+    // Verify all returned tasks are overdue and open
+    for task in &tasks {
+        assert!(task.is_open(), "Overdue tasks should be open");
+        if let Some(ref due) = task.due_date {
+            let due_date = NaiveDate::parse_from_str(due, "%Y-%m-%d")
+                .expect("Due date should be valid");
+            assert!(due_date < today, "Task should be overdue");
+        }
+    }
+}
 ```
 
-## Shell Integration
+## Test Database Requirements
 
-**Test Runner Script:**
-- `innatescript/run-tests.sh`
-- Wipes project FASL cache before run (cold-load guarantee)
-- Loads test system via ASDF
-- Calls `(innate.tests:run-tests)` with optional filter
-- Exit code matches test result (0 = pass, 1 = fail)
+**Prerequisites:**
+- Active SSH tunnel to remote PostgreSQL
+- Command: `ssh -L 5433:127.0.0.1:5432 root@144.126.251.126 -N -f`
+- Local port: 5433
+- Remote port: 5432
+- Connection string: `postgres://chronicle:chronicle2026@127.0.0.1:5433/master_chronicle`
 
-**Pattern (run-tests.sh):**
-```bash
-#!/usr/bin/env bash
-set -e
+**Database State:**
+- Tests expect existing data (~2,678 memories, ~47K documents)
+- Tests query existing records for validation
+- Tests do NOT create/modify/delete data
+- Read-only test approach
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CACHE_ROOT="${HOME}/.cache/common-lisp"
+**Known Data Volumes:**
+- Memories: >100 expected, ~2,678 actual
+- Documents: >40,000 expected, ~47K actual
+- Titles: >1,000 expected
 
-# Wipe project FASL cache
-find "${CACHE_ROOT}" -type d -path "*/${SCRIPT_DIR#/}" -prune -exec rm -rf {} +
+## Test Execution
 
-# Run tests
-sbcl --non-interactive \
-  --eval "(require :asdf)" \
-  --eval "(asdf:load-system :innatescript/tests)" \
-  --eval "(let ((result (innate.tests:run-tests)))
-            (sb-ext:exit :code (if result 0 1)))"
-```
+**Threading:**
+- Single-threaded recommended: `cargo test -- --test-threads=1`
+- Reason: Shared database connection pool
+- Default (parallel) may cause connection contention
+
+**Output:**
+- Default: Only failed tests show output
+- Verbose: `cargo test -- --nocapture` shows all output
+
+**Performance:**
+- Database tests are slow (network latency)
+- Typical test: 50-200ms per test
+- Full suite: ~5-15 seconds
+
+## Test Naming Conventions
+
+**Pattern:** `test_<operation>_<target>`
+
+**Examples:**
+- `test_create_pool()` — basic setup
+- `test_list_memories()` — list operation
+- `test_get_memory_by_path()` — specific lookup
+- `test_search_canonical_documents()` — complex query
+- `test_format_tasks_for_daily_note()` — formatting function
+
+**Descriptive Names:**
+- `test_get_open_tasks_due_on()` — clear what's tested
+- `test_get_all_titles_canonical()` — specific variant
+- `test_get_versions()` — fallback behavior tested
+
+## Known Test Files
+
+**Database Tests:**
+- `noosphere/src/core/db/tests.rs` (326 lines)
+- `dpn-core/src/db/tests.rs` (identical copy, 326 lines)
+
+**Test Categories:**
+1. Connection tests (pool creation, connectivity)
+2. Memory tests (list, get, search, count)
+3. Document tests (canonical, versions, search)
+4. Task tests (due dates, overdue, formatting)
+
+**Test Count:**
+- ~20-25 test functions total
+- All async (`#[tokio::test]`)
+- All integration-style (use real database)
+
+## Python Testing
+
+**Framework:**
+- No formal test framework detected
+- Scripts use manual validation
+
+**Test Files:**
+- `doltgres-data/test_connection.py` — connection validation
+- No unittest or pytest usage detected
+
+**Approach:**
+- Scripts run and report success/failure
+- No structured test suites
+- Manual verification
 
 ## Test Coverage Gaps
 
-**innatescript:**
+**What's Tested:**
+- Database connection pool creation
+- Memory CRUD operations (list, get by ID, get by path, search, count)
+- Document queries (list, canonical, search, titles, versions)
+- Task queries (due dates, open tasks, overdue, formatting)
+- Event queries (assumed similar pattern)
+- Project queries (assumed similar pattern)
 
-What's tested:
-- Tokenizer: basic token types, whitespace handling, position tracking
-- Parser: all node types, nesting, error cases
-- Evaluator: two-pass, decree hoisting, reference resolution
-- Conditions: error signaling, resistance propagation
-- Resolver protocol: stub implementation, entity resolution
+**What's NOT Tested:**
+- API handlers (`noosphere/src/api/handlers/*`) — zero tests
+- HTTP endpoints (health, ghosts, tasks, conversations) — zero tests
+- Cache layer (`noosphere/src/core/cache/*`) — zero tests
+- Hybrid store (offline-first) — zero tests
+- Sync queue — zero tests
+- Embeddings generation — zero tests
+- Context injection — zero tests
+- Deduplication logic — zero tests
+- Notification webhooks — zero tests
+- Pipeline automation — zero tests
+- RSS reader — zero tests
+- Wikilink parsing — zero tests
+- Graph generation — zero tests
+- Timeline building — zero tests
+- Conversations messaging — zero tests
+- Error handling paths — minimal tests
+- Validation logic — zero tests
+- Authentication — zero tests
+- Concurrent request handling — zero tests
 
-What's NOT tested:
-- REPL: interactive mode, error recovery
-- File loading: `run-file` function
-- Performance: large input handling
-- Edge cases: deeply nested structures (>100 levels)
+**Priority: Critical**
+- API handlers completely untested
+- Cache layer untested (offline-first is core feature)
+- Business logic layers untested
 
-Priority: Medium — core interpreter is covered, REPL and file I/O are thin wrappers
+**Priority: High**
+- Error paths and edge cases
+- Validation logic
+- Concurrent access patterns
 
-**dpn-api/dpn-core:**
+**Priority: Medium**
+- Helper utilities (wikilinks, graph, timeline)
+- Notification system
+- RSS reader
 
-What's tested:
-- Basic connection tests inline in source
+## Testing Best Practices (Observed)
 
-What's NOT tested:
-- Unit tests: handler logic, error paths
-- Database edge cases: NULL handling, constraint violations
-- Concurrent requests: race conditions
-- HTTP endpoints: health, documents, tasks, events (no integration tests found)
+**Good Practices:**
+1. Descriptive test names
+2. Clear failure messages with context
+3. Header documentation with prerequisites
+4. Query-first pattern for test data
+5. Validation of data structure, not just success
+6. Date handling with chrono
+7. Conditional assertions for optional data
 
-Priority: High — minimal test coverage for production API
-
-**project-noosphere-ghosts:**
-
-What's tested:
-- Basic PG client: `tests/test-pg.lisp`
-
-What's NOT tested:
-- Tick engine: perception, action planning, execution
-- Cognition broker: provider chain, caching, winter/thaw
-- Tool registry: tool execution, argument validation
-- Memory rollups: daily/weekly/monthly aggregation
-- Standing orders: cron matching, task injection
-
-Priority: Critical — zero test coverage for core runtime loops
+**Missing Practices:**
+1. Test data fixtures
+2. Setup/teardown functions
+3. Test isolation (tests share database)
+4. Mocking external dependencies
+5. Property-based testing
+6. Performance benchmarks
+7. Integration test coverage
+8. HTTP endpoint testing
+9. Error path coverage
+10. Test coverage reporting
 
 ---
 

@@ -4,207 +4,249 @@
 
 ## Pattern Overview
 
-**Overall:** Multi-layer cognitive AI system with tick-based execution engine
+**Overall:** Multi-layer sovereign agent platform with polyglot implementation
 
 **Key Characteristics:**
-- Tick-based ghost agent runtime in Common Lisp (SBCL)
-- Rust infrastructure layer for database and REST API
-- Custom scripting language (innatescript) for ghost programming
-- Nine-table polymorphic PostgreSQL schema
-- Two-phase cognition (probe/commit) with LLM broker
-- CLOS resolver protocol for entity resolution
-- Perception-Cognition-Execution cycle
+- Three-pillar architecture: Rust API + Common Lisp agents + Innate scripting language
+- PostgreSQL as unified substrate with polymorphic domain tables (9+3 schema)
+- Tick-based artificial life engine for autonomous agents ("ghosts in the noosphere")
+- Pluggable resolver protocol separating substrate from agent runtime
+- Zero external dependencies in Lisp components (hand-rolled everything)
 
 ## Layers
 
-**Ghost Runtime (project-noosphere-ghosts/):**
-- Purpose: Cognitive agent execution engine
+**Presentation Layer (noosphere Rust):**
+- Purpose: HTTP API server and web UI for operations dashboard
+- Location: `noosphere/`
+- Contains: Axum web server, static assets, API handlers
+- Depends on: dpn-core (via Cargo workspace), PostgreSQL
+- Used by: Web UI clients, noosphere-ops dashboard, external API consumers
+- Port: 8888
+
+**API Layer (dpn-api Rust):**
+- Purpose: RESTful API exposing dpn-core functionality with authentication
+- Location: `dpn-api/`
+- Contains: Axum HTTP handlers, JWT/API key auth middleware, CORS configuration
+- Depends on: dpn-core library crate
+- Used by: Common Lisp ghost runtime (AF64), external integrations
+- Port: 8080
+- Authentication: Dual-mode (JWT tokens or API keys)
+
+**Core Library (dpn-core Rust):**
+- Purpose: Shared database access and business logic for all Rust components
+- Location: `dpn-core/`
+- Contains: Database models, sync engine, embedding generation, wikilink parsing, RSS reader, memory storage, pipeline automation
+- Depends on: sqlx (PostgreSQL), tokio (async runtime)
+- Used by: dpn-api, noosphere server, standalone tools
+- Pattern: Library crate with feature-based module organization
+
+**Agent Runtime (project-noosphere-ghosts Lisp):**
+- Purpose: Tick-based artificial life engine for autonomous agents
 - Location: `project-noosphere-ghosts/lisp/`
-- Contains: Tick engine, cognition broker, action executor, perception pipeline
-- Depends on: dpn-core API, innatescript evaluator, PostgreSQL (via `db-client.lisp`)
-- Used by: Scheduled cron jobs, manual REPL invocation
-- Language: Common Lisp (ASDF system `af64.asd`)
+- Contains: 30 Lisp modules (AF64 system), tick engine, cognition broker, perception layer, action executor, energy/drive models, tool registry
+- Depends on: libpq.so (PostgreSQL FFI), curl (HTTP client), SBCL runtime
+- Used by: Standalone tick invocations, scheduled cron jobs
+- Pattern: ASDF system with zero Quicklisp dependencies, hand-rolled JSON/HTTP/PostgreSQL clients
 
-**Infrastructure Layer (dpn-core/):**
-- Purpose: Database models, memory storage, embedding generation
-- Location: `dpn-core/src/`
-- Contains: PostgreSQL connection pool, memory scopes, context injection, deduplication
-- Depends on: PostgreSQL, SQLite (cache), external LLM APIs
-- Used by: dpn-api, ghost runtime (via HTTP), CLI tools
-- Language: Rust
+**Scripting Language (innatescript Lisp):**
+- Purpose: Declarative intention language for ghost routines and pipelines
+- Location: `innatescript/`
+- Contains: Lexer, recursive descent parser, two-pass evaluator, pluggable resolver protocol, REPL
+- Depends on: SBCL only (zero external libraries)
+- Used by: Ghost runtime for executing `.dpn` scripts
+- Pattern: Classic interpreter architecture with hand-rolled parser
 
-**API Layer (dpn-api/):**
-- Purpose: REST endpoints for ghost runtime and external clients
-- Location: `dpn-api/src/`
-- Contains: Axum HTTP handlers, auth middleware, CORS config
-- Depends on: dpn-core
-- Used by: Ghost runtime (via HTTP), external clients, UI (future)
-- Language: Rust
-
-**Scripting Layer (innatescript/):**
-- Purpose: Domain-specific language for ghost routines and entity references
-- Location: `innatescript/src/`
-- Contains: Tokenizer, parser, evaluator, resolver protocol
-- Depends on: Nothing (standalone)
-- Used by: Ghost runtime (loaded as Lisp package `innate`)
-- Language: Common Lisp (consumed by af64 runtime)
-
-**Schema Layer (noosphere-schema/):**
-- Purpose: Nine-table polymorphic database design
-- Location: `noosphere-schema/schema/`
-- Contains: SQL DDL files, migration scripts
-- Depends on: PostgreSQL with pg_trgm, vector extensions
-- Used by: dpn-core, ghost runtime
-- Language: SQL
+**Data Layer (PostgreSQL):**
+- Purpose: Unified substrate for all application state
+- Location: Remote database (SSH tunnel to port 5433 locally)
+- Contains: 83 tables collapsed to 9 polymorphic domain tables + 3 infrastructure tables
+- Schema: `noosphere-schema/schema/` (16 SQL files)
+- Pattern: Polymorphic tables with `kind` discriminator + JSONB `meta` field
 
 ## Data Flow
 
 **Ghost Tick Cycle:**
 
-1. **Tick Trigger** (cron/manual) → `run-tick` in `tick-engine.lisp`
-2. **Agent Activation** → Fetch active agents + dormant with Nathan messages
-3. **Perception** → `db-perceive` aggregates unread conversations, tasks, drives
-4. **Cognition Broker** → Builds cognition jobs per agent, submits to provider chain
-5. **LLM Resolution** → Providers (Anthropic/OpenClaw gateway) return structured JSON
-6. **Action Execution** → `execute-cognition-result` parses tool calls, updates database
-7. **Memory Consolidation** → `db-upsert-daily-memory` writes agent daily log
-8. **Tick Report** → `write-tick-report` generates rollup, rebuilds empirical summaries
+1. **Perception** (`perception.lisp` → PostgreSQL via libpq FFI)
+   - Query substrate for agent-relevant state (tasks, conversations, memories, decisions)
+   - Tier-aware scans (prime/working/base determine scope depth)
+   - Return structured perception data to tick engine
 
-**API Request Flow:**
+2. **Drive Evaluation** (`drive.lisp`, `energy.lisp`)
+   - Tick drive counters (curiosity, purpose, communication, etc.)
+   - Calculate pressure levels and energy constraints
+   - Determine agent readiness for cognition
 
-1. **Client Request** → HTTP to dpn-api (port 8080)
-2. **Auth Middleware** → `auth_middleware` validates bearer token
-3. **Handler Dispatch** → Axum routes to specific handler (e.g., `af64_tasks::list_tasks`)
-4. **Database Query** → dpn-core functions query PostgreSQL via connection pool
-5. **Response** → JSON serialization, CORS headers, HTTP 200/40x/50x
+3. **Action Planning** (`action-planner.lisp`)
+   - Build cognition jobs based on perception + drives + available energy
+   - Cache persona context to avoid repeated reads
+   - Submit jobs to cognition broker
 
-**Innate Evaluation Flow:**
+4. **Cognition Brokering** (`cognition-broker.lisp`)
+   - Queue/priority management for LLM requests
+   - Provider chain (claude-code → anthropic → stub)
+   - Winter/thaw logic for cognitive economy
+   - Budget enforcement ($0.50 per request limit)
 
-1. **Ghost Action Planner** → Builds Innate expression (e.g., `@agents.eliana`, `![tasks where department=engineering]`)
-2. **Tokenizer** → Parses expression into tokens
-3. **Parser** → AST node construction
-4. **Resolver** → `noosphere-resolver` (CLOS subclass) queries PostgreSQL
-5. **Evaluator** → Produces `innate-result` with value/context
-6. **Error Handling** → `innate-resistance` conditions surface to ghost as resistance messages
+5. **Action Execution** (`action-executor.lisp`)
+   - Apply cognition results to side effects (database writes, tool calls, conversations)
+   - Tool registry dispatch (`tool-socket.lisp`)
+   - Transaction management
+
+6. **Reporting** (`tick-reporting.lisp`, `empirical-rollups.lisp`)
+   - Write tick logs to `the_ledger` (hot/warm/cold tiers)
+   - Generate empirical rollups (daily/weekly/monthly/quarterly/yearly)
+   - Persist to `the_forge` memory tables
+
+**HTTP Request Flow:**
+
+1. Client → Axum router (`noosphere/src/main.rs` or `dpn-api/src/main.rs`)
+2. CORS + tracing middleware
+3. Auth middleware (JWT or API key validation) — dpn-api only
+4. Handler function (`src/api/handlers/*.rs`)
+5. dpn-core function call (`use dpn_core::{...}`)
+6. sqlx query to PostgreSQL
+7. Response serialization (JSON via serde)
+8. Client
 
 **State Management:**
-- Ghost state: `agents` table (id, status, tier, energy, drives)
-- Agent energy: Consumed by actions, restored by tick rewards, decayed over time
-- Cognition jobs: `cognition_job` kind in `the_forge` table
-- Memory: `memory_daily` and `memory_entry` kinds in `the_forge` table
-- Tick logs: `tick_log` and `tick_report` in `the_ledger` (schema v2)
+- All persistent state in PostgreSQL (no Redis, no in-memory state)
+- Local SQLite cache (`~/.dpn/cache.db`) for offline-first access patterns
+- Sync queue for pending changes when remote unavailable
+- Hybrid store pattern: try remote first, fallback to cache, queue writes
 
 ## Key Abstractions
 
+**Ghost (AF64 Agent):**
+- Purpose: Runtime autonomous agent with identity, memory, drives, and energy
+- Examples: `the_forge` table rows with `kind='agent'`, instantiated from identity vessels
+- Pattern: Tick-based lifecycle with perception → decision → action → reporting cycle
+- File: Identity vessels in PostgreSQL, runtime state in `the_forge` table, behavior in `lisp/runtime/tick-engine.lisp`
+
+**Polymorphic Domain Table:**
+- Purpose: Single table representing an entire domain with type discriminator
+- Examples: `the_forge`, `the_commons`, `the_work`, `the_post`, `the_chronicles`, etc.
+- Pattern: `id` (BIGSERIAL), `slug` (TEXT), `kind` (TEXT discriminator), `title`, `body`, `meta` (JSONB), `status`, `created_at`, `updated_at`
+- Schema: `noosphere-schema/schema/*.sql`
+
+**Resolver Protocol:**
+- Purpose: Pluggable abstraction for fulfilling `@` references in Innate scripts
+- Examples: `stub-resolver.lisp` (in-memory), database resolver (planned)
+- Pattern: `defgeneric resolve-reference` specialized per resolver implementation
+- File: `innatescript/src/eval/resolver.lisp`
+
 **Cognition Job:**
-- Purpose: Represents a pending LLM request
-- Examples: `project-noosphere-ghosts/lisp/runtime/cognition-types.lisp`
-- Pattern: CLOS struct with `cognition-job` type
-- Fields: `agent-id`, `kind` (perceive/act/reflect), `input-context`, `requested-model-tier`, `priority`, `status`, `cache-key`
+- Purpose: Structured LLM request with tier, prompt, context, and provider chain
+- Examples: CognitionJob struct in `lisp/runtime/cognition-types.lisp`
+- Pattern: Queue-based with priority, cache, winter/thaw, and budget enforcement
+- File: `lisp/runtime/cognition-broker.lisp`
 
-**Cognition Broker:**
-- Purpose: LLM request queue with cognitive winter throttling
-- Examples: `project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp`
-- Pattern: Singleton struct with provider chain
-- Strategy: Probe (haiku/base) before commit (sonnet/opus), cache results with TTL
+**Perception Substrate:**
+- Purpose: Environment scan providing agent-visible state for tick decisions
+- Examples: `get_perception` PostgreSQL function, Lisp perception queries
+- Pattern: Tier-aware depth (prime=all, working=recent, base=minimal), agent-scoped filtering
+- File: `lisp/runtime/perception.lisp`, `dpn-api/src/handlers/af64_perception.rs`
 
-**Noosphere Resolver:**
-- Purpose: CLOS resolver protocol for Innate entity references
-- Examples: `project-noosphere-ghosts/lisp/runtime/noosphere-resolver.lisp`
-- Pattern: Subclass of `innate.eval.resolver:resolver`
-- Methods: `resolve-reference` (@agents.eliana), `resolve-search` (![tasks where status=open])
-
-**Ghost Capabilities:**
-- Purpose: Per-ghost YAML declaration of responsibilities and tools
-- Examples: `project-noosphere-ghosts/config/agents/eliana.yaml`
-- Pattern: YAML file with responsibilities (Innate expressions), tools, metadata
-- Loading: `load-ghost-capabilities` in `ghost-capabilities.lisp`
-
-**Pipeline Stages:**
-- Purpose: Multi-stage workflows (e.g., engineering pipeline)
-- Examples: `pipeline` and `pipeline_stage` kinds in `the_forge` table
-- Pattern: Ordered stages with assigned ghosts, next_stage pointers
-- Advancement: `get-pipeline-advancement` determines next stage based on completion
-
-**Memory Scopes:**
-- Purpose: Hierarchical memory inheritance (vault → project → area)
-- Examples: `dpn-core/src/memory/inheritance.rs`
-- Pattern: Union of memory entries from broader to narrower scope
-- Loading: `MemoryInheritance::get_inherited_memories`
-
-**Tool Definitions:**
-- Purpose: Registry of available tools for ghost action execution
-- Examples: `tool_definition` kind in `the_forge` table
-- Pattern: Name, description, parameter schema (JSON), handler function
-- Loading: `reload-tool-definitions` caches in `*tool-definition-cache*`
+**Pipeline Stage:**
+- Purpose: Workflow step with assigned agent and progression logic
+- Examples: Pipeline definitions in `the_forge` with `kind='pipeline'`, stages with `kind='pipeline_stage'`
+- Pattern: Ordered stages with `next_stage` progression, agent assignment, tool requirements
+- File: `lisp/runtime/pipeline-definitions.lisp`
 
 ## Entry Points
 
-**Ghost Tick Engine:**
-- Location: `project-noosphere-ghosts/lisp/main.lisp`
-- Triggers: Cron job (every 10 minutes default), manual REPL `(af64:run-tick)`
-- Responsibilities: Fetch agents, perceive, cognition, execute, report
+**noosphere HTTP Server:**
+- Location: `noosphere/src/main.rs`
+- Triggers: Manual invocation `cargo run` or systemd service
+- Responsibilities: Serve noosphere-ops dashboard, expose ghost/task/conversation APIs for UI, static file serving
+- Port: 8888
+- Routes: `/api/ghosts`, `/api/tasks`, `/api/conversations`, `/api/pipelines`, `/api/system/stats`, `/static/*`
 
-**API Server:**
+**dpn-api HTTP Server:**
 - Location: `dpn-api/src/main.rs`
-- Triggers: HTTP requests on port 8080
-- Responsibilities: Serve REST API, authenticate requests, proxy to dpn-core
+- Triggers: Manual invocation `cargo run --release` or deployment script
+- Responsibilities: Authenticated REST API for documents, tasks, events, projects, RSS reader, agent operations, AF64 ghost endpoints
+- Port: 8080
+- Routes: `/api/documents/*`, `/api/tasks/*`, `/api/events/*`, `/api/projects/*`, `/api/agents/*`, `/api/conversations/*`, `/api/reading/*`, `/health`, `/auth/login`
 
-**Database Initialization:**
-- Location: `noosphere-schema/schema/*.sql`
-- Triggers: Manual psql execution, migration scripts
-- Responsibilities: Create 9 domain tables, 3 infrastructure tables, indexes, triggers
+**AF64 Tick Engine:**
+- Location: `project-noosphere-ghosts/lisp/main.lisp`
+- Triggers: CLI invocation `sbcl --eval '(af64:run-tick TICK-NUM)'`, cron jobs
+- Responsibilities: Execute one tick cycle for all active agents (perception → cognition → action → reporting)
+- Entry function: `af64:run-tick`
+- File: `lisp/runtime/tick-engine.lisp`
 
 **Innate REPL:**
-- Location: `innatescript/src/repl.lisp` (if exists, not confirmed)
-- Triggers: Manual SBCL session
-- Responsibilities: Interactive Innate expression evaluation
+- Location: `innatescript/src/repl.lisp`
+- Triggers: CLI invocation `sbcl --eval '(asdf:load-system "innatescript")' --eval '(innate:repl)'`
+- Responsibilities: Interactive Innate script evaluation, file runner for `.dpn` scripts
+- Entry function: `innate:repl`, `innate:run-file`
+
+**Database Schema Initialization:**
+- Location: `noosphere-schema/schema/*.sql`
+- Triggers: Manual application via `psql` or migration tool
+- Responsibilities: Create 12 polymorphic tables (9 domains + 3 infrastructure), indexes, triggers, functions
+- Order: `00_extensions.sql` → `15_the_ledger.sql`
 
 ## Error Handling
 
-**Strategy:** Resistance-based error propagation with fallback to dormancy
+**Strategy:** Layered error propagation with domain-specific error types
 
 **Patterns:**
-- **Innate Resistance:** `innate-resistance` condition signals to ghost, logged but not fatal
-- **Database Errors:** Handler-case with fallback nil, logged to stderr
-- **LLM Provider Failures:** Provider chain fallback (Anthropic → OpenClaw → cached)
-- **Energy Depletion:** Ghost status → "dormant", skipped in next tick
-- **Cache Expiry:** Expired cognition results pruned, cache-miss fallback to LLM
-- **Parse Errors:** Innate parse errors surface as resistance messages in action result
+- Rust: `anyhow::Result<T>` for dpn-core library functions, `thiserror` for custom error types, Axum's built-in HTTP error responses
+- Lisp: `handler-case` / `restart-case` for recoverable conditions, resistance errors propagate to cognition broker for retry/fallback
+- HTTP: 401 Unauthorized (missing/invalid auth), 403 Forbidden (valid auth but insufficient permissions), 404 Not Found, 500 Internal Server Error with structured JSON bodies
 
-**Logging:**
-- Format: Plain text to stdout/stderr, JSON telemetry to `~/.af64/telemetry.jsonl`
-- Critical: Database connection failures, provider API errors, SBCL crashes
-- Info: Tick start/end, cognition job submissions, action executions
-- Debug: Perception queries, cache hits, energy deltas
+**Rust Error Flow:**
+1. Database query fails (sqlx::Error)
+2. Wrapped in anyhow context (`context("Failed to query vault_notes")`)
+3. Handler returns `Result<Json<T>, StatusCode>`
+4. Axum converts error to HTTP response with tracing
+
+**Lisp Error Flow:**
+1. Perception query fails (PostgreSQL connection lost)
+2. Caught by `handler-case` in tick engine
+3. Log error, skip agent's tick, continue with next agent
+4. Tick report includes resistance note
+
+**Cognition Broker Fallback Chain:**
+1. Primary provider (claude-code) fails → log error, try next
+2. Secondary provider (anthropic HTTP) fails → log error, try next
+3. Stub provider returns deterministic fallback → no LLM call, proceed with cached/template response
 
 ## Cross-Cutting Concerns
 
-**Logging:** Lisp `format t` to stdout, Rust `tracing` crate to stderr
+**Logging:**
+- Rust: `tracing` crate with `EnvFilter` configuration, log levels: debug/info/warn/error
+- Lisp: Manual `format t` logging to stdout, no structured logging framework
+- dpn-api: `RUST_LOG=dpn_api=info,tower_http=debug`
+- noosphere: `RUST_LOG=noosphere=debug,tower_http=debug`
 
-**Validation:** Innate expressions validated on template creation, not at evaluation time
+**Validation:**
+- Rust: Serde deserialization enforces types, custom validation in handlers
+- Lisp: Manual validation in parser (`tokenizer.lisp`), evaluator performs type checking
+- PostgreSQL: Schema constraints (NOT NULL, UNIQUE, FOREIGN KEY where applicable), triggers for immutability (canon entries in `the_chronicles`)
 
-**Authentication:** Bearer token auth in dpn-api (`auth_middleware`), no auth in ghost runtime (trusted localhost)
+**Authentication:**
+- dpn-api: Dual-mode (JWT tokens via `/auth/login` or API keys in `X-API-Key` header), middleware validates on protected routes
+- noosphere: No authentication (assumes trusted local network or reverse proxy auth)
+- AF64 runtime: No authentication (direct database access via libpq FFI, assumes authorized environment)
+
+**Authorization:**
+- Implicit: API keys grant full access, JWT tokens include user identity but no role-based restrictions yet
+- Agent-scoped queries: AF64 perception filters by `agent_id` in database queries
+- Memory inheritance: `MemoryScope` enum controls cross-agent memory access (Private, Shared, Global, Department)
+
+**Concurrency:**
+- Rust: Tokio async runtime for HTTP servers, connection pooling via sqlx (10 connections default)
+- Lisp: Single-threaded tick execution (one agent at a time), no parallelism
+- PostgreSQL: MVCC for concurrent reads/writes, row-level locking where needed
 
 **Caching:**
-- Cognition broker: In-memory cache with 6-hour TTL, disk-backed to `~/.af64/broker-state.json`
-- dpn-core: SQLite cache at `~/.dpn/cache.db` for offline-first access
-- Embeddings: Generated on write, cached in PostgreSQL `vector(1536)` columns
-
-**Two-Phase Cognition:**
-- Phase 1: Probe tier (haiku/base) for low-stakes decisions
-- Phase 2: Commit tier (sonnet/opus) only when probe returns `needs_deeper_thought: true`
-- Rationale: 90% of ticks resolve at probe tier, massive cost savings
-
-**Cognitive Winter:**
-- Trigger: Pending job count exceeds threshold (default 18)
-- Effect: Max jobs per tick reduced (6 → 3), throttles LLM usage
-- Thaw: When pending count drops below thaw threshold (9) for 2+ ticks
-
-**Standing Orders:**
-- Definition: Cron-based recurring tasks (daily note creation, rollup generation)
-- Matching: `cron-matcher.lisp` parses cron strings, fires labels once per tick
-- Tracking: `*schedule-fired-labels*` hash table prevents duplicate fires
+- SQLite local cache (`~/.dpn/cache.db`) for offline-first document access
+- Persona cache in action planner (avoid repeated file reads per tick)
+- No Redis or memcached
+- Cognition broker has in-memory job cache (winter/thaw logic)
 
 ---
 
