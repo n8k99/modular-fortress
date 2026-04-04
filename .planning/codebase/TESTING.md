@@ -1,459 +1,328 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-04-04
 
 ## Test Framework
 
-**Common Lisp (innatescript, project-noosphere-ghosts):**
+**Runner (Common Lisp):**
+- Hand-rolled test harness (91 lines in `innatescript/tests/test-framework.lisp`)
+- Pattern: Practical Common Lisp chapter 9 (`deftest`/`check`/`combine-results`)
+- Config: None — pure Lisp macros
 
-Runner:
-- Hand-rolled test harness (zero external dependencies)
-- Config: No config file — tests defined inline with `deftest` macro
-- Pattern: Practical Common Lisp chapter 9 (Seibel's test framework)
-- Location: `innatescript/tests/test-framework.lisp`
+**Runner (Rust):**
+- `cargo test` (built-in test framework)
+- `tokio-test` for async test utilities
+- Config: `[dev-dependencies]` section in `Cargo.toml`
 
-Core macros:
-```lisp
-(deftest test-name
-  (assert-equal expected actual "description")
-  (assert-true form "description")
-  (assert-nil form "description")
-  (assert-signals condition-type form "description"))
-```
+**Assertion Library (Lisp):**
+- Custom macros: `assert-equal`, `assert-true`, `assert-nil`, `assert-signals`
+- No external dependencies
 
-Test registry:
-- Global `*test-registry*` alist
-- Auto-registered by `deftest`
-- Filtered runs: `(run-tests "prefix")`
+**Assertion Library (Rust):**
+- Standard `assert!`, `assert_eq!`, `assert_ne!` macros
+- No additional libraries
 
-Run Commands:
+**Run Commands:**
 ```bash
-./run-tests.sh              # Run all tests
-./run-tests.sh parser       # Run tests matching "parser"
-sbcl --eval '(asdf:load-system :innatescript/tests)' \
-     --eval '(innate.tests:run-tests)'
-```
+# Common Lisp (innatescript, af64)
+./run-tests.sh                # Run all tests
+./run-tests.sh tokenizer      # Run tests matching "tokenizer"
 
-**Rust (dpn-api, dpn-core):**
-
-Runner:
-- `cargo test` (standard Rust testing)
-- Integration tests: `test_integration.sh` shell script
-- Unit tests: inline with `#[cfg(test)]` modules
-
-Run Commands:
-```bash
-cargo test                  # Run all unit tests
-./test_integration.sh       # Run API integration tests
-cargo test --lib            # Library tests only
-cargo test --test integration  # Named integration test
+# Rust (dpn-core, dpn-api)
+cargo test                    # Run all tests
+cargo test --lib              # Library tests only
+cargo test integration        # Tests matching "integration"
 ```
 
 ## Test File Organization
 
-**Common Lisp:**
+**Location (Common Lisp):**
+- Co-located in `tests/` directory at project root
+- Separate ASDF system (e.g., `:innatescript/tests` depends on `:innatescript`)
+- Pattern: One test file per source module (e.g., `test-tokenizer.lisp` for `parser/tokenizer.lisp`)
 
-Location:
-- Separate `tests/` directory
-- Co-located with source via ASDF system, not filesystem
+**Location (Rust):**
+- Inline: `#[cfg(test)]` modules at bottom of source files
+- Integration tests: `tests/` directory (not currently used in these projects)
 
-Naming:
-- `test-*.lisp` — all test files use `test-` prefix
-- `test-framework.lisp` — test harness implementation
-- `smoke-test.lisp` — quick validation tests
-- `test-evaluator.lisp` — module-specific tests
+**Naming (Lisp):**
+- Prefix `test-` for test files (e.g., `test-parser.lisp`, `test-evaluator.lisp`)
+- Test packages mirror source packages with `.tests` suffix (e.g., `:innate.tests.tokenizer`)
 
-Structure:
+**Naming (Rust):**
+- No separate test files — tests inline in source
+
+**Structure (Lisp):**
 ```
 innatescript/
 ├── src/
 │   ├── packages.lisp
 │   ├── types.lisp
-│   └── parser/
-│       ├── tokenizer.lisp
-│       └── parser.lisp
+│   ├── parser/
+│   │   ├── tokenizer.lisp
+│   │   └── parser.lisp
+│   └── eval/
+│       ├── resolver.lisp
+│       └── evaluator.lisp
 └── tests/
-    ├── packages.lisp
-    ├── test-framework.lisp
-    ├── test-types.lisp
+    ├── packages.lisp          # Test package definitions
+    ├── test-framework.lisp    # Test harness
+    ├── smoke-test.lisp        # Harness verification
     ├── test-tokenizer.lisp
-    └── test-parser.lisp
+    ├── test-parser.lisp
+    ├── test-resolver.lisp
+    └── test-evaluator.lisp
 ```
 
-**Rust:**
-
-Location:
-- Unit tests: inline `#[cfg(test)]` modules in source files
-- Integration tests: `tests/` directory (standard Cargo convention)
-- Script tests: `*.sh` files in project root
-
-Naming:
-- No prefix needed — Cargo recognizes `tests/` directory
-- Integration scripts: `test_*.sh` with underscore
-
-Structure:
-```
-dpn-api/
-├── src/
-│   ├── main.rs
-│   └── handlers/
-│       └── af64_agents.rs  (may contain #[cfg(test)] mod tests)
-├── tests/
-│   └── integration.rs
-└── test_integration.sh
-```
+**Structure (Rust):**
+- No separate test directory structure — tests live inline
 
 ## Test Structure
 
-**Common Lisp:**
-
-Suite Organization:
+**Suite Organization (Lisp):**
 ```lisp
-;;;; tests/test-evaluator.lisp — Two-pass evaluator tests
+;;;; test-tokenizer.lisp — tests for the Innate tokenizer (Phase 3)
+;;;; Covers TOK-01 through TOK-18
 
-(in-package :innate.tests.evaluator)
+(in-package :innate.tests.tokenizer)
 
-;;; EVL-01: Two-pass - decree collected in pass 1
-(deftest test-decree-collected-in-pass-1
-  (let* ((env (make-eval-env :resolver (make-stub-resolver)))
-         (ast (make-node :kind :program :children
-                (list (make-node :kind :decree :value "greeting"
-                        :children (list (make-node :kind :string-lit
-                                                    :value "hello")))))))
-    (evaluate ast env)
-    (assert-true (gethash "greeting" (eval-env-decrees env)))))
+;;; ─── Task 1: Single-character token tests (TOK-01 through TOK-10) ───
 
-;;; EVL-02: Reference resolution - decree before resolver
-(deftest test-reference-resolves-decree-first
-  ...)
+(deftest test-single-bracket-tokens
+  (let ((lbrak (tokenize "[")))
+    (assert-equal 1 (length lbrak) "lbracket: one token")
+    (assert-equal :lbracket (token-type (first lbrak)) "lbracket type")))
+
+(deftest test-single-punctuation-tokens
+  (assert-equal :colon (token-type (first (tokenize ":"))) "colon")
+  (assert-equal :comma (token-type (first (tokenize ","))) "comma"))
 ```
 
-Patterns:
-- Setup: `let*` bindings for test data
-- Assertions: inline with test logic
-- Teardown: automatic (lexical scope cleanup)
-- Each `deftest` is self-contained
+**Patterns (Lisp):**
+- File header comments document phase and task coverage
+- Section dividers group related tests (e.g., `;;; ─── Task 1: ... ───`)
+- `deftest` macro defines named tests
+- `let` bindings for setup (e.g., tokenizing input)
+- Multiple assertions per test allowed
+- Descriptive string labels for each assertion
 
-**Rust:**
-
-Suite Organization:
+**Suite Organization (Rust):**
 ```rust
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_api_error_from_anyhow() {
-        let err = anyhow::anyhow!("test error");
-        let api_err = ApiError::from(err);
-
-        match api_err {
-            ApiError::Internal(msg) => assert_eq!(msg, "test error"),
-            _ => panic!("Expected Internal error"),
-        }
+    #[tokio::test]
+    async fn test_connection() {
+        let pool = create_pool(DEFAULT_DATABASE_URL).await.unwrap();
+        let result = test_connection(&pool).await;
+        assert!(result.is_ok());
     }
 }
 ```
 
-Integration tests:
-```rust
-// tests/integration.rs
-use dpn_api::*;
-
-#[tokio::test]
-async fn test_health_endpoint() {
-    let response = test_client().get("/health").send().await;
-    assert!(response.status().is_success());
-}
-```
+**Patterns (Rust):**
+- `#[cfg(test)]` module at file bottom
+- `use super::*;` imports parent module
+- `#[test]` attribute for sync tests
+- `#[tokio::test]` attribute for async tests
+- Inline setup in test body
 
 ## Mocking
 
-**Common Lisp:**
+**Framework (Lisp):** Stub resolver pattern
 
-Framework: Hand-rolled stub resolver
+**Patterns:**
+- `stub-resolver` struct with in-memory hash tables
+- Provides `stub-add-entity`, `stub-add-wikilink`, `stub-add-bundle` functions
+- Fulfills resolver protocol without external substrate
+- Used for testing evaluator in isolation
 
-Pattern:
+**Pattern (Lisp stub resolver):**
 ```lisp
-;; innatescript/src/eval/stub-resolver.lisp
-(defclass stub-resolver ()
-  ((entities :initform (make-hash-table :test #'equal))
-   (wikilinks :initform (make-hash-table :test #'equal))
-   (bundles :initform (make-hash-table :test #'equal))
-   (contexts :initform (make-hash-table :test #'equal))
-   (commissions :initform '())))
-
-(defmethod resolve-reference ((resolver stub-resolver) name qualifiers)
-  (let ((entity (gethash name (slot-value resolver 'entities))))
-    (if entity
-        (make-innate-result :value entity :context :query)
-        (make-resistance :message (format nil "No stub for ~a" name)
-                         :source name))))
+(let ((resolver (make-stub-resolver)))
+  (stub-add-entity resolver "count" "42")
+  (let* ((env (make-eval-env :resolver resolver))
+         (result (evaluate ast env)))
+    (assert-equal "42" (innate-result-value result))))
 ```
 
-Usage:
-```lisp
-(deftest test-with-stub
-  (let* ((resolver (make-stub-resolver))
-         (env (make-eval-env :resolver resolver)))
-    (stub-add-entity resolver "user" "Alice")
-    (let ((result (evaluate (parse "@user") env)))
-      (assert-equal "Alice" (first result)))))
-```
+**Framework (Rust):** Not currently used
 
-What to Mock:
-- External substrate (resolver protocol)
-- Database queries (stub-resolver)
-- API responses (hand-rolled stubs)
+**What to Mock:**
+- Lisp: External substrate calls (database, API) via resolver protocol
+- Rust: Not actively mocked — tests use real database connections
 
-What NOT to Mock:
-- Pure functions (parser, AST construction)
-- Data structures (nodes, results)
-- Core logic (evaluator dispatch)
-
-**Rust:**
-
-Framework: No mocking library used (test against real DB or manual stubs)
-
-Pattern (manual stubs):
-```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn mock_pool() -> DbPool {
-        // Return in-memory SQLite pool for tests
-        sqlx::sqlite::SqlitePoolOptions::new()
-            .connect(":memory:")
-            .await
-            .unwrap()
-    }
-}
-```
-
-Integration tests use live database or Docker containers.
+**What NOT to Mock:**
+- Lisp: Core interpreter logic (tokenizer, parser, evaluator)
+- Rust: Core business logic
 
 ## Fixtures and Factories
 
-**Common Lisp:**
+**Test Data (Lisp):**
+- Inline strings for small inputs (e.g., `(tokenize "[foo]")`)
+- File reading for larger inputs (e.g., `burg_pipeline.dpn`)
+- Helper functions prefixed `%` (e.g., `%read-file-to-string`)
 
-Test Data:
+**Pattern (Lisp file fixtures):**
 ```lisp
-;; Helper functions in test files
-(defun make-test-ast ()
-  (make-node :kind :program
-             :children (list (make-node :kind :prose :value "test"))))
+(defun %read-file-to-string (path)
+  "Read entire file at PATH into a string."
+  (with-open-file (stream path :direction :input)
+    (let ((contents (make-string (file-length stream))))
+      (read-sequence contents stream)
+      contents)))
 
-(defun make-test-env ()
-  (make-eval-env :resolver (make-stub-resolver)))
+(deftest test-burg-pipeline-tokenizes
+  (let* ((source (%read-file-to-string "burg_pipeline.dpn"))
+         (tokens (tokenize source)))
+    (assert-true (> (length tokens) 0) "token list is non-empty")))
 ```
 
-Location:
-- Inline helpers in test files
-- No separate fixtures directory
-- Construct fresh data per test (no global state)
+**Location (Lisp):**
+- Test data files in project root (e.g., `burg_pipeline.dpn`)
+- No separate `fixtures/` directory
 
-**Rust:**
-
-Test Data:
-```rust
-#[cfg(test)]
-mod tests {
-    fn sample_agent() -> Agent {
-        Agent {
-            id: "test-agent".into(),
-            full_name: Some("Test Agent".into()),
-            role: Some("Tester".into()),
-            ..Default::default()
-        }
-    }
-}
-```
-
-Database fixtures (integration tests):
-```bash
-# test_integration.sh sets up state
-API_URL="${DPN_API_URL:-http://localhost:8080}"
-API_KEY="${DPN_API_KEY:-test-key}"
-```
+**Location (Rust):**
+- No fixtures currently used
 
 ## Coverage
 
-**Common Lisp:**
+**Requirements:** No enforced coverage targets
 
-Requirements: No enforced coverage target
-
-Measurement:
-- No automated coverage tool
-- Manual verification: run tests, check SBCL compilation warnings
-
-Approach:
-- Write tests for each specification requirement (e.g., EVL-01, EVL-02)
-- Test-driven development for parser and evaluator
-- Smoke tests for basic integration
-
-**Rust:**
-
-Requirements: No enforced coverage target
-
-Measurement:
-```bash
-cargo tarpaulin --out Html  # Requires tarpaulin installation
-```
-
-Approach:
-- Unit tests for error handling
-- Integration tests for HTTP endpoints
-- No TDD pattern observed — tests added after implementation
+**View Coverage:**
+- Lisp: Manual review — no coverage tooling
+- Rust: `cargo tarpaulin` (not configured in these projects)
 
 ## Test Types
 
-**Common Lisp:**
+**Unit Tests (Lisp):**
+- Scope: Individual functions and modules
+- Approach: Test tokenizer, parser, resolver, evaluator in isolation
+- Example: `test-tokenizer.lisp` tests `tokenize` function with various inputs
 
-Unit Tests:
-- Scope: Single function or module
-- Approach: Pure function testing with controlled inputs
-- Examples: `test-tokenizer.lisp`, `test-parser.lisp`, `test-types.lisp`
+**Unit Tests (Rust):**
+- Scope: Individual functions
+- Approach: Inline `#[test]` functions in source files
+- Example: `test_connection` in `db/connection.rs`
 
-Integration Tests:
-- Scope: Multi-module interactions
-- Approach: Test evaluator + parser + resolver together
-- Examples: `test-evaluator.lisp` (uses parser + stub resolver)
+**Integration Tests (Lisp):**
+- Scope: End-to-end interpreter pipeline
+- Approach: Parse and evaluate complete `.dpn` files
+- Example: `test-burg-pipeline-tokenizes` reads full file and verifies token output
 
-E2E Tests:
-- Scope: REPL or full script execution
-- Framework: `smoke-test.lisp`
-- Approach: Run actual `.dpn` scripts, verify output
+**Integration Tests (Rust):**
+- Scope: Not actively used
+- Approach: Would live in `tests/` directory (not present)
 
-Example smoke test:
-```lisp
-(deftest smoke-test-basic-parsing
-  (let* ((input "# Hello World
-This is prose.
-")
-         (ast (parse input)))
-    (assert-equal :program (node-kind ast))))
-```
-
-**Rust:**
-
-Unit Tests:
-- Scope: Function-level, inline with source
-- Pattern: `#[test]` attribute on functions
-- Location: `#[cfg(test)] mod tests` at bottom of source file
-
-Integration Tests:
-- Scope: API endpoint testing
-- Pattern: Shell script with curl commands
-- Location: `test_integration.sh`
-
-Example from `test_integration.sh`:
-```bash
-test_endpoint() {
-    local name="$1"
-    local method="$2"
-    local endpoint="$3"
-    local expected_field="$4"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-    echo -n "Testing $name... "
-
-    response=$(api_request "$method" "$endpoint")
-
-    if echo "$response" | grep -q "$expected_field"; then
-        echo -e "${GREEN}✓ PASS${NC}"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    else
-        echo -e "${RED}✗ FAIL${NC}"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    fi
-}
-
-test_endpoint "Health Check" "GET" "/health" "status"
-test_endpoint "List Documents" "GET" "/api/documents?limit=5" "documents"
-```
-
-E2E Tests:
-- Not currently implemented
-- Would use: live database + full server startup
+**E2E Tests:**
+- Not used in either Lisp or Rust projects
 
 ## Common Patterns
 
-**Common Lisp:**
-
-Async Testing:
-- Not applicable — AF64 runtime uses synchronous tick model
-- No async/await in Common Lisp tests
-
-Error Testing:
-```lisp
-(deftest test-parse-error-signals
-  (assert-signals innate-parse-error
-                  (parse "!invalid syntax")
-                  "Parser should signal error on invalid input"))
-
-(deftest test-resistance-signaled
-  (let* ((resolver (make-stub-resolver))
-         (env (make-eval-env :resolver resolver)))
-    (handler-case
-        (progn
-          (evaluate (parse "@missing") env)
-          (error "Should have signaled resistance"))
-      (innate-resistance (c)
-        (assert-true (search "missing"
-                             (resistance-condition-message c)))))))
-```
-
-Boundary Testing:
-```lisp
-(deftest test-empty-input
-  (let ((ast (parse "")))
-    (assert-equal :program (node-kind ast))
-    (assert-nil (node-children ast))))
-
-(deftest test-large-decree-body
-  (let* ((large-string (make-string 10000 :initial-element #\x))
-         (ast (parse (format nil "!x = \"~a\"" large-string))))
-    (assert-equal :program (node-kind ast))))
-```
-
-**Rust:**
-
-Async Testing:
+**Async Testing (Rust):**
 ```rust
 #[tokio::test]
-async fn test_async_endpoint() {
-    let result = async_function().await;
-    assert!(result.is_ok());
+async fn test_create_pool() {
+    let pool = create_pool(DEFAULT_DATABASE_URL).await;
+    assert!(pool.is_ok());
 }
 ```
 
-Error Testing:
-```rust
-#[test]
-fn test_error_conversion() {
-    let err = anyhow::anyhow!("test");
-    let api_err = ApiError::from(err);
-
-    match api_err {
-        ApiError::Internal(msg) => assert_eq!(msg, "test"),
-        _ => panic!("Wrong error variant"),
-    }
-}
+**Error Testing (Lisp):**
+```lisp
+(deftest test-string-unterminated
+  (assert-signals innate-parse-error
+    (tokenize "\"hello")
+    "unterminated string signals parse error"))
 ```
 
-## Test Execution
+**Pattern:** Use `assert-signals` macro to verify condition is signaled
 
-**Common Lisp:**
+**Positive/Negative Testing (Lisp):**
+```lisp
+(deftest test-wikilink-vs-nested-brackets
+  ;; Positive case: [[Burg]] is wikilink
+  (let ((toks (tokenize "[[Burg]]")))
+    (assert-equal :wikilink (token-type (first toks))))
+  ;; Negative case: [[sylvia[command]]] is nested brackets
+  (let ((toks (tokenize "[[sylvia[command]]]")))
+    (assert-equal 8 (length toks) "not a wikilink")))
+```
 
-Shell script wrapper (`run-tests.sh`):
+## Test Harness Implementation
+
+**Hand-Rolled Framework (91 lines):**
+- `innatescript/tests/test-framework.lisp`
+- Three core macros: `assert-equal`, `assert-true`, `assert-nil`, `assert-signals`
+- One registration macro: `deftest`
+- One runner function: `run-tests`
+
+**Key Features:**
+- Global test registry: `*test-registry*` alist
+- Failure counter: `*test-failures*` per test
+- Selective execution: `(run-tests "prefix")` runs matching tests
+- Exit code: Returns `T` if all pass, `NIL` if any fail
+
+**Pattern (deftest macro):**
+```lisp
+(defmacro deftest (name &body body)
+  "Define a named test. Registers it in *test-registry*.
+   NAME is a symbol. BODY is a sequence of assertions."
+  `(progn
+     (defun ,name ()
+       (let ((*current-test* ,(symbol-name name)))
+         (format t "  ~a ... " ,(symbol-name name))
+         (let ((*test-failures* 0))
+           ,@body
+           (if (zerop *test-failures*)
+               (format t "PASS~%")
+               (format t "FAIL (~a failure~:p)~%" *test-failures*))
+           (zerop *test-failures*))))
+     (pushnew (cons ,(symbol-name name) #',name) *test-registry*
+              :key #'car :test #'string=)
+     ',name))
+```
+
+## ASDF System Organization
+
+**Test System (Lisp):**
+- Separate system definition (e.g., `:innatescript/tests`)
+- Depends on main system (e.g., `:depends-on ("innatescript")`)
+- Pathname pointing to `tests/` directory
+
+**Pattern (ASDF):**
+```lisp
+(defsystem "innatescript/tests"
+  :description "Test suite for the Innate interpreter"
+  :depends-on ("innatescript")
+  :pathname "tests/"
+  :components
+  ((:file "packages")
+   (:file "test-framework"  :depends-on ("packages"))
+   (:file "smoke-test"      :depends-on ("packages" "test-framework"))
+   (:file "test-tokenizer"  :depends-on ("packages" "test-framework"))))
+```
+
+## Shell Integration
+
+**Test Runner Script:**
+- `innatescript/run-tests.sh`
+- Wipes project FASL cache before run (cold-load guarantee)
+- Loads test system via ASDF
+- Calls `(innate.tests:run-tests)` with optional filter
+- Exit code matches test result (0 = pass, 1 = fail)
+
+**Pattern (run-tests.sh):**
 ```bash
 #!/usr/bin/env bash
 set -e
 
-# Wipe FASL cache for clean load
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CACHE_ROOT="${HOME}/.cache/common-lisp"
-find "${CACHE_ROOT}" -type d -path "*/${PROJECT_CACHE_SUFFIX}" -prune -exec rm -rf {} +
+
+# Wipe project FASL cache
+find "${CACHE_ROOT}" -type d -path "*/${SCRIPT_DIR#/}" -prune -exec rm -rf {} +
 
 # Run tests
 sbcl --non-interactive \
@@ -463,77 +332,16 @@ sbcl --non-interactive \
             (sb-ext:exit :code (if result 0 1)))"
 ```
 
-Exit codes:
-- `0` = all tests pass
-- `1` = any test fails
-
-Filtering:
-```bash
-./run-tests.sh parser    # Only run tests matching "parser"
-```
-
-**Rust:**
-
-Standard Cargo:
-```bash
-cargo test                      # All tests
-cargo test --lib                # Library only
-cargo test integration          # Match "integration"
-cargo test -- --nocapture       # Show output
-cargo test -- --test-threads=1  # Serial execution
-```
-
-Integration script:
-```bash
-./test_integration.sh
-# Outputs:
-# Testing Health Check... ✓ PASS
-# Testing List Documents... ✓ PASS
-# ...
-# Total Tests: 15
-# Passed: 15
-# Failed: 0
-```
-
-## CI/CD Integration
-
-**Common Lisp:**
-
-Not configured (manual testing workflow).
-
-Expected pattern:
-```yaml
-# .github/workflows/test.yml
-- name: Run Innate tests
-  run: |
-    sudo apt-get install sbcl
-    cd innatescript
-    ./run-tests.sh
-```
-
-**Rust:**
-
-Not configured (manual testing workflow).
-
-Expected pattern:
-```yaml
-# .github/workflows/test.yml
-- name: Run Rust tests
-  run: |
-    cd dpn-api
-    cargo test --all-features
-    ./test_integration.sh
-```
-
 ## Test Coverage Gaps
 
 **innatescript:**
 
 What's tested:
-- Tokenizer: basic token types, whitespace handling
+- Tokenizer: basic token types, whitespace handling, position tracking
 - Parser: all node types, nesting, error cases
 - Evaluator: two-pass, decree hoisting, reference resolution
 - Conditions: error signaling, resistance propagation
+- Resolver protocol: stub implementation, entity resolution
 
 What's NOT tested:
 - REPL: interactive mode, error recovery
@@ -545,18 +353,16 @@ Priority: Medium — core interpreter is covered, REPL and file I/O are thin wra
 
 **dpn-api/dpn-core:**
 
-What's tested (integration only):
-- HTTP endpoints: health, documents, tasks, events, projects
-- Query parameters: limit, filtering
-- Authentication: API key validation
+What's tested:
+- Basic connection tests inline in source
 
 What's NOT tested:
 - Unit tests: handler logic, error paths
 - Database edge cases: NULL handling, constraint violations
 - Concurrent requests: race conditions
-- WebSocket endpoints (if any)
+- HTTP endpoints: health, documents, tasks, events (no integration tests found)
 
-Priority: High — integration tests are brittle, need unit test foundation
+Priority: High — minimal test coverage for production API
 
 **project-noosphere-ghosts:**
 
@@ -568,9 +374,10 @@ What's NOT tested:
 - Cognition broker: provider chain, caching, winter/thaw
 - Tool registry: tool execution, argument validation
 - Memory rollups: daily/weekly/monthly aggregation
+- Standing orders: cron matching, task injection
 
-Priority: Critical — zero test coverage for core runtime
+Priority: Critical — zero test coverage for core runtime loops
 
 ---
 
-*Testing analysis: 2026-04-03*
+*Testing analysis: 2026-04-04*

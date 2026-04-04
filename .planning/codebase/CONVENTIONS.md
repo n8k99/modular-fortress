@@ -1,369 +1,274 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-04-04
 
 ## Naming Patterns
 
 **Files:**
-
-Common Lisp:
-- `packages.lisp` — package definitions (loaded first)
-- `kebab-case.lisp` — all other source files
-- `test-*.lisp` — test files with `test-` prefix
-- System definitions: `project-name.asd`
-
-Rust:
-- `snake_case.rs` — all source files
-- `lib.rs` — library entry point
-- `main.rs` — binary entry point
-- `mod.rs` — module definitions
+- Common Lisp: Hyphenated lowercase with `.lisp` extension (e.g., `test-framework.lisp`, `db-conversations.lisp`, `action-planner.lisp`)
+- Rust: Snake_case with `.rs` extension (e.g., `connection.rs`, `agent_requests.rs`, `af64_perception.rs`)
+- ASDF system definitions: Project name + `.asd` (e.g., `innatescript.asd`, `af64.asd`)
+- Cargo manifests: `Cargo.toml` per project
+- Test files: Prefix `test-` for Lisp tests (e.g., `test-tokenizer.lisp`, `test-parser.lisp`)
 
 **Functions:**
-
-Common Lisp:
-- `kebab-case` for all functions and methods
-- Predicate suffix: `-p` (e.g., `resistance-p`, `node-p`)
-- Internal helpers: prefix with `%` (e.g., `%report-failure`)
-- Generic functions: `defgeneric` for protocol definitions
-- Constants: `+constant+` with plus signs (e.g., `+node-program+`)
-
-Rust:
-- `snake_case` for functions and methods
-- Type constructors: `new()` or `make_*` pattern
-- Async functions: marked with `async fn`
-- Error conversion: implement `From<T>` traits
+- Common Lisp: Hyphenated lowercase (e.g., `make-eval-env`, `resolve-reference`, `db-fetch-agents`, `empty-perception`)
+- Rust: Snake_case (e.g., `create_pool`, `list_documents`, `get_recent_conversations`)
+- Internal functions in Lisp: Prefix with `%` (e.g., `%report-failure`, `%read-file-to-string`)
 
 **Variables:**
-
-Common Lisp:
-- `kebab-case` for locals
-- Dynamic variables: `*asterisk-wrapped*` (e.g., `*test-registry*`, `*db-pool*`)
-- Environment variables: `AF64_*` prefix (uppercase with underscores)
-
-Rust:
-- `snake_case` for all variables
-- Constants: `SCREAMING_SNAKE_CASE`
-- Type parameters: `CamelCase` single letters or descriptive names
+- Lisp global dynamic variables: Earmuffs (e.g., `*test-registry*`, `*db-pool*`, `*noosphere-resolver*`)
+- Lisp constants: Plus signs (e.g., `+node-program+`, `+node-bracket+`, `+energy-costs+`)
+- Rust: Snake_case for locals, SCREAMING_SNAKE_CASE for constants (e.g., `DEFAULT_DATABASE_URL`)
 
 **Types:**
-
-Common Lisp:
-- `defstruct` names: lowercase with hyphens (e.g., `innate-result`, `cognition-job`)
-- Condition types: `-condition` or `-error` suffix (e.g., `innate-parse-error`, `innate-resistance`)
-- Package names: `:package.submodule` (e.g., `:innate.parser`, `:af64.utils.json`)
-
-Rust:
-- `CamelCase` for structs, enums, traits
-- Error types: `*Error` suffix (e.g., `ApiError`)
-- Type aliases: `CamelCase`
+- Lisp structs: Hyphenated lowercase (e.g., `cognition-job`, `innate-result`, `resistance`)
+- Lisp conditions: Hyphenated with descriptive suffix (e.g., `innate-parse-error`, `innate-resistance`)
+- Rust structs/enums: PascalCase (e.g., `DbPool`, `ApiError`, `ConversationLight`)
+- Lisp packages: Dotted hierarchical lowercase (e.g., `:innate.types`, `:af64.runtime.perception`, `:innate.parser.tokenizer`)
+- Rust modules: Snake_case (e.g., `mod handlers`, `mod auth`)
 
 ## Code Style
 
 **Formatting:**
-
-Common Lisp:
-- No external formatter — hand-formatted
-- Indentation: 2 spaces per level
-- Opening paren stays on same line as form name
-- Closing parens stack on final line
-- Comment headers: `;;;; filename — description` (4 semicolons for file headers)
-- Section comments: `;;; Section Name` (3 semicolons)
-- Line comments: `;; explanation` (2 semicolons, indented with code)
-- Inline comments: `; inline note` (1 semicolon, after code)
-
-Rust:
-- Use `rustfmt` (standard Rust formatter)
-- Edition 2021
-- Line length: default (100 chars)
-- No explicit config files found — uses Rust defaults
+- Common Lisp: Hand-formatted with visual alignment on closing parens, 2-space indentation standard
+- Rust: `cargo fmt` with default settings (4-space indentation, trailing commas)
+- Line width: Not enforced programmatically; natural breaks preferred
 
 **Linting:**
-
-Common Lisp:
-- No linter — manual review and SBCL warnings
-- Compile with `(declaim (optimize (safety 3) (debug 3)))` during development
-- Zero external dependencies policy (no Quicklisp)
-
-Rust:
-- Standard `cargo clippy` (no custom config found)
-- Warnings as errors: not enforced by default
-- Use `#[allow(clippy::*)]` sparingly for legitimate cases
+- Common Lisp: No external linter — manual review against style guide
+- Rust: `cargo clippy` enabled but not blocking (warnings allowed)
 
 ## Import Organization
 
-**Common Lisp:**
+**Order (Common Lisp):**
+1. `(in-package ...)` at top of file
+2. No implicit imports — all packages declare explicit `:use` and `:import-from`
+3. Never `:use :common-lisp-user` — always `:use :cl` only
+4. Cross-package imports via `:import-from` with explicit symbol lists
 
-Order:
-1. `(in-package :package.name)` — always first
-2. No `:use` except `:cl` in defpackage
-3. Explicit `:import-from` for cross-package symbols
-4. Export list in package definition
-
-Pattern from `innatescript/src/packages.lisp`:
+**Pattern (Lisp packages.lisp):**
 ```lisp
-(defpackage :innate.parser
+(defpackage :innate.eval
   (:use :cl)
-  (:import-from :innate.parser.tokenizer
-    #:token-type #:token-value #:tokenize)
+  (:import-from :innate.eval.resolver
+    #:resolver #:eval-env #:resolve-reference)
   (:import-from :innate.types
-    #:make-node #:node-kind #:+node-program+)
-  (:export #:parse))
+    #:node-kind #:node-value)
+  (:export
+   #:evaluate))
 ```
 
-Path Aliases:
-- None — use explicit package prefixes when needed
-
-**Rust:**
-
-Order:
+**Order (Rust):**
 1. Standard library imports
-2. External crate imports
-3. Internal crate imports
-4. Module declarations
+2. External crate imports (grouped by crate)
+3. Internal crate imports (`dpn_core`, local modules)
+4. Re-exports at top of `lib.rs` for public API
 
-Pattern from `dpn-api/src/handlers/af64_agents.rs`:
+**Pattern (Rust):**
 ```rust
-use axum::{
-    extract::{Path, Query, State},
-    Json,
-};
-use dpn_core::DbPool;
-use serde::Deserialize;
-use serde_json::Value;
-use sqlx::Row;
+use anyhow::Result;
+use sqlx::postgres::{PgPool, PgPoolOptions};
+use std::time::Duration;
 
-use crate::error::ApiError;
+use dpn_core::{create_pool, Memory};
 ```
 
 ## Error Handling
 
-**Common Lisp:**
+**Patterns (Common Lisp):**
+- Use `handler-case` for recoverable conditions (e.g., missing references, parse errors)
+- Use `restart-case` when offering recovery options
+- Signal resistance conditions with `(signal 'innate-resistance ...)` — NOT `error`
+- Error conditions inherit from both `innate-condition` and `error`
+- Resistance conditions inherit from `innate-condition` and `condition` (not `error`)
+- Always provide `:report` methods for user-facing condition messages
 
-Patterns:
-- Condition system with `define-condition`
-- Parse errors: inherit from `error` — unrecoverable
-- Resistance conditions: inherit from `condition` — use `signal`, not `error`
-- `handler-case` for recovery
-- `restart-case` for fulfillment protocol
-
-Example from `innatescript/src/conditions.lisp`:
+**Pattern (Lisp handler-case):**
 ```lisp
-(define-condition innate-resistance (innate-condition condition)
-  ((message :initarg :message :reader resistance-condition-message)
-   (source  :initarg :source  :reader resistance-condition-source))
-  (:report (lambda (condition stream)
-             (format stream "Innate resistance: ~a (from: ~a)"
-                     (resistance-condition-message condition)
-                     (resistance-condition-source condition)))))
+(handler-case
+    (db-perceive *db-pool* agent-id tier since)
+  (error (e)
+    (format t "  [perception-error] ~a: ~a~%" agent-id e)
+    (empty-perception)))
 ```
 
-Resistance values vs conditions:
-- Return `(make-resistance :message "..." :source "...")` for soft failures
-- Signal `innate-resistance` condition for propagatable errors
+**Patterns (Rust):**
+- Use `Result<T, E>` for all fallible operations
+- Prefer `anyhow::Result` for application-level errors
+- Use `thiserror` for domain-specific error types
+- Implement `IntoResponse` for API error types
+- Convert errors at API boundary with `From` traits
 
-**Rust:**
-
-Patterns:
-- `thiserror` for error type definitions
-- `anyhow` for error propagation in non-library code
-- `Result<T, E>` return types
-- `?` operator for propagation
-- Custom `ApiError` enum with `IntoResponse` for HTTP handlers
-
-Example from `dpn-api/src/error.rs`:
+**Pattern (Rust error enum):**
 ```rust
 #[derive(Debug)]
 pub enum ApiError {
     Database(String),
     NotFound(String),
     BadRequest(String),
-    Internal(String),
 }
 
-impl From<anyhow::Error> for ApiError {
-    fn from(err: anyhow::Error) -> Self {
-        ApiError::Internal(err.to_string())
+impl IntoResponse for ApiError {
+    fn into_response(self) -> Response {
+        let (status, message) = match self { /* ... */ };
+        (status, Json(json!({"error": message}))).into_response()
     }
 }
 ```
 
 ## Logging
 
-**Common Lisp:**
+**Framework (Common Lisp):** Console output via `format`
 
-Framework: Hand-rolled or `format` to stderr
+**Patterns:**
+- Prefix messages with context tags: `"[perception-error]"`, `"[action-executor]"`
+- Use `~a` for string interpolation, `~%` for newlines
+- Log to stdout — no file-based logging in core runtime
 
-Patterns:
-- Development: `(format t "Debug: ~a~%" value)`
-- Production: structured writes to log files
-- No external logging framework (zero-deps policy)
+**Framework (Rust):** `tracing` crate
 
-**Rust:**
+**Patterns:**
+- Use `tracing::info!`, `tracing::debug!`, `tracing::error!` macros
+- Configure via `RUST_LOG` environment variable
+- Default filter: `"dpn_api=debug,tower_http=debug"`
 
-Framework: `tracing` crate
-
-Patterns:
-- Use `tracing::info!`, `tracing::error!`, etc.
-- Initialize with `tracing-subscriber` in `main.rs`
-- Environment filter via `RUST_LOG`
+**Pattern (Rust):**
+```rust
+tracing::info!("Database pool created");
+tracing::debug!("Connecting to database...");
+```
 
 ## Comments
 
-**Common Lisp:**
+**When to Comment:**
+- File headers: Purpose, phase number, task IDs (e.g., `;;;; test-tokenizer.lisp — tests for the Innate tokenizer (Phase 3)`)
+- Section dividers: Major logical sections (e.g., `;;; ─── Task 1: Single-character token tests (TOK-01 through TOK-10) ───`)
+- Complex algorithms: Explain WHY, not WHAT
+- TODOs: Prefix with `TODO:` or `FIXME:` (e.g., `// TODO: Uncomment after Phase 6`)
 
-When to Comment:
-- File headers: always include `;;;; filename — description`
-- Function purpose: docstrings in `defun`, `defstruct`, `define-condition`
-- Complex algorithms: explain why, not what
-- Protocol implementations: reference protocol name
+**Docstrings:**
+- Lisp: `:documentation` slot in `defstruct`, `defclass`, `define-condition`
+- Lisp functions: String literal after parameter list (e.g., `"Assert that ACTUAL is EQUAL to EXPECTED."`)
+- Rust: `///` for public items, `//!` for module-level docs
 
-Docstring convention:
+**Pattern (Lisp):**
 ```lisp
-(defun parse-json (text)
-  "Parse JSON TEXT string into Lisp data structures.
-Returns hash tables for objects, vectors for arrays, keywords for keys."
-  ...)
+(defstruct (node (:constructor make-node (&key kind value children props)))
+  "Universal AST node. Dispatch on (node-kind n) using etypecase."
+  (kind nil))
 ```
 
-**Rust:**
-
-When to Comment:
-- Module documentation: `//!` at top of file
-- Public API documentation: `///` before public items
-- Implementation notes: `//` inline
-- Complex logic: explain intent
-
-Example:
+**Pattern (Rust):**
 ```rust
-//! AF64 Agent endpoints
+//! Database connection management
+//!
+//! Expects PostgreSQL via SSH tunnel on port 5433
 
-/// GET /api/agents/:id
-pub async fn get_agent(
-    State(pool): State<DbPool>,
-    Path(id): Path<String>,
-) -> Result<Json<Value>, ApiError> {
-    ...
-}
+/// Create a connection pool to the PostgreSQL database
+pub async fn create_pool(database_url: &str) -> Result<DbPool> {
 ```
 
 ## Function Design
 
-**Common Lisp:**
+**Size:** No hard limit — prefer readability over line count
 
-Size:
-- Small focused functions preferred
-- Test helpers: single assertion each
-- Evaluator: dispatch via `etypecase` on node kind
+**Parameters:**
+- Lisp: Keyword arguments for >3 parameters or when order is unclear
+- Rust: Use structs for complex parameter sets
 
-Parameters:
-- Required first, optional/keyword after
-- Dynamic variables for implicit context (e.g., `*resolver*`)
-
-Return Values:
-- Multiple values: use `values` form
-- Structs: return `defstruct` instances
-- Lists: use for ordered collections
-- Hash tables: use for key-value data
-
-**Rust:**
-
-Size:
-- Functions stay focused and testable
-- Handler functions: single responsibility (one endpoint)
-
-Parameters:
-- Use Axum extractors for HTTP handlers (`State`, `Path`, `Query`, `Json`)
-- Generic types for reusable code
-
-Return Values:
-- `Result<T, E>` for fallible operations
-- `impl Trait` for complex return types
-- `Json<Value>` for HTTP responses
+**Return Values:**
+- Lisp: Return value or `resistance` struct (not error) for missing resources
+- Rust: `Result<T, E>` for fallible operations, bare `T` for infallible
 
 ## Module Design
 
-**Common Lisp:**
+**Exports (Common Lisp):**
+- Explicit `:export` lists in `defpackage`
+- Export symbols with `#:` reader syntax (e.g., `#:evaluate`)
+- One package per logical module (e.g., `:innate.parser.tokenizer`, `:af64.runtime.perception`)
 
-Exports:
-- Explicit `:export` list in package definition
-- Only export public API symbols
-- Use qualified symbols for cross-package access
+**Exports (Rust):**
+- Use `pub` keyword for public items
+- Re-export commonly used types in `lib.rs` (e.g., `pub use db::{DbPool, create_pool}`)
+- Prefer `pub(crate)` for internal APIs
 
-Package structure (innatescript):
-```
-:innate.types
-:innate.conditions
-:innate.parser.tokenizer
-:innate.parser
-:innate.eval.resolver
-:innate.eval
-:innate.repl
-:innate (facade)
-```
-
-Barrel Files:
-- Not applicable — Common Lisp uses package system
-
-**Rust:**
-
-Exports:
-- `pub` for public items
-- `pub use` for re-exports
-- Private by default
-
-Module structure (dpn-api):
-```
-src/
-├── main.rs
-├── error.rs
-├── auth.rs
-└── handlers/
-    ├── mod.rs
-    ├── af64_agents.rs
-    └── af64_tasks.rs
-```
+**Barrel Files:**
+- Lisp: All packages declared in single `packages.lisp` file loaded first
+- Rust: `mod.rs` files export submodules (e.g., `handlers/mod.rs`)
 
 ## AF64 Zero-Dependencies Policy
 
-**Critical Convention:**
+**Applies to:**
+- `project-noosphere-ghosts/` (Common Lisp runtime)
+- `innatescript/` (Common Lisp interpreter)
 
-Projects under AF64 framework follow a **strict zero external dependencies** policy:
+**Rules:**
+- No Quicklisp dependencies
+- ASDF + SBCL built-ins only
+- Hand-rolled JSON parser (`util/json.lisp`)
+- Hand-rolled HTTP client via `curl` subprocess (`util/http.lisp`)
+- Hand-rolled PostgreSQL client via `libpq.so` FFI (`util/pg.lisp`)
+- Hand-rolled YAML parser (`util/yaml.lisp`)
+- Hand-rolled test framework (91-line `test-framework.lisp`)
 
-**Common Lisp:**
-- No Quicklisp
-- No external libraries
-- Hand-roll utilities: JSON parser, HTTP client (via curl subprocess), PostgreSQL client (via libpq FFI)
-- ASDF system definition only
-- Standard library only (`:use :cl`)
+**Not subject to zero-deps:**
+- `dpn-core/` and `dpn-api/` (Rust projects use standard crates: `sqlx`, `axum`, `tokio`, `serde`, etc.)
 
-**Rust (dpn-core/dpn-api):**
-- Rust projects are **exempt** from zero-deps policy
-- Use Cargo ecosystem normally
-- Standard production crates allowed: `axum`, `sqlx`, `tokio`, `serde`, `anyhow`, `thiserror`, `tracing`
+## Package/Module Conventions
 
-**Why this matters:**
-The AF64 ghosts are Common Lisp native. InnateScipt must be compatible with that ecosystem. All `.lisp` files in `project-noosphere-ghosts/lisp/` and `innatescript/` implement hand-rolled utilities to avoid external dependencies.
+**Lisp Package Hierarchy:**
+- Root package exports main API (e.g., `:innate`, `:af64`)
+- Subpackages for implementation details (e.g., `:innate.parser`, `:af64.runtime.perception`)
+- Utility packages prefixed `utils` (e.g., `:af64.utils.json`, `:af64.utils.pg`)
 
-Example hand-rolled utilities:
-- `af64.utils.json` — JSON parser/encoder (`project-noosphere-ghosts/lisp/util/json.lisp`)
-- `af64.utils.pg` — PostgreSQL client via SB-ALIEN FFI (`project-noosphere-ghosts/lisp/util/pg.lisp`)
-- `af64.utils.http` — HTTP via curl subprocess (`project-noosphere-ghosts/lisp/util/http.lisp`)
-- `innate.tests` — Test framework (3 macros) (`innatescript/tests/test-framework.lisp`)
+**Rust Crate Structure:**
+- `dpn-core`: Shared library crate (`[lib]`)
+- `dpn-api`: Binary crate (`[[bin]]`) with `main.rs`
+- `dpn-core` exports high-level API in `lib.rs`
+- Submodules in `src/` directories (e.g., `src/db/`, `src/handlers/`)
+
+## Commit Message Conventions
+
+**Format:** `<type>(<scope>): <subject>`
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only
+- `chore`: Maintenance (e.g., archiving files)
+- `merge`: Merge commit
+
+**Scopes:**
+- Phase numbers (e.g., `31-01`, `phase-31`)
+- Component names (e.g., `codebase`, `state`, `v1.5`)
+- Module names (e.g., `31-tool-migration`)
+
+**Examples:**
+```
+docs(codebase): map Modular Fortress codebase structure
+feat(31-01): insert 75 tool definitions into area_content
+fix(31-tool-migration): revise plans based on checker feedback
+docs(phase-31): complete phase execution
+merge: resolve conflicts from parallel wave 1 execution (31-01 + 31-02)
+```
+
+**Subject line:**
+- Lowercase after colon
+- No period at end
+- Present tense imperative (e.g., "add", not "added" or "adds")
 
 ## ASDF System Organization
 
 **Pattern:**
+- Files: `project-name.asd` in project root
+- Explicit `:depends-on` for each component (avoid `:serial t` for complex systems)
+- Separate test system: `project-name/tests` depends on main system
+- Pathname directives: `:pathname "src/"` or `:pathname "tests/"`
 
-Files:
-- `project-name.asd` in project root
-- Explicit `:depends-on` for each component
-- `:serial t` acceptable for utility modules, avoid for complex systems
-- Separate test system: `project-name/tests`
-
-Example from `innatescript/innatescript.asd`:
+**Example from `innatescript.asd`:**
 ```lisp
 (defsystem "innatescript"
-  :description "Innate language interpreter"
   :pathname "src/"
   :serial nil
   :components
@@ -380,27 +285,8 @@ Example from `innatescript/innatescript.asd`:
   :pathname "tests/"
   :components
   ((:file "packages")
-   (:file "test-framework" :depends-on ("packages"))
-   (:file "test-parser" :depends-on ("packages" "test-framework"))))
+   (:file "test-framework" :depends-on ("packages"))))
 ```
-
-## Documentation Standards
-
-**Common Lisp:**
-
-Required:
-- File header with `;;;; filename — description`
-- Docstrings for all public functions
-- System `:description` in `.asd` file
-- README.md for project overview
-
-**Rust:**
-
-Required:
-- Module docs (`//!`) in each file
-- Public API docs (`///`) for public functions
-- `README.md` with usage examples
-- `Cargo.toml` description field
 
 ## Special Conventions
 
@@ -436,4 +322,4 @@ Use `defclass` + `defmethod` when:
 
 ---
 
-*Convention analysis: 2026-04-03*
+*Convention analysis: 2026-04-04*

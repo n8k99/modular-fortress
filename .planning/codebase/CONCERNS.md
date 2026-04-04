@@ -1,402 +1,419 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-04-03
+**Analysis Date:** 2026-04-04
 
-## Security Concerns
+## Critical Security Issues
 
-**Secrets in config.json:**
-- Issue: `config.json` contains plaintext API keys, tokens, and passwords for multiple services (OpenAI, Anthropic, GitHub, Discord, DigitalOcean, Ghost, Printful, database credentials, etc.)
-- Files: `/Volumes/Elements/Modular Fortress/config.json`
-- Impact: Committed secrets = immediate security breach. Anyone with repo access has full API access to production services, databases, and third-party integrations.
-- Current mitigation: File is in .gitignore (confirmed by git status showing it untracked)
-- Recommendations:
-  - Move all secrets to environment variables or vault service
-  - Use `.env` files that are explicitly ignored
-  - Add pre-commit hook to scan for accidental secret commits
-  - Rotate all exposed keys immediately if config.json was ever committed
-  - Consider using service like doppler.com or AWS Secrets Manager for production
-
-**Authentication bypass in dpn-api:**
-- Issue: Login endpoint accepts any non-empty username/password combination
-- Files: `/Volumes/Elements/Modular Fortress/dpn-api/src/handlers/auth.rs` (line 30-34)
-- Impact: No real authentication — any attacker can generate valid JWT tokens
-- Trigger: `POST /api/auth/login` with any credentials
-- Workaround: Currently relies on API key authentication as primary security layer
-- Fix approach: Implement proper credential validation against `agents` table or separate user store
-
-**Hardcoded database credentials in deployment docs:**
-- Issue: Database password `chronicle2026` appears in multiple README files
-- Files:
-  - `/Volumes/Elements/Modular Fortress/dpn-core/README.md` (line 24)
-  - `/Volumes/Elements/Modular Fortress/dpn-api/DEPLOYMENT.md` (line 99)
-  - `/Volumes/Elements/Modular Fortress/config.json` (lines 195-196, 215-216)
-- Impact: If these docs are public or committed to public repo, database is compromised
-- Current mitigation: Requires SSH tunnel to access database (port 5433 forwarded from droplet)
-- Recommendations:
-  - Replace examples with placeholder values
-  - Use strong unique passwords per environment
-  - Enable PostgreSQL SSL/TLS required mode
-  - Restrict database access by IP whitelist
-
-**Open webhook URLs in config.json:**
-- Issue: Discord webhook URLs are bearer tokens that allow posting to channels
-- Files: `/Volumes/Elements/Modular Fortress/config.json` (lines 245-275)
-- Impact: Anyone with these URLs can impersonate ghost personas and post to Discord channels
-- Recommendations:
-  - Treat webhooks as secrets
-  - Rotate webhooks if config.json was ever exposed
-  - Consider using Discord bot with proper OAuth instead of webhooks
-
-**Missing rate limiting:**
-- Issue: dpn-api documents rate limiting as "planned but not yet implemented"
-- Files: `/Volumes/Elements/Modular Fortress/dpn-api/README.md` (line 132-133)
-- Impact: API vulnerable to abuse, DoS, and resource exhaustion
-- Current mitigation: None at application layer
-- Recommendations:
-  - Implement rate limiting middleware (tower-governor crate)
-  - Add per-IP and per-API-key limits
-  - Use reverse proxy rate limiting (nginx limit_req) as interim solution
-
-## Technical Debt
-
-**af64.asd out of sync with launch.sh:**
-- Issue: ASDF system definition (`af64.asd`) uses `:serial t` and different load order than production launcher
-- Files:
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/af64.asd` (line 5, serial: t)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (lines 9-11, explicit load order)
-- Impact: Development loads via ASDF may fail or behave differently than production. New developers can't use `(asdf:load-system :af64)` reliably.
-- Cause: Production runtime evolved to inline Innate dependencies and explicit module ordering; ASDF definition not kept in sync
-- Fix approach:
-  - Update af64.asd to match launch.sh load order
-  - Remove `:serial t`, use explicit `:depends-on`
-  - Add ASDF load test to CI/pre-commit hook
-
-**Massive runtime modules (77KB action-executor, 69KB action-planner):**
-- Issue: Core runtime files exceed 60-70KB, making them difficult to reason about and modify
-- Files:
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/action-executor.lisp` (77,987 bytes)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/action-planner.lisp` (69,413 bytes)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/db-client.lisp` (36,953 bytes)
-- Impact: High cognitive load, merge conflicts, difficult to test in isolation
-- Cause: Kitchen-sink modules accumulating multiple responsibilities over ~31 phases of development
-- Fix approach:
-  - Split action-executor into: execution engine, stage handlers, pipeline dispatch
-  - Extract action-planner cognition request builders into separate module
-  - Consider phase 32: "Module Decomposition" to systematically refactor
-
-**Tool registry migration incomplete:**
-- Issue: Phase 31 migrated tools from JSON to database, but legacy references may remain
-- Files:
-  - Migration: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/migrations/028_pipeline_definitions.sql`
-  - New code: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/tool-definitions.lisp`
-  - Old system: `tool-registry.json` (deleted according to git status)
-- Impact: Risk of ghost ticks referencing non-existent tool-registry.json, breaking execution
-- Test coverage: No evidence of migration rollback testing
-- Fix approach:
-  - Grep entire codebase for "tool-registry.json" references
-  - Add regression test that ticks complete without tool-registry file present
-  - Document migration in CHANGELOG or migration guide
-
-**Innate load order hardcoded in launch.sh:**
-- Issue: Innate interpreter loaded via manual file list instead of ASDF system
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (line 9)
-- Impact: Changes to Innate structure require updating launch.sh manually; no dependency tracking
-- Cause: Innate is in separate repo (`/opt/innatescript`) but loaded directly into AF64 runtime
-- Fix approach:
-  - Load Innate via ASDF: `(asdf:load-system :innatescript)`
-  - Add Innate as proper ASDF dependency in af64.asd
-  - Coordinate with Innate repo to ensure ASDF system is stable
-
-**464MB database dump in repo:**
-- Issue: `master_chronicle.dump` is 464MB and tracked in git
+**Unencrypted database dump in repository root:**
+- Issue: `master_chronicle.dump` (443 MB) exists untracked in repo root
 - Files: `/Volumes/Elements/Modular Fortress/master_chronicle.dump`
-- Impact: Bloats git history, slows clones, wastes storage
-- Cause: Likely committed for backup/migration purposes
-- Fix approach:
-  - Add `*.dump` to .gitignore
-  - Remove from git history: `git filter-repo --path master_chronicle.dump --invert-paths`
-  - Store database backups in S3 or separate backup system
+- Impact: Contains complete ghost memories, conversations, personal data in plaintext
+- Risk: High - single file leak exposes entire noosphere substrate
+- Trigger: Synced from droplet server at 2026-04-04 00:07
+- Current state: File is untracked but NOT gitignored
+- Fix approach: Add `*.dump` to `.gitignore`, delete local dump after verification, implement encrypted backup protocol
 
-**No test coverage for dpn-api authentication:**
-- Issue: Auth handlers have no automated tests
-- Files: `/Volumes/Elements/Modular Fortress/dpn-api/src/handlers/auth.rs`
-- Impact: Auth bypass bug (TODO on line 30) hasn't been caught by tests; refactoring is risky
-- Test coverage: No `tests/` directory found in dpn-api
-- Fix approach:
-  - Add integration tests using `axum-test` crate
-  - Test both JWT and API key flows
-  - Add negative tests (invalid tokens, missing keys, expired JWTs)
+**API keys and credentials committed to repository:**
+- Issue: `config.json` contains production API keys in plaintext
+- Files: `/Volumes/Elements/Modular Fortress/config.json`
+- Impact: Full access to OpenAI ($), Anthropic ($), Discord bot, GitHub, DigitalOcean, Printful, n8n, Ghost CMS, Perplexity, news APIs
+- Exposed keys include:
+  - OpenAI: `sk-proj-EmUb...NKEA` (project key with payment access)
+  - Anthropic: `sk-ant-api03-l7cV...NEQ` (full API access)
+  - GitHub: `ghp_4z1j...vwZ` (personal access token)
+  - Discord bot: `MTMwMjc5OTQzNDc0NDIwNTM5NQ.G8-5nq...YshI` (multiple bots)
+  - DigitalOcean: `dop_v1_6e48...993b8` (infrastructure control)
+  - Obsidian API key: `80a3e285ff...d98c2a`
+  - Perplexity: `pplx-WY26...hjw`
+  - Printful: `JYJaFC08...5txt` (e-commerce fulfillment)
+  - Ghost CMS admin: `697d938a5e...c8e2994`
+  - n8n: JWT tokens for local and droplet instances
+- Current state: File is untracked but NOT gitignored
+- Risk: Critical - any repository exposure = complete system compromise and financial loss
+- Fix approach: Rotate ALL keys immediately, move to environment variables, add `config.json` to `.gitignore`, implement secrets management (Vault/1Password CLI)
 
-**Placeholder persona webhooks in config.json:**
-- Issue: Multiple Discord persona webhooks set to "PLACEHOLDER_*" values
-- Files: `/Volumes/Elements/Modular Fortress/config.json` (lines 250-253)
-- Impact: Ghosts assigned to FionaCarter, TaraBennett, MarcelloRuiz, EvelynWoods personas cannot post to Discord
-- Cause: Partial persona roster deployment
-- Fix approach:
-  - Generate missing webhooks or remove personas from active roster
-  - Add validation that checks for PLACEHOLDER values at startup
-  - Fail fast if ghost attempts to use placeholder webhook
+**Hardcoded database credentials in Common Lisp FFI:**
+- Issue: Default connection string hardcoded in `pg.lisp`
+- Files: `project-noosphere-ghosts/lisp/util/pg.lisp` line 69-73
+- Credentials: `user=chronicle password=chronicle2026`
+- Impact: Production database credentials in source code
+- Risk: High - anyone with codebase access can connect to production database
+- Fix approach: Read from environment variables, no defaults in source
 
-**Droplet database password is placeholder:**
-- Issue: Production database credential in config.json is "PLACEHOLDER_PASSWORD_DROPLET"
-- Files: `/Volumes/Elements/Modular Fortress/config.json` (line 225)
-- Impact: Production deployments will fail to connect to droplet database
-- Cause: Environment-specific config not fully populated
-- Fix approach:
-  - Never commit real production passwords
-  - Use environment variable override: `DPN_DB_PASSWORD_DROPLET`
-  - Document required env vars in deployment guide
+**Unencrypted .env file in dpn-api:**
+- Issue: `.env` file exists with credentials
+- Files: `dpn-api/.env` (215 bytes, modified Mar 16)
+- Impact: Database connection strings, API keys for REST API
+- Current state: File exists but gitignore status unclear
+- Risk: Medium - contains operational credentials
+- Fix approach: Verify gitignore coverage, rotate credentials if exposed
 
-## Performance Bottlenecks
+**Private keys in gotcha-secrets directory:**
+- Issue: `gotcha-secrets/` contains trading platform private keys
+- Files: `gotcha-secrets/kalshi/kalshi_private.key`
+- Impact: Trading account access with real money
+- Current state: Directory appears tracked (has `.git` subdirectory)
+- Risk: High - financial account compromise
+- Fix approach: Remove from main repo, move to separate encrypted secrets vault
 
-**Cognition broker cache without TTL:**
-- Issue: Cognition response cache has no time-based expiration
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp`
-- Problem: Cache grows indefinitely; stale responses may be reused inappropriately
-- Cause: Simple hash-table caching without LRU or TTL logic
-- Improvement path:
-  - Add TTL to cache entries (e.g., 1 hour for haiku tier, 24 hours for opus)
-  - Implement LRU eviction when cache exceeds size threshold
-  - Add cache metrics to tick reports
+**Email and social platform credentials in config.json:**
+- Issue: Plain text passwords for external services
+- Credentials exposed:
+  - Email: `task.data.harmony@gmail.com` / `QxW9GX)\`6B6h`
+  - LiveJournal: `T4SKS` / `%*@EzDjjYm2_b4y`
+- Impact: Account takeover, unauthorized posting, reputation damage
+- Risk: Medium - external platform credentials
+- Fix approach: Use OAuth where possible, rotate passwords, store in secrets manager
 
-**Database connection pool per tick:**
-- Issue: Each tick may create new database connections instead of reusing pool
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/util/pg.lisp`
-- Problem: Connection overhead adds latency to every tick
-- Current capacity: Unknown — no connection pool size visible in config
-- Cause: libpq FFI wrapper may not implement pooling
-- Improvement path:
-  - Implement connection pool with configurable max size
-  - Reuse connections across ticks
-  - Add connection pool metrics (active, idle, wait time)
+**Discord webhook URLs exposed:**
+- Issue: 20+ Discord webhook URLs in `config.json` lines 245-275
+- Impact: Unauthorized message posting to production Discord channels
+- Risk: Medium - social engineering, misinformation campaigns
+- Fix approach: Regenerate all webhooks, move to environment variables
 
-**Linear search in stub resolver:**
-- Issue: Stub resolver uses `maphash` to search entities, O(n) for each query
-- Files: `/Volumes/Elements/Modular Fortress/innatescript/src/eval/stub-resolver.lisp` (line 87)
-- Problem: Scales poorly with entity count
-- Current impact: Low (stub resolver only used in tests)
-- Fix: Add proper indexing when implementing real resolver
-
-**Action executor TODO comment about tool stage migration:**
-- Issue: "TODO(Phase 31): Move tool-execution stage list to DB pipeline definitions" still in code
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/action-executor.lisp` (line 221)
-- Problem: Phase 31 is complete but TODO remains, suggesting incomplete migration
-- Impact: May be using hardcoded pipeline stages instead of database definitions
-- Fix: Verify migration completed, remove TODO or create phase 32 task
-
-## Operational Risks
-
-**launch.sh assumes specific directory structure:**
-- Issue: Hardcoded paths to `/opt/project-noosphere-ghosts` and `/opt/innatescript`
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (lines 2, 6, 9)
-- Problem: Cannot run from different locations; breaks on dev machines
-- Trigger: Running outside /opt/ directory or on macOS (shown as Darwin in env)
-- Safe modification: Use `dirname $0` and relative paths, or environment variables
-- Workaround: Symlink repos to /opt/ on dev machines
-
-**No graceful shutdown in tick loop:**
-- Issue: Infinite tick loop has no signal handling for clean shutdown
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (lines 20-26)
-- Problem: SIGTERM kills process immediately, may leave ticks incomplete or database transactions uncommitted
-- Trigger: `systemctl stop`, Ctrl+C, server restart
-- Fix approach:
-  - Add `(sb-sys:enable-interrupt sb-posix:sigterm #'shutdown-handler)`
-  - Set shutdown flag, wait for current tick to complete
-  - Flush any pending logs/reports before exit
-
-**SSH tunnel requirement not enforced:**
-- Issue: dpn-core assumes SSH tunnel is running but doesn't verify
-- Files: `/Volumes/Elements/Modular Fortress/dpn-core/README.md` (lines 47-52)
-- Problem: Connection attempts hang or timeout if tunnel is down; error messages unclear
-- Trigger: Reboot, SSH session timeout, network change
-- Fix approach:
-  - Check port 5433 is listening before attempting connection
-  - Provide clear error: "SSH tunnel not detected. Run: ssh -L 5433:..."
-  - Add health check endpoint that verifies database connectivity
-
-**Config loading without validation:**
-- Issue: config.json loaded without schema validation
-- Files: `/Volumes/Elements/Modular Fortress/config.json` (770 lines)
-- Problem: Typos, missing required fields, or type mismatches cause runtime failures
-- Examples of fragility: Placeholder passwords, optional vs required keys unclear
-- Fix approach:
-  - Add JSON schema definition
-  - Validate config at startup using jsonschema crate (Rust) or custom validator (Lisp)
-  - Fail fast with actionable error messages
-
-**Environment variable dependencies undocumented:**
-- Issue: launch.sh sources `af64.env` but required variables not listed
-- Files:
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (line 2)
-  - Expected: `/opt/project-noosphere-ghosts/config/af64.env` (not found in repo)
-- Problem: New deployments fail with cryptic errors
-- Trigger: Fresh deployment, Docker container, CI environment
-- Fix approach:
-  - Add `config/af64.env.example` with all required variables
-  - Document in README.md or DEPLOYMENT.md
-  - Add validation that checks required env vars at startup
-
-## Known Bugs
-
-**GitHub sync warning about missing token:**
-- Issue: GitHub integration logs warning but doesn't fail when GITHUB_TOKEN unset
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/util/github.lisp` (line 436)
-- Symptoms: Warning message during tick: "[github-sync] WARNING: GITHUB_TOKEN not set, skipping sync."
-- Trigger: Any ghost action that uses GitHub integration
-- Impact: Silently skips GitHub operations; may appear to succeed but do nothing
-- Workaround: Set GITHUB_TOKEN environment variable
-- Fix: Either require token at startup or remove GitHub integration from action options
-
-**Ghost capabilities validation errors logged but not surfaced:**
-- Issue: Invalid Innate expressions log warnings but evaluation continues
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/ghost-capabilities.lisp` (lines 94, 97)
-- Symptoms: Logs show "WARNING: Invalid expression" or "WARNING: Validation error" but tick completes normally
-- Trigger: Ghost generates malformed Innate script
-- Impact: Silent failures — ghost thinks action succeeded but nothing happened
-- Fix: Propagate validation errors to tick reporting, fail tick if critical expression invalid
-
-**Action executor resistance reporting ambiguity:**
-- Issue: Resistance severity calculation uses string comparison ("CRITICAL" > "WARNING" > "SUGGESTION")
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/action-executor.lisp` (lines 763, 777-780, 788-800)
-- Problem: String comparisons are fragile; adding new severity levels breaks logic
-- Trigger: Any action that returns resistance/validation issues
-- Fix: Use enum or keyword symbols instead of strings, compare numerically
-
-## Fragile Areas
-
-**Innate-Noosphere integration boundary:**
-- Files:
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/noosphere-resolver.lisp` (22KB)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/innate-builder.lisp` (6KB)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/ghost-capabilities.lisp` (12KB)
-- Why fragile: Three modules coordinate between Innate language and AF64 runtime; changes to Innate syntax break ghost capabilities
-- Test coverage: Innate has 4,123 lines of tests but integration with Noosphere not tested end-to-end
-- Safe modification:
-  - Add integration tests that load both systems and execute real ghost capabilities
-  - Version Innate syntax and maintain backwards compatibility
-  - Use feature flags to gate new Innate features
-
-**Provider chain fallback logic:**
-- Files:
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/provider-adapters.lisp` (12KB)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/claude-code-provider.lisp` (9KB)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp` (19KB)
-- Why fragile: 3-provider chain (claude-code -> anthropic -> stub) with budget limits, winter/thaw logic, and caching
-- Test coverage: No mocking infrastructure for provider testing
-- Safe modification:
-  - Mock provider responses in tests
-  - Add circuit breaker for failing providers
-  - Test budget exhaustion scenarios
-
-**Database migration history:**
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/migrations/` (28 migrations found)
-- Why fragile: No migration rollback strategy, schema changes affect both Rust API and Lisp runtime
-- Test coverage: No schema validation tests
-- Safe modification:
-  - Add schema version check at runtime
-  - Test migrations against production dump
-  - Maintain schema.sql that represents current state
-
-## Scaling Limits
-
-**Single-tick serial execution:**
-- Current capacity: One agent action per tick, sequential processing
-- Limit: Cannot scale beyond ~30 ghosts with current 120s tick interval
-- Scaling path:
-  - Parallelize perception and planning phases
-  - Use agent priority queue instead of round-robin
-  - Consider multi-process architecture with message passing
-
-**Cognition broker queue unbounded:**
-- Current capacity: In-memory hash table, no size limit
-- Limit: Memory exhaustion if cognition requests queue up faster than LLM can process
-- Scaling path:
-  - Add max queue size with backpressure
-  - Persist queue to database for durability
-  - Implement job expiration/TTL
-
-**Config.json loading into memory:**
-- Current capacity: 770-line JSON file loaded at startup
-- Limit: As more ghosts/personas added, config grows; becomes bottleneck to parse and load
-- Scaling path:
-  - Move persona definitions to database (already in `em_staff` table)
-  - Load config sections on-demand
-  - Use config service with caching
-
-**464MB database dump workflow:**
-- Current capacity: Full database dump for backup/migration
-- Limit: Grows with data, takes minutes to load/restore
-- Scaling path:
-  - Use incremental backups (pg_dump with --data-only)
-  - Implement WAL archiving for point-in-time recovery
-  - Use logical replication for read replicas
-
-## Missing Critical Features
-
-**No tick failure recovery:**
-- Problem: If a tick fails, next tick starts from scratch — no retry or partial recovery
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/launch.sh` (lines 23-24)
-- Blocks: Reliable production operation — transient LLM failures cause dropped ticks
-- Priority: High — affects all ghost execution
-
-**No authentication session management:**
-- Problem: JWT tokens expire after 24 hours with no refresh mechanism
-- Files: `/Volumes/Elements/Modular Fortress/dpn-api/src/handlers/auth.rs` (line 45)
-- Blocks: Long-running applications must re-authenticate daily
-- Priority: Medium — workaround is re-login
-
-**No metrics or observability:**
-- Problem: No Prometheus metrics, no traces, no structured logging
-- Files: All — no telemetry infrastructure found
-- Blocks: Production monitoring, debugging performance issues, capacity planning
-- Priority: High for production deployment
-
-**No database migration tooling:**
-- Problem: Migrations are SQL files with numeric prefixes, no migration runner
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/migrations/` (28 files)
-- Blocks: Safe schema evolution, rollback capability
-- Priority: High — currently applying migrations manually
-
-## Test Coverage Gaps
-
-**No integration tests for dpn-api:**
-- What's not tested: Full request/response flows, authentication, error handling
-- Files: `/Volumes/Elements/Modular Fortress/dpn-api/` (no tests/ directory found)
-- Risk: Auth bypass bug on line 30 hasn't been caught
-- Priority: High
-
-**No end-to-end ghost tick tests:**
-- What's not tested: Complete tick lifecycle from perception to reporting
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/` (only unit tests inferred)
-- Risk: Integration failures between tick-engine, cognition-broker, action-executor not caught
-- Priority: High
-
-**No provider failure scenario tests:**
-- What's not tested: LLM provider timeout, budget exhaustion, malformed responses
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/cognition-broker.lisp`
-- Risk: Production failures due to provider issues
-- Priority: Medium
-
-**No Innate-Noosphere integration tests:**
-- What's not tested: Ghost capabilities calling Innate resolver with noosphere substrate
-- Files:
-  - `/Volumes/Elements/Modular Fortress/innatescript/` (4,123 test lines, all unit tests)
-  - `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/lisp/runtime/ghost-capabilities.lisp`
-- Risk: Changes to either system break ghost scripting
-- Priority: Medium
-
-**No database migration rollback tests:**
-- What's not tested: Applying migration, rolling back, data integrity preserved
-- Files: `/Volumes/Elements/Modular Fortress/project-noosphere-ghosts/migrations/`
-- Risk: Cannot safely revert schema changes
-- Priority: Medium
-
-**No SSH tunnel failure handling tests:**
-- What's not tested: dpn-core behavior when port 5433 is not forwarded
-- Files: `/Volumes/Elements/Modular Fortress/dpn-core/src/db/connection.rs`
-- Risk: Unclear error messages, hangs during connection attempts
-- Priority: Low
+**No .gitignore for sensitive patterns:**
+- Issue: `.gitignore` file doesn't exist or doesn't cover critical patterns
+- Files checked: `config.json`, `master_chronicle.dump`, `.env`, `gotcha-secrets/`
+- Impact: Easy to accidentally commit secrets
+- Risk: High - systematic exposure vulnerability
+- Fix approach: Create comprehensive `.gitignore` with patterns: `config.json`, `*.dump`, `.env*`, `*secret*`, `*credential*`, `*.key`, `*.pem`
 
 ---
 
-*Concerns audit: 2026-04-03*
+## Technical Debt
+
+**af64.asd out of sync with actual runtime loader:**
+- Issue: ASDF system definition missing critical modules that `launch.sh` loads manually
+- Files:
+  - `project-noosphere-ghosts/lisp/af64.asd` (ASDF definition)
+  - `project-noosphere-ghosts/launch.sh` (actual loader)
+- Discrepancy: `launch.sh` loads InnateScipt dependencies and 10+ modules not in af64.asd
+- Missing from ASDF: `util/yaml`, `runtime/openclaw-gateway`, `runtime/tool-definitions`, `runtime/noosphere-resolver`, `runtime/innate-builder`, `runtime/ghost-capabilities`, `runtime/pipeline-definitions`
+- Impact: `(asdf:load-system :af64)` fails or loads incomplete system; documentation misleads developers
+- Current workaround: Everyone must use `launch.sh` instead of ASDF
+- Risk: Medium - developer confusion, broken tooling integration
+- Fix approach: Update `af64.asd` to match `launch.sh` module list exactly, or vice versa
+
+**Phase 31 TODO comment still present:**
+- Issue: "TODO(Phase 31): Move tool-execution stage list to DB pipeline definitions" remains in code
+- Files: `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` line 221
+- Problem: Phase 31 completed but hardcoded stage list still exists
+- Impact: Tool execution validation relies on hardcoded list instead of database-driven config
+- Risk: Low - functional but inflexible, requires code changes to add stages
+- Fix approach: Complete migration to database-driven pipeline definitions, remove hardcoded list
+
+**Semantic search placeholder in dpn-core:**
+- Issue: Vector-based semantic search not implemented, using ILIKE text matching
+- Files: `dpn-core/src/stagehand/recall.rs` lines 3, 82
+- Problem: `semantic_search()` function uses simple text matching with TODO for embeddings
+- Impact: Poor recall quality for stagehand show notes, no true semantic similarity
+- Risk: Low - feature incomplete but functional fallback exists
+- Fix approach: Implement embeddings pipeline (pgvector extension), replace ILIKE with vector similarity
+
+**Incomplete office phase mappings:**
+- Issue: Operations and Content office phase mappings stubbed out
+- Files: `dpn-core/src/notify/phases.rs` lines 80, 85
+- Problem: Only TechDev office has phase-to-staff mappings, COO and Content offices have empty HashMaps
+- Impact: Phase notifications won't route to Kathryn Lyonne (COO) or Sylvia Inkweaver (Content) teams
+- Risk: Low - features gated on future capability activation
+- Fix approach: Define phase mappings when COO/Content ghost capabilities are activated
+
+**137 unwrap/expect calls in dpn-core:**
+- Issue: Potential panic points throughout Rust codebase
+- Files: 23 files including `cache/hybrid.rs` (3), `notify/mod.rs` (6), `tasks/parser.rs` (17), `db/tests.rs` (37)
+- Impact: Runtime crashes on unexpected None/Err values instead of graceful error handling
+- Risk: Medium - production stability issues, difficult debugging
+- Pattern: Especially prevalent in cache layer and parser modules
+- Fix approach: Audit high-count files, replace with proper Result propagation or descriptive expects
+
+**Large complex modules:**
+- Issue: Multiple files exceed 800+ lines indicating high complexity
+- Files:
+  - `project-noosphere-ghosts/lisp/runtime/action-executor.lisp` (1329 lines)
+  - `project-noosphere-ghosts/lisp/runtime/action-planner.lisp` (1087 lines)
+  - `dpn-core/src/cache/hybrid.rs` (855 lines, 30KB)
+  - `dpn-core/src/publish/db.rs` (591 lines)
+- Impact: Difficult to understand, test, maintain; cognitive load for developers
+- Risk: Medium - bugs hide in complexity, refactoring is expensive
+- Fix approach: Extract responsibilities into smaller modules, improve test coverage for complex logic
+
+**InnateScipt dependencies not modular:**
+- Issue: `launch.sh` manually loads 7 InnateScipt files without using ASDF system
+- Files: `launch.sh` line 9 loads individual `.lisp` files from `/opt/innatescript/src/`
+- Problem: Tight coupling between AF64 and InnateScipt, no version control
+- Impact: AF64 cannot load without InnateScipt, breakage risk on updates
+- Risk: Medium - system coupling creates deployment complexity
+- Fix approach: Load InnateScipt as proper ASDF dependency, version lock in system definition
+
+---
+
+## Performance Bottlenecks
+
+**Database connection pool hardcoded to 2 connections:**
+- Issue: PG connection pool size fixed at 2 in Common Lisp FFI
+- Files: `project-noosphere-ghosts/lisp/util/pg.lisp` line 78
+- Problem: `(make-array 2 :initial-element nil)` limits parallelism
+- Impact: Tick engine blocks waiting for connection under concurrent load
+- Scaling limit: Max 2 simultaneous database operations across all ghosts
+- Risk: High - throughput bottleneck for multi-ghost ticks
+- Current workaround: Sequential processing, low ghost population
+- Fix approach: Make pool size configurable, increase to 10-20 connections, implement dynamic sizing
+
+**No connection pool in dpn-api/dpn-core:**
+- Issue: Database access pattern unclear, potential connection leaks
+- Files: `dpn-core/src/db/connection.rs`
+- Problem: No visible connection pooling layer (sqlx pool not explicitly configured)
+- Impact: Connection exhaustion under load, slow startup times
+- Risk: Medium - production stability under traffic spikes
+- Fix approach: Verify sqlx pool configuration, tune min/max connections, add monitoring
+
+**Hybrid cache using synchronous file I/O:**
+- Issue: `SyncStateFile` uses blocking filesystem operations
+- Files: `dpn-core/src/cache/hybrid.rs` lines 30-45
+- Problem: `std::fs::read_to_string` and `std::fs::write` block async runtime
+- Impact: Event loop stalls during cache sync operations
+- Risk: Medium - latency spikes on disk I/O
+- Fix approach: Use `tokio::fs` for async file operations, consider memory-backed sync state
+
+**No query result caching:**
+- Issue: No evidence of query result caching in dpn-core
+- Files: Database query modules in `dpn-core/src/db/`
+- Problem: Repeated identical queries hit PostgreSQL every time
+- Impact: Unnecessary database load, higher latency
+- Risk: Low - database handles load currently but wasteful
+- Fix approach: Implement Redis/in-memory cache for frequently accessed data (ghost profiles, pipelines)
+
+**Tick engine sleeps between ticks:**
+- Issue: Fixed `sleep` interval regardless of work completion time
+- Files: `project-noosphere-ghosts/launch.sh` line 26
+- Problem: If tick takes 8s and interval is 10s, system waits full 10s before next tick
+- Impact: Wasted idle time, lower effective throughput
+- Risk: Low - acceptable for current scale
+- Fix approach: Sleep for `(interval - elapsed-time)` to maintain cadence
+
+---
+
+## Operational Risks
+
+**Runtime depends on external services without fallback:**
+- Issue: AF64 tick engine crashes if PostgreSQL unavailable
+- Files: `project-noosphere-ghosts/lisp/runtime/tick-engine.lisp`
+- Problem: `(af64.runtime.db:init-db-pool)` failure = runtime abort
+- Impact: Complete system downtime on database hiccup
+- Risk: High - single point of failure
+- Current mitigation: `handler-case` around tick execution but not initialization
+- Fix approach: Implement graceful degradation mode with local cache, retry logic for initialization
+
+**No health check endpoint in dpn-api:**
+- Issue: No `/health` or `/ready` endpoint visible
+- Files: `dpn-api/src/handlers/health.rs` exists but deployment unclear
+- Problem: Load balancers/orchestrators cannot determine service health
+- Impact: Traffic routed to unhealthy instances, cascading failures
+- Risk: Medium - operational visibility gap
+- Fix approach: Expose Kubernetes-ready health checks (liveness, readiness)
+
+**Database migrations not automated:**
+- Issue: SQL migration files exist but no migration runner
+- Files: `project-noosphere-ghosts/migrations/`, `noosphere-schema/schema/`
+- Problem: Manual execution required, no version tracking
+- Impact: Human error during deployments, schema drift between environments
+- Risk: Medium - deployment reliability issue
+- Fix approach: Integrate Flyway/Liquibase or use SQLx migrations in Rust
+
+**No log aggregation:**
+- Issue: Logs only written to stdout/stderr
+- Files: `config.json` specifies log files: `.tasks_core.log`, `.tasks_discord.log`
+- Problem: Distributed logs across multiple services, no centralized search
+- Impact: Difficult to debug production issues, no alerting
+- Risk: Medium - operational blindness
+- Fix approach: Ship logs to Loki/ELK stack, implement structured logging (JSON lines)
+
+**Tick engine has no graceful shutdown:**
+- Issue: Infinite loop with no signal handling
+- Files: `project-noosphere-ghosts/launch.sh` lines 20-26
+- Problem: `(loop for tick from 1 ...)` never checks for termination signal
+- Impact: Ungraceful kills leave database connections open, incomplete transactions
+- Risk: Medium - resource leaks on restarts
+- Fix approach: Add signal handlers for SIGTERM/SIGINT, drain in-flight work before exit
+
+**No monitoring/metrics exposed:**
+- Issue: No Prometheus metrics, no telemetry export
+- Files: Codebase has no `/metrics` endpoint
+- Problem: Cannot track ghost activity, tick duration, error rates, queue depth
+- Impact: Reactive incident response, no capacity planning data
+- Risk: High - operational blindness
+- Fix approach: Add Prometheus client, export key metrics (ticks/sec, cognition latency, error rates)
+
+**SSH tunnel dependency for production database:**
+- Issue: Database access requires SSH tunnel to droplet
+- Files: Implied by `config.json` database section with localhost references
+- Problem: Production operations dependent on SSH connectivity
+- Impact: Network issues = production outage, complex deployment setup
+- Risk: High - fragile operational model
+- Fix approach: Use connection pooling proxy (PgBouncer), VPN mesh (Tailscale), or managed database service
+
+---
+
+## Data Integrity Risks
+
+**No foreign key constraints visible:**
+- Issue: Schema files in `noosphere-schema/schema/` don't show comprehensive FK coverage
+- Files: `noosphere-schema/schema/02_the_chronicles.sql` through `15_the_ledger.sql`
+- Problem: Orphaned records possible (tasks referencing deleted ghosts, etc.)
+- Impact: Data corruption, cascade delete failures, invalid references
+- Risk: Medium - data quality degrades over time
+- Fix approach: Audit schema for missing FK constraints, add with ON DELETE CASCADE/SET NULL
+
+**No backup verification process:**
+- Issue: `master_chronicle.dump` exists but no verification it's valid
+- Files: `master_chronicle.dump`
+- Problem: Backup could be corrupted, incomplete, or outdated
+- Impact: Cannot restore if production database fails
+- Risk: Critical - disaster recovery failure
+- Fix approach: Automated pg_restore dry-run, backup integrity checks, retention policy
+
+**Duplicate prevention unclear:**
+- Issue: No deduplication logic visible in conversation/task creation
+- Files: `dpn-core/src/db/` modules
+- Problem: Same conversation/task could be created multiple times
+- Impact: Duplicate ghost actions, wasted cognition budget, confused state
+- Risk: Medium - system bloat and confusion
+- Fix approach: Add unique constraints (conversation + timestamp), upsert patterns
+
+---
+
+## Missing Critical Features
+
+**No authentication in dpn-api:**
+- Issue: REST API endpoints appear unauthenticated
+- Files: `dpn-api/src/auth.rs` exists but usage unclear
+- Problem: Anyone with network access can read/write ghost data
+- Impact: Unauthorized data access, ghost manipulation, DOS attacks
+- Risk: Critical - complete security bypass
+- Fix approach: Implement JWT authentication, API key validation, rate limiting
+
+**No rate limiting:**
+- Issue: No rate limiter visible in dpn-api
+- Files: API handler modules in `dpn-api/src/handlers/`
+- Problem: Single client can exhaust API resources
+- Impact: DOS attacks, runaway costs from LLM API calls
+- Risk: High - financial and operational exposure
+- Fix approach: Add tower middleware rate limiter, per-client quotas
+
+**No rollback capability for ghost actions:**
+- Issue: Ghost actions are fire-and-forget
+- Files: `project-noosphere-ghosts/lisp/runtime/action-executor.lisp`
+- Problem: Bad cognition results permanently alter state
+- Impact: No recovery from LLM hallucinations or bugs
+- Risk: Medium - data quality degradation
+- Fix approach: Transaction log of state changes, admin rollback interface
+
+**No schema versioning:**
+- Issue: Database schema has no version tracking
+- Files: `noosphere-schema/schema/*.sql`
+- Problem: Cannot detect schema drift or enforce migration order
+- Impact: Production schema diverges from dev, migration conflicts
+- Risk: Medium - deployment safety issue
+- Fix approach: Add schema_version table, number migrations sequentially
+
+---
+
+## Test Coverage Gaps
+
+**No integration tests for AF64 runtime:**
+- Issue: `project-noosphere-ghosts/` has no visible test directory
+- Files: No `tests/` or `spec/` directory in Common Lisp codebase
+- Problem: Tick engine, cognition broker, database access untested
+- Impact: Regressions go undetected until production
+- Risk: High - critical path untested
+- Fix approach: Add RT/FiveAM test suite, mock database/API for unit tests, E2E tick tests
+
+**No Rust tests in dpn-core:**
+- Issue: Tests exist but coverage unknown
+- Files: `dpn-core/src/db/tests.rs` has 37 unwrap/expect calls (test quality concern)
+- Problem: Test suite may not cover critical paths
+- Impact: Regressions in cache, graph, publish modules
+- Risk: Medium - unknown coverage is risky coverage
+- Fix approach: Run `cargo tarpaulin`, target 80%+ coverage, add property tests
+
+**No load testing:**
+- Issue: System behavior under high ghost population unknown
+- Problem: Tick engine designed for 64 ghosts but scaling characteristics unknown
+- Impact: Production outages when system grows
+- Risk: High - capacity planning blindness
+- Fix approach: Load test with 32/64/128 ghosts, measure tick duration, identify bottlenecks
+
+**No chaos testing:**
+- Issue: Failure modes not exercised
+- Problem: Unknown behavior when PostgreSQL hangs, API rate limits hit, disk fills
+- Impact: Cascading failures in production
+- Risk: Medium - resilience untested
+- Fix approach: Inject failures (network partition, database timeout), verify graceful degradation
+
+---
+
+## Dependency Risks
+
+**Zero-dependency Common Lisp approach:**
+- Issue: AF64 reimplements JSON parser, HTTP client, PostgreSQL driver
+- Files: `project-noosphere-ghosts/lisp/util/json.lisp`, `util/http.lisp`, `util/pg.lisp`
+- Trade-off: No Quicklisp dependencies = maintainability burden
+- Impact: Security patches in libpq won't auto-apply, HTTP/JSON bugs must be fixed in-house
+- Risk: Medium - security and correctness burden
+- Current state: Intentional design decision per README
+- Fix approach: Weigh benefits vs. costs, consider minimal Quicklisp subset (Dexador, Shasht, Postmodern)
+
+**libpq.so.5 version lock:**
+- Issue: Hard dependency on specific libpq version
+- Files: `project-noosphere-ghosts/lisp/util/pg.lisp` line 7
+- Problem: Breaks on systems with libpq.so.6 or different PostgreSQL versions
+- Impact: Deployment failures on non-Ubuntu systems, version skew
+- Risk: Medium - portability issue
+- Fix approach: Dynamic library loading with version fallback, or use Postmodern for portability
+
+**Rust dependency audit needed:**
+- Issue: No `cargo audit` output visible
+- Files: `dpn-core/Cargo.toml`, `dpn-api/Cargo.toml`
+- Problem: Unknown if dependencies have security vulnerabilities
+- Risk: Medium - supply chain security
+- Fix approach: Run `cargo audit`, update vulnerable dependencies, add to CI pipeline
+
+**dpn-core and dpn-api sync unclear:**
+- Issue: Relationship between freshly synced dpn-core and dpn-api unknown
+- Files: `dpn-core/` synced 2026-04-04 00:07, `dpn-api/` last touched Mar 28
+- Problem: API may be using old dpn-core version, schema mismatch risk
+- Impact: Runtime errors from type mismatches, broken endpoints
+- Risk: High - integration failure after sync
+- Fix approach: Version lock dpn-core in dpn-api Cargo.toml, enforce matching versions
+
+---
+
+## Immediate Actions Required
+
+### Security (URGENT - within 24 hours):
+
+1. **Delete database dump:** Remove `master_chronicle.dump`, add `*.dump` to `.gitignore`
+2. **Rotate all API keys:** Every key in `config.json` must be regenerated
+3. **Move config.json out of repo:** Add to `.gitignore`, use environment variables
+4. **Audit git history:** Check if secrets were ever committed, force-push cleaned history if needed
+5. **Move gotcha-secrets:** Migrate to separate encrypted vault outside main repo
+
+### Operational (within 1 week):
+
+1. **Add comprehensive .gitignore:** Cover `config.json`, `*.dump`, `.env*`, `*secret*`, `*.key`
+2. **Implement health checks:** Add `/health` and `/ready` endpoints to dpn-api
+3. **Set up log aggregation:** Ship logs to centralized system
+4. **Add monitoring:** Expose Prometheus metrics for tick engine and API
+
+### Technical Debt (within 1 month):
+
+1. **Sync af64.asd with launch.sh:** Make ASDF system definition accurate
+2. **Complete Phase 31 migration:** Remove TODO, finish pipeline definitions
+3. **Increase PG pool size:** Make configurable, default to 10 connections
+4. **Add graceful shutdown:** Handle SIGTERM in tick engine
+
+---
+
+*Concerns audit: 2026-04-04*
+*Focus: Security vulnerabilities, technical debt, operational risks*
+*Codebase synced from droplet: 2026-04-04 00:07*
