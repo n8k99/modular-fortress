@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ROADMAP.md",
+                "file": "Modular Fortress.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ROADMAP"
+              "title": "Modular Fortress"
             }
           }
         ]
@@ -185,19 +185,22 @@
   },
   "active": "58401169c5bd3cc5",
   "lastOpenFiles": [
-    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/work-products.bin",
-    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/query-cache.bin",
-    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc/dep-graph.bin",
-    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-4h7t9pvcq1ans101dxbnv7boc",
-    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/work-products.bin",
-    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/query-cache.bin",
-    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92/dep-graph.bin",
-    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-2rxcbzh13uq7mlvfvf9e4ey92",
-    "noosphere/target/debug/incremental/noosphere-2fvjd3gp5dsri/s-hhahouxqo1-1j6o6yf-working/dep-graph.bin",
-    "noosphere/target/debug/incremental/noosphere-1smm05xgfkfcu/s-hhahouxqn8-0f78qub-working/dep-graph.bin",
-    "noosphere/target/debug/deps/libnoosphere-2e676ef9a26f3e7b.rmeta",
-    "Modular Fortress.md",
+    "dpn-api/target/debug/deps/libaxum-24a917c450b54aed.rmeta",
+    "dpn-api/target/debug/deps/rmetaasnYw0/full.rmeta",
+    "dpn-api/target/debug/deps/rmetaasnYw0",
+    "dpn-core/target/debug/deps/dpn_core-471dbf562b720dd4.d",
+    "dpn-core/target/debug/deps/dpn_core-1f0357579c14d5a4.d",
+    "dpn-api/target/debug/deps/dpn_core-99e52ef88b3bc473.d",
+    "dpn-core/target/debug/incremental/dpn_core-28ldwoskxldbi/s-hhaio3qum2-1lqu8j9-working/dep-graph.part.bin",
+    "dpn-core/target/debug/incremental/dpn_core-28ldwoskxldbi/s-hhaio3qum2-1lqu8j9.lock",
+    "dpn-core/target/debug/incremental/dpn_core-28ldwoskxldbi/s-hhaio3qum2-1lqu8j9-working",
+    "dpn-core/target/debug/incremental/dpn_core-28ldwoskxldbi",
+    "dpn-core/target/debug/incremental/dpn_core-3p2mtmo15aobq/s-hhaio3quka-1gb3ccv-working/dep-graph.part.bin",
     "ROADMAP.md",
+    "DPS.md",
+    "INK.md",
+    "DPN.md",
+    "Modular Fortress.md",
     "dpn-core/analysis/schema-migration.md",
     "dpn-core/analysis/dedup-report.md",
     "CLAUDE.md"
