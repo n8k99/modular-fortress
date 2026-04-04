@@ -1,377 +1,636 @@
-# Architecture Patterns: PARAT Noosphere Schema Integration
+# Architecture Patterns
 
-**Domain:** PostgreSQL schema restructuring for agentic AI platform
-**Researched:** 2026-03-28
-**Confidence:** HIGH (based on direct schema inspection of live 77-table master_chronicle)
-
-## Current State: 77-Table master_chronicle
-
-The existing database has 77 tables serving multiple concerns without organizational structure. The PARAT integration reorganizes these into five pillars without breaking the live system.
-
-### Table-to-Pillar Mapping
-
-Every existing table maps to a PARAT pillar or remains as infrastructure:
-
-| Pillar | Existing Tables (migrate/modify) | New Tables |
-|--------|----------------------------------|------------|
-| **@Projects** | `projects` (add lifestage), `goals` (add FK), `tasks` (already linked) | none |
-| **@Areas** | `agents` (add area_id) | `areas` |
-| **@Resources** | `documents`, `media`, `feeds`, `articles`, `fetched_articles` | `resources` (organizational overlay) |
-| **@Archives** | documents with `Archive/` paths (~2179 Nexus imports) | `archives` |
-| **@Templates** | none currently | `templates` |
-| **Memories** | `vault_notes` (rename to `memories`), `memory_entries`, `agent_daily_memory` | none (rename + view) |
-| **Infrastructure** (unchanged) | `conversations`, `agent_state`, `agent_drives`, `agent_fitness`, `tick_reports`, `tick_log`, `decisions`, `persona_mutations`, `metamorphosis_log`, `codebase_scans`, `security_lint_*`, forex/market tables, `users`, `events`, etc. | none |
-
-### Tables That Stay Unchanged (40+)
-
-These are operational/infrastructure tables that don't map to PARAT pillars. They must NOT be touched:
-
-- **Agent runtime:** `agent_state`, `agent_drives`, `agent_fitness`, `agent_requests`, `persona_mutations`, `metamorphosis_log`, `tick_log`, `tick_reports`
-- **Communication:** `conversations`, `noosphere_feedback`, `noosphere_replies`, `xmpp_messages`, `discord_messages`
-- **Financial:** `forex_*` (4 tables), `kalshi_*` (2 tables), `market_*` (4 tables), `positions`, `position_events`, `orders`, `trade_*` (2 tables), `probability_scores`, `sentiment_scores`
-- **Music:** `lrm_corpus`, `music_*` (3 tables), `audio_*` (2 tables), `episodes`
-- **Infrastructure:** `users`, `linked_accounts`, `contacts`, `locations`, `events`, `inbox`, `issues`, `daily_logs`, `executive_sessions`, `wave_calendar`, `weekly_executive_summary`, `stagehand_notes`
-- **Document meta:** `document_edges`, `document_categories`, `document_registry`, `document_versions`, `annotations`, `comments`, `collected_comments`, `folders`
+**Domain:** Polyglot AI Agent Platform (Go API + Common Lisp Runtime)
+**Researched:** 2026-04-04
 
 ## Recommended Architecture
 
+### The Database-Centric Pattern
+
+**Pattern:** PostgreSQL as shared state substrate with independent language runtimes
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      PostgreSQL                             │
+│              (Single Source of Truth)                       │
+│                                                             │
+│  Nine Tables Schema + Ticks + Wikilinks + Config           │
+│  - Polymorphic tables (kind + JSONB meta)                  │
+│  - LISTEN/NOTIFY for IPC                                   │
+│  - Triggers for consistency                                │
+└──────────────┬──────────────────────────┬───────────────────┘
+               │                          │
+               │                          │
+     ┌─────────▼──────────┐     ┌────────▼──────────────┐
+     │   Go API Server    │     │  Lisp Ghost Runtime   │
+     │  (dpn → Modular    │     │   (AF64 + Innate)     │
+     │    Fortress)       │     │                       │
+     ├────────────────────┤     ├───────────────────────┤
+     │ • HTTP/JSON API    │     │ • Tick engine         │
+     │ • Auth (JWT/API)   │     │ • Cognition broker    │
+     │ • CRUD operations  │     │ • Action executor     │
+     │ • WebSocket/SSE    │     │ • Postmodern (FFI)    │
+     │ • pgx connection   │     │ • Hand-rolled JSON    │
+     │   pool             │     │ • SBCL runtime        │
+     └─────────┬──────────┘     └───────────┬───────────┘
+               │                            │
+               │                            │
+     ┌─────────▼────────────────────────────▼───────────┐
+     │           TypeScript UI (Foundry-style)          │
+     │  • Scene-based interface                         │
+     │  • Real-time updates (WebSocket)                 │
+     │  • CRUD panels over scenes                       │
+     └──────────────────────────────────────────────────┘
+```
+
+**Why this pattern:**
+- PostgreSQL provides ACID guarantees that neither language needs to implement
+- Each runtime optimized for its role (Go for I/O, Lisp for cognition)
+- No FFI complexity between Go and Lisp (clean separation)
+- LISTEN/NOTIFY enables event-driven coordination without polling
+- Independent scaling: API can scale horizontally, ghosts can run on dedicated hardware
+
 ### Component Boundaries
 
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| `areas` table | Ongoing domains (EM Corp, Orbis, etc.) | `ghosts.area_id`, `projects.area_id` |
-| `projects` table (modified) | Active work with Lifestage arc | `goals`, `tasks`, `areas` |
-| `goals` table (modified) | Project objectives with proper FK | `projects` via integer FK |
-| `memories` table (renamed from vault_notes) | Temporal notes with ghost memory columns | Ghost perception, temporal compression |
-| `ghosts` view (over agents) | Agent registry with org structure | `areas`, `agent_state`, all agent_* tables |
-| `resources` table | Read-optimized organizational overlay | Indexes into `media`, `documents`, `feeds` |
-| `archives` table | Immutable historical content | Temporal compression terminus |
-| `templates` table | Live .dpn expressions | Future Innate interpreter |
-| `temporal_compression_log` | Tracks compression runs | `memories`, `archives` |
+| Component | Responsibility | Technology | Why |
+|-----------|---------------|------------|-----|
+| **Go API Server** | HTTP interface, auth, CRUD operations, WebSocket/SSE real-time updates | Go 1.23+, pgx/v5, Gin or Echo framework | Fast I/O, excellent concurrency, mature HTTP ecosystem, strong static typing |
+| **Lisp Ghost Runtime** | Autonomous agent tick cycle, cognition brokering, action execution | SBCL, Postmodern, zero Quicklisp dependencies | Macros for DSL, REPL-driven development, hot reload without restart, proven in v1.5 |
+| **InnateScript Interpreter** | Domain-specific scripting language for ghost routines | SBCL, hand-rolled parser | Part of Lisp runtime, loaded as ASDF system |
+| **PostgreSQL** | All persistent state, IPC via LISTEN/NOTIFY, constraints/triggers | PostgreSQL 16+ | MVCC for concurrent access, JSONB for polymorphism, row-level security |
+| **TypeScript UI** | User interface, real-time visualization | TypeScript, Foundry VTT patterns, WebSocket | Type safety, reactive UI patterns, scene-based navigation |
 
 ### Data Flow
 
-```
-GSD dispatch --> projects (with lifestage + area_id)
-                  --> goals (proper FK to project_id)
-                  --> tasks (already has project_id FK)
+#### HTTP Request Cycle (User → Database)
 
-Tick engine --> perception reads:
-                 memories (was vault_notes) -- ghost_memories columns
-                 agent_daily_memory -- daily logs
-                 memory_entries -- long-term facts
-                 projects/tasks -- assigned work
+1. **Client** → HTTP request → **Go API Server**
+2. **Gin/Echo Router** → Auth middleware (JWT or API key)
+3. **Handler** → Business logic layer
+4. **pgx Connection Pool** → SQL query to **PostgreSQL**
+5. **PostgreSQL** → Result set
+6. **Handler** → JSON serialization
+7. **Client** ← HTTP response
 
-Standing orders --> ghost writes to memories columns
-                --> temporal compression rolls daily->weekly->monthly->quarterly->yearly
+**Characteristics:**
+- Synchronous request/response
+- Connection pooling (10-50 connections typical)
+- Context with timeouts (prevent hanging queries)
+- CORS middleware for web clients
 
-Nexus Chat Import --> archives table (immutable source)
-                   --> temporal compression
-                   --> ghost memory injection into memories columns
-```
+#### Ghost Tick Cycle (Autonomous Agent Loop)
 
-## Schema Changes (Detailed)
+1. **Cron/Scheduler** triggers `sbcl --eval '(af64:run-tick TICK-NUM)'`
+2. **Lisp Tick Engine** → Perception phase
+   - Query PostgreSQL via Postmodern (`:pooled-p t`)
+   - Tier-aware scans (prime/working/base)
+3. **Drive Evaluation** → Energy/pressure calculations
+4. **Action Planning** → Build cognition jobs
+5. **Cognition Broker** → LLM API calls (cached, winter/thaw)
+6. **Action Executor** → Database writes, tool calls
+7. **Reporting** → Write tick logs to `the_ledger`
+8. **PostgreSQL NOTIFY** → `ghost_tick_complete` channel
+9. **Go API Server** (LISTEN subscriber) → Push WebSocket update to UI
 
-### Wave 1: Foundation Tables (no existing code breakage)
+**Characteristics:**
+- Asynchronous event-driven
+- Single-threaded Lisp (one agent at a time)
+- Database as coordination layer
+- LISTEN/NOTIFY for real-time UI updates
 
-#### New: `areas` table
-```sql
-CREATE TABLE areas (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(256) NOT NULL UNIQUE,
-    slug VARCHAR(256) NOT NULL UNIQUE,
-    description TEXT,
-    domain VARCHAR(128),
-    owner VARCHAR(64),
-    status VARCHAR(32) DEFAULT 'active',
-    metadata JSONB DEFAULT '{}',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-Initial seed: EM Corp, Orbis, Living Room Music, N8K99/Personal, Infrastructure/Systems.
-
-#### New: `templates` table
-```sql
-CREATE TABLE templates (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(256) NOT NULL,
-    slug VARCHAR(256) NOT NULL UNIQUE,
-    category VARCHAR(128),
-    body TEXT NOT NULL,
-    description TEXT,
-    variables JSONB DEFAULT '[]',
-    metadata JSONB DEFAULT '{}',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### New: `archives` table
-```sql
-CREATE TABLE archives (
-    id SERIAL PRIMARY KEY,
-    source VARCHAR(128) NOT NULL,
-    original_path TEXT,
-    original_date DATE,
-    title VARCHAR(512),
-    content TEXT,
-    metadata JSONB DEFAULT '{}',
-    embedding VECTOR(768),
-    archived_at TIMESTAMPTZ DEFAULT NOW(),
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE INDEX idx_archives_source ON archives(source);
-CREATE INDEX idx_archives_date ON archives(original_date);
-CREATE INDEX idx_archives_embedding ON archives USING hnsw (embedding vector_cosine_ops);
-```
-
-#### New: `resources` table
-```sql
-CREATE TABLE resources (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(512) NOT NULL,
-    resource_type VARCHAR(64) NOT NULL,
-    source_table VARCHAR(64),
-    source_id INTEGER,
-    path TEXT,
-    description TEXT,
-    tags JSONB DEFAULT '[]',
-    metadata JSONB DEFAULT '{}',
-    area_id INTEGER REFERENCES areas(id),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE INDEX idx_resources_type ON resources(resource_type);
-CREATE INDEX idx_resources_area ON resources(area_id);
-```
-
-**Design decision:** `resources` is an organizational overlay, not a replacement. `media`, `documents`, `feeds` continue to exist. Resources provides a unified PARAT-aware index into them. This avoids migrating 48K+ documents.
-
-#### New: `temporal_compression_log` table
-```sql
-CREATE TABLE temporal_compression_log (
-    id SERIAL PRIMARY KEY,
-    source_type VARCHAR(32) NOT NULL,
-    target_type VARCHAR(32) NOT NULL,
-    source_date_start DATE NOT NULL,
-    source_date_end DATE NOT NULL,
-    target_date DATE NOT NULL,
-    ghost_id VARCHAR(64),
-    source_count INTEGER,
-    compressed_content TEXT,
-    status VARCHAR(32) DEFAULT 'completed',
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### Wave 2: Project/Goals Modification (low risk)
-
-#### `projects` table additions
-```sql
-ALTER TABLE projects ADD COLUMN lifestage VARCHAR(32) DEFAULT 'seed'
-    CHECK (lifestage IN ('seed', 'sapling', 'tree', 'harvest'));
-ALTER TABLE projects ADD COLUMN area_id INTEGER REFERENCES areas(id);
-CREATE INDEX idx_projects_area ON projects(area_id);
-CREATE INDEX idx_projects_lifestage ON projects(lifestage);
-```
-
-#### `goals` table: Add proper FK to projects
-```sql
-ALTER TABLE goals ADD COLUMN project_id INTEGER REFERENCES projects(id);
--- Backfill from text column:
--- UPDATE goals SET project_id = p.id FROM projects p WHERE goals.project = p.slug;
-CREATE INDEX idx_goals_project_id ON goals(project_id);
--- Keep goals.project TEXT column for backward compat during transition
-```
-
-### Wave 3: vault_notes Rename (medium risk, view-mitigated)
-
-**Strategy: RENAME + VIEW for backward compatibility**
+#### IPC Pattern: PostgreSQL as Message Bus
 
 ```sql
--- Step 1: Rename the actual table
-ALTER TABLE vault_notes RENAME TO memories;
+-- Lisp runtime after completing tick
+NOTIFY ghost_tick_complete, '{"agent_id": 42, "tick": 12345}';
 
--- Step 2: Rename indexes/constraints to match
-ALTER INDEX vault_notes_pkey RENAME TO memories_pkey;
-ALTER INDEX vault_notes_path_key RENAME TO memories_path_key;
-ALTER SEQUENCE vault_notes_id_seq RENAME TO memories_id_seq;
-
--- Step 3: Create backward-compatible view
-CREATE VIEW vault_notes AS SELECT * FROM memories;
-
--- Step 4: Make view insertable (for existing INSERT queries)
-CREATE RULE vault_notes_insert AS ON INSERT TO vault_notes
-    DO INSTEAD INSERT INTO memories VALUES (NEW.*);
-CREATE RULE vault_notes_update AS ON UPDATE TO vault_notes
-    DO INSTEAD UPDATE memories SET
-        path = NEW.path, title = NEW.title, content = NEW.content,
-        frontmatter = NEW.frontmatter, size_bytes = NEW.size_bytes,
-        note_type = NEW.note_type, note_date = NEW.note_date,
-        embedding = NEW.embedding, modified_at = NEW.modified_at
-    WHERE id = OLD.id;
+-- Go API server listening
+LISTEN ghost_tick_complete;
+-- Receives payload, pushes WebSocket message to connected clients
 ```
 
-Code migration path:
-1. dpn-core: rename `vault_notes.rs` to `memories.rs`, update table name in all queries
-2. dpn-api: update `documents.rs` handler comments and query strings
-3. dpn-api: update `af64_perception.rs` memory column queries
-4. Lisp: update `write_vault_memory.py` tool
-5. Trigger: recreate `trg_sync_task_checkbox` on `memories` table
+**Why LISTEN/NOTIFY:**
+- Built into PostgreSQL, no Redis dependency
+- Lightweight (payload up to 8KB)
+- Async notification delivery
+- Perfect for event-driven updates (tick completion, task state changes, memory creation)
 
-**Memory columns stay as-is.** The 64 `{agent_name}_memories` columns are the ghost memory substrate. They work. Don't normalize them.
-
-### Wave 4: Agents Org Structure (low risk, additive)
-
-```sql
-ALTER TABLE agents ADD COLUMN area_id INTEGER REFERENCES areas(id);
-ALTER TABLE agents ADD COLUMN team VARCHAR(128);
-ALTER TABLE agents ADD COLUMN blog_enabled BOOLEAN DEFAULT FALSE;
-
--- Create ghosts view for PARAT-native code
-CREATE VIEW ghosts AS SELECT * FROM agents;
-```
-
-**Why not rename agents to ghosts:** The `agents` table has 8 FK references (`agent_state`, `agent_drives`, `agent_fitness`, `agent_daily_memory`, `tick_log`, `metamorphosis_log`, `persona_mutations`, `agent_document_links`). Renaming requires cascading all FK constraint names. A view is safer.
-
-### Wave 5: Nexus Import + Temporal Compression
-
-1. Migration script copies documents with `Archive/%Nexus AI Chat Imports%` paths into `archives` table
-2. Temporal compression tool reads archive content, summarizes per-period
-3. Compressed summaries injected into `memories` ghost columns (nova_memories primarily)
-4. Daily/weekly notes get "Nexus Import Links" section referencing archive IDs
+**Go implementation:** `github.com/jackc/pgxlisten` package
+**Lisp implementation:** Postmodern's `cl-postgres-listen` or hand-rolled via `libpq` FFI
 
 ## Patterns to Follow
 
-### Pattern 1: View-Based Rename for Live Migration
-**What:** Rename tables by creating views with old names
-**When:** Any table rename where existing code references the old name
-**Example:** vault_notes -> memories + CREATE VIEW vault_notes
+### Pattern 1: Hexagonal Architecture (Ports and Adapters)
 
-### Pattern 2: Organizational Overlay (not Replacement)
-**What:** `resources` table indexes into existing tables rather than replacing them
-**When:** Existing tables have complex FK relationships or large row counts (48K documents)
+**What:** Core domain logic isolated from external dependencies, with adapters for I/O
 
-### Pattern 3: JSONB metadata for Extensibility
-**What:** `metadata JSONB` column on all new PARAT tables
-**When:** Any new table that might need schema evolution
+**When:** Building the Go API server
 
-### Pattern 4: Backfill-Then-Drop for Column Migrations
-**What:** Add new column, backfill from old, verify, optionally drop old
-**When:** Changing column type (goals.project TEXT -> goals.project_id INTEGER FK)
+**Structure:**
+```
+modular-fortress/
+├── internal/
+│   ├── domain/          # Business logic, domain models, interfaces
+│   │   ├── entities/    # Core entities (Task, Conversation, Ghost)
+│   │   ├── ports/       # Interfaces for external dependencies
+│   │   └── services/    # Domain services
+│   ├── application/     # Use cases, orchestration
+│   │   └── usecases/    # CreateTask, UpdateGhost, etc.
+│   └── adapter/         # External interface implementations
+│       ├── http/        # Gin/Echo handlers, middleware
+│       ├── postgres/    # pgx repository implementations
+│       └── websocket/   # Real-time push notifications
+├── cmd/
+│   └── server/          # Main entry point
+└── pkg/                 # Public libraries (if extractable)
+```
+
+**Why:** Testable without external dependencies, swap implementations (mock DB for tests), clear separation of concerns
+
+**Example:**
+```go
+// internal/domain/ports/repository.go
+type TaskRepository interface {
+    Create(ctx context.Context, task *domain.Task) error
+    FindByID(ctx context.Context, id int64) (*domain.Task, error)
+}
+
+// internal/adapter/postgres/task_repo.go
+type pgTaskRepo struct {
+    pool *pgxpool.Pool
+}
+
+func (r *pgTaskRepo) Create(ctx context.Context, task *domain.Task) error {
+    query := `INSERT INTO the_work (slug, kind, title, body, meta, status)
+              VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
+    return r.pool.QueryRow(ctx, query, task.Slug, "task", task.Title,
+                           task.Body, task.Meta, task.Status).Scan(&task.ID)
+}
+```
+
+### Pattern 2: Connection Pooling with Context Timeouts
+
+**What:** Reuse database connections with lifecycle management
+
+**When:** Both Go and Lisp database access
+
+**Go implementation:**
+```go
+// Initialize once at startup
+config, _ := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
+config.MaxConns = 25
+config.MinConns = 5
+config.MaxConnLifetime = time.Hour
+config.MaxConnIdleTime = 30 * time.Minute
+pool, _ := pgxpool.NewWithConfig(context.Background(), config)
+
+// Use with timeout
+func (r *repo) GetTask(id int64) (*Task, error) {
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+
+    var task Task
+    err := r.pool.QueryRow(ctx, "SELECT * FROM the_work WHERE id=$1", id).
+           Scan(&task.ID, &task.Title, &task.Body)
+    return &task, err
+}
+```
+
+**Lisp implementation (Postmodern):**
+```lisp
+;; Set connection pool parameters
+(setf postmodern:*max-pool-size* 20)
+
+;; Use pooled connections
+(postmodern:with-connection
+    '("master_chronicle" "nebulab_user" "password" "localhost" :pooled-p t)
+  (postmodern:query "SELECT * FROM the_work WHERE id=$1" task-id :single))
+```
+
+**Why:** PostgreSQL connections consume ~10MB each; pooling prevents resource exhaustion. SCRAM-SHA-256 auth is expensive; connection reuse amortizes cost.
+
+### Pattern 3: Strangler Fig Migration (Incremental Rewrite)
+
+**What:** Gradually replace Rust API with Go, routing requests via proxy
+
+**When:** Migrating from current Rust codebase to Go
+
+**Implementation:**
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Nginx Reverse Proxy                  │
+│                    (Routing Layer)                      │
+└───────────────┬──────────────────────┬──────────────────┘
+                │                      │
+     ┌──────────▼─────────┐  ┌─────────▼────────────┐
+     │   Go API Server    │  │  Rust API (Legacy)   │
+     │   (New routes)     │  │  (Remaining routes)  │
+     │  :8080             │  │  :8888               │
+     └────────────────────┘  └──────────────────────┘
+```
+
+**Nginx configuration:**
+```nginx
+upstream go_api {
+    server localhost:8080;
+}
+
+upstream rust_api {
+    server localhost:8888;
+}
+
+server {
+    listen 80;
+
+    # Migrated routes → Go
+    location /api/v2/tasks {
+        proxy_pass http://go_api;
+    }
+
+    location /api/v2/conversations {
+        proxy_pass http://go_api;
+    }
+
+    # Legacy routes → Rust
+    location / {
+        proxy_pass http://rust_api;
+    }
+}
+```
+
+**Migration sequence:**
+1. Deploy Go API on port 8080 with zero routes (health check only)
+2. Implement `/api/v2/tasks` in Go
+3. Update nginx to route `/api/v2/tasks` → Go
+4. Verify, monitor, rollback if needed
+5. Repeat for next endpoint
+6. When all routes migrated, retire Rust server
+
+**Why:** Zero downtime, incremental risk, easy rollback per route, allows learning Go patterns before committing fully
+
+### Pattern 4: LISTEN/NOTIFY Event Bus
+
+**What:** PostgreSQL as lightweight message bus for inter-process events
+
+**When:** Coordinating Go API and Lisp runtime without polling
+
+**Go listener setup:**
+```go
+import "github.com/jackc/pgxlisten"
+
+conn, _ := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+listener := pgxlisten.NewListener(conn)
+
+err := listener.Listen(context.Background(), "ghost_tick_complete")
+for notification := range listener.Notify {
+    var payload struct {
+        AgentID int64 `json:"agent_id"`
+        TickNum int64 `json:"tick"`
+    }
+    json.Unmarshal([]byte(notification.Payload), &payload)
+
+    // Push WebSocket update to UI
+    wsHub.Broadcast(payload)
+}
+```
+
+**Lisp notifier:**
+```lisp
+(postmodern:execute
+  (format nil "NOTIFY ghost_tick_complete, '~A'"
+          (jonathan:to-json
+            (list :agent-id agent-id :tick tick-num))))
+```
+
+**Events to propagate:**
+- `ghost_tick_complete` → UI updates ghost status
+- `task_status_changed` → UI updates task board
+- `memory_created` → UI shows notification
+- `pipeline_advanced` → UI updates pipeline view
+
+**Why:** No polling, sub-second latency, leverages existing PostgreSQL connection, no Redis dependency
+
+### Pattern 5: Polymorphic Table Querying
+
+**What:** Query Nine Tables schema with `kind` discriminator and JSONB meta
+
+**When:** Accessing domain tables in both Go and Lisp
+
+**Schema pattern:**
+```sql
+CREATE TABLE the_work (
+    id BIGSERIAL PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
+    kind TEXT NOT NULL, -- 'task', 'goal', 'decision', 'routine', 'issue'
+    title TEXT NOT NULL,
+    body TEXT,
+    meta JSONB, -- Kind-specific fields
+    status TEXT DEFAULT 'active',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_work_kind ON the_work(kind);
+CREATE INDEX idx_work_meta ON the_work USING GIN(meta);
+```
+
+**Go querying:**
+```go
+type Task struct {
+    ID        int64
+    Slug      string
+    Title     string
+    Body      string
+    Meta      map[string]interface{} // Unmarshal JSONB
+    Status    string
+    CreatedAt time.Time
+}
+
+func (r *repo) FindTasks(ctx context.Context) ([]*Task, error) {
+    query := `SELECT id, slug, title, body, meta, status, created_at
+              FROM the_work WHERE kind = 'task' ORDER BY created_at DESC`
+    rows, _ := r.pool.Query(ctx, query)
+    defer rows.Close()
+
+    var tasks []*Task
+    for rows.Next() {
+        var task Task
+        var metaJSON []byte
+        rows.Scan(&task.ID, &task.Slug, &task.Title, &task.Body,
+                  &metaJSON, &task.Status, &task.CreatedAt)
+        json.Unmarshal(metaJSON, &task.Meta)
+        tasks = append(tasks, &task)
+    }
+    return tasks, rows.Err()
+}
+```
+
+**Lisp querying:**
+```lisp
+(defun find-tasks ()
+  (postmodern:query
+    (:select :id :slug :title :body :meta :status :created-at
+     :from 'the-work
+     :where (:= :kind "task")
+     :order-by (:desc :created-at))
+    :plists))
+```
+
+**Why:** Reduces 83 tables to 9, simplifies queries, JSONB allows schema evolution without migrations, GIN indexes support JSONB queries
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Big Bang Table Rename
-**What:** `ALTER TABLE agents RENAME TO ghosts` then fix all code
-**Why bad:** 8+ FK references, Lisp tick engine, dpn-api handlers, Python tools all break simultaneously
-**Instead:** View-based rename
+### Anti-Pattern 1: Direct FFI Between Go and Lisp
 
-### Anti-Pattern 2: Migrating 48K Documents to New Table
-**What:** Moving all `documents` rows to a `resources` table
-**Why bad:** Massive data migration, all document_id FKs break, embedding indexes must be rebuilt
-**Instead:** `resources` as organizational overlay
+**What:** Using CGO to call Lisp code directly from Go
 
-### Anti-Pattern 3: Normalizing Ghost Memory Columns
-**What:** Replacing per-agent columns (nova_memories, eliana_memories) with a join table
-**Why bad:** These columns work, perception queries are optimized for them, tick engine writes to them via Python helper. Wide-table is intentional (fast per-agent reads without JOINs).
-**Instead:** Keep columns as-is.
+**Why bad:**
+- CGO disables Go's best concurrency features
+- Complex memory management (Go GC vs SBCL GC)
+- Debugging nightmares across runtimes
+- Deployment complexity (single binary impossible)
+- Performance overhead at FFI boundary
 
-### Anti-Pattern 4: Modifying Perception Endpoint Mid-Migration
-**What:** Changing perception SQL before all table renames are stable
-**Why bad:** Ghosts are live. Broken perception = no ghost activity.
-**Instead:** Perception changes go last, after all tables/views verified.
+**Instead:** Use PostgreSQL as shared state + LISTEN/NOTIFY for coordination. Clean process separation.
 
-## dpn-api Endpoint Changes
+### Anti-Pattern 2: Shared In-Memory State
 
-### New Endpoints
+**What:** Redis or shared memory segments for state coordination
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/areas` | GET, POST | List/create areas |
-| `/api/areas/:id` | GET, PATCH | Get/update area |
-| `/api/areas/:id/ghosts` | GET | Ghosts assigned to area |
-| `/api/areas/:id/projects` | GET | Projects in area |
-| `/api/templates` | GET, POST | List/create templates |
-| `/api/templates/:id` | GET, PUT | Get/update template |
-| `/api/archives` | GET | List archives (paginated) |
-| `/api/archives/:id` | GET | Get archive entry |
-| `/api/archives/import` | POST | Bulk import (Nexus) |
-| `/api/resources` | GET | List resources |
-| `/api/resources/:id` | GET | Get resource |
-| `/api/temporal-compression/run` | POST | Trigger compression |
-| `/api/temporal-compression/log` | GET | View compression history |
+**Why bad:**
+- PostgreSQL already provides ACID guarantees
+- Adds operational complexity (one more service to run)
+- Cache invalidation problems
+- Violates "database as single source of truth" principle
 
-### Modified Endpoints
+**Instead:** PostgreSQL with proper indexing (GIN for JSONB, B-tree for IDs). Use connection pooling to reduce query latency. LISTEN/NOTIFY for real-time updates.
 
-| Endpoint | Change |
-|----------|--------|
-| `/api/projects` | Add `lifestage`, `area_id` to response/input |
-| `/api/projects/:id` | Add `lifestage`, `area_id` |
-| `/api/perception/:agent_id` | After rename: query `memories` table (view handles backward compat during transition) |
+### Anti-Pattern 3: Big Bang Rewrite
 
-### dpn-core Module Changes
+**What:** Replace entire Rust codebase in one release
 
-| Module | Change |
-|--------|--------|
-| `src/db/vault_notes.rs` | Rename to `memories.rs`, update table name in queries |
-| `src/db/projects.rs` | Add lifestage, area_id to struct and queries |
-| `src/db/mod.rs` | Add: `areas.rs`, `templates.rs`, `archives.rs`, `resources.rs` |
+**Why bad:**
+- High risk, no rollback path
+- Requires code freeze during migration
+- Learning Go patterns under pressure
+- Testing entire surface area before release
 
-## Nexus Chat AI Import Data Flow
+**Instead:** Strangler Fig pattern. Migrate route by route. Learn incrementally. Each migration is independently deployable.
 
-2,179 documents at `Archive/Retired Nebulab/04 Archives/01 Nexus AI Chat Imports/` paths. Duplicates exist in `Archive/backup-Nebulab/` (need dedup).
+### Anti-Pattern 4: Nano-Services (Over-Decomposition)
 
-```
-1. documents table (source, 2179 rows)
-   | migration script (copy, don't move)
-   v
-2. archives table (immutable, source='nexus_chat_import', dates from paths)
-   | temporal compression (scheduled process)
-   v
-3. Compressed summaries --> memories ghost columns (nova_memories primarily)
-   | link injection
-   v
-4. Daily/weekly notes get "Nexus Import Links" section
-```
+**What:** Separate Go service per domain table
 
-Documents table rows are NOT deleted. Archives gets copies. Preserves all existing document_id FKs and search indexes.
+**Why bad:**
+- Network latency between services
+- Distributed transaction complexity
+- Operational overhead (9+ services to deploy)
+- Doesn't match team size (single developer)
 
-## Temporal Compression Architecture
+**Instead:** Monolithic Go API server with Hexagonal Architecture. Use internal packages for domain boundaries. Scale horizontally if needed (stateless API).
 
-```
-daily memories (2199 rows, note_type='daily')
-  | weekly rollup (7 days -> 1 summary)
-  v
-weekly memories (314 rows, note_type='weekly')
-  | monthly rollup (4-5 weeks -> 1 summary)
-  v
-monthly memories (68 rows, note_type='monthly')
-  | quarterly rollup (3 months -> 1 summary)
-  v
-quarterly memories (25 rows, note_type='quarterly')
-  | yearly rollup (4 quarters -> 1 summary)
-  v
-yearly memories (9 rows, note_type='yearly')
-```
+### Anti-Pattern 5: REST for Real-Time Updates
 
-The compression process:
-1. Scheduled via standing order (Nova/T.A.S.K.S. cron)
-2. Reads source-level notes from `memories` table
-3. LLM summarizes (or deterministic merge) into target-level note
-4. Writes compressed note to `memories` with target note_type
-5. Logs to `temporal_compression_log`
-6. Does NOT delete source notes
+**What:** Client polling `/api/ghosts/status` every second
 
-Ghost memory columns compress too: daily ghost memories roll up into weekly summary in the weekly note's ghost column.
+**Why bad:**
+- Unnecessary database load
+- Network inefficiency
+- UI lag (polling interval vs event arrival)
+- Scales poorly (N clients = N × requests/sec)
+
+**Instead:** WebSocket or Server-Sent Events (SSE) for real-time push. LISTEN/NOTIFY triggers push to connected clients. Client receives updates within milliseconds of database change.
+
+## Scalability Considerations
+
+| Concern | At 1 User (Now) | At 10 Users | At 100 Users |
+|---------|----------------|-------------|--------------|
+| **Database** | Single PostgreSQL instance, 25 connections | Same (PostgreSQL handles this easily) | Consider read replicas, connection pooling via PgBouncer |
+| **Go API** | Single server, localhost | Single server with proper connection pooling | Horizontal scaling (2-3 instances behind load balancer) |
+| **Lisp Runtime** | Single process, sequential ticks | Same (ghosts are per-user) | One Lisp process per user, scheduled independently |
+| **Real-time Updates** | WebSocket, in-process hub | Same | Consider Redis Pub/Sub for WebSocket fan-out across Go instances |
+| **Storage** | PostgreSQL on same machine | Same | Consider separate DB server, SSD storage |
+| **Authentication** | JWT + API keys | Same | Consider session storage in PostgreSQL or Redis |
+
+**Key insight:** Architecture naturally scales to 10-100 users without major changes. Stateless Go API scales horizontally. Lisp runtime scales by running independent processes per user.
+
+## Rewrite Strategy: Strangler Fig (Incremental)
+
+### Why Incremental Over Big Bang
+
+**Incremental advantages:**
+- **Risk mitigation:** Each route migration is independently testable and rollbackable
+- **Learning curve:** Practice Go patterns on simple endpoints before complex ones
+- **No downtime:** Nginx routes traffic seamlessly during migration
+- **Continuous delivery:** Ship improvements while migration progresses
+- **Cost containment:** Spread effort over time, no code freeze
+
+**Big bang disadvantages:**
+- **All-or-nothing risk:** Single bug breaks entire application
+- **Development freeze:** No feature work during migration window
+- **Pressure testing:** Must validate entire surface area before release
+- **Rollback complexity:** Reverting requires full deployment
+
+**Decision:** Use Strangler Fig pattern with nginx routing layer. Migrate route by route over 3-6 months.
+
+### Migration Phases
+
+#### Phase 0: Foundation (Week 1-2)
+
+**Goal:** Go project structure, database connection, health check endpoint
+
+**Deliverables:**
+- Go project initialized with Hexagonal Architecture
+- pgx connection pool configured
+- `/health` endpoint returning 200 OK
+- Nginx routing `/api/v2/health` → Go, everything else → Rust
+- CI/CD pipeline for Go (build, test, deploy)
+
+**Why first:** Validates deployment pipeline before adding complexity. Establishes patterns for subsequent routes.
+
+#### Phase 1: Read-Only Endpoints (Week 3-6)
+
+**Goal:** Migrate simple GET endpoints (tasks, conversations, ghosts)
+
+**Suggested order:**
+1. `GET /api/v2/tasks` → List tasks from `the_work` table
+2. `GET /api/v2/tasks/:id` → Single task by ID
+3. `GET /api/v2/conversations` → List conversations from `the_post`
+4. `GET /api/v2/ghosts` → List ghosts from `the_forge`
+
+**Why first:** No data mutation, easy to validate correctness, builds confidence with database queries.
+
+#### Phase 2: Write Endpoints (Week 7-10)
+
+**Goal:** Migrate POST/PUT/DELETE endpoints
+
+**Suggested order:**
+1. `POST /api/v2/tasks` → Create task
+2. `PUT /api/v2/tasks/:id` → Update task
+3. `DELETE /api/v2/tasks/:id` → Soft delete (set status='archived')
+4. Repeat for conversations, ghosts
+
+**Why second:** Requires transaction handling, validation, error handling patterns. Builds on Phase 1 knowledge.
+
+#### Phase 3: Complex Endpoints (Week 11-14)
+
+**Goal:** Migrate endpoints with business logic
+
+**Suggested order:**
+1. Pipeline progression (`POST /api/v2/pipelines/:id/advance`)
+2. Memory creation from perception (`POST /api/v2/ghosts/:id/memories`)
+3. Wikilink graph queries (`GET /api/v2/wikilinks/:slug`)
+
+**Why third:** Requires deep understanding of domain logic. May need refactoring from Rust patterns to Go idioms.
+
+#### Phase 4: Real-Time Layer (Week 15-16)
+
+**Goal:** WebSocket server with LISTEN/NOTIFY integration
+
+**Deliverables:**
+- WebSocket endpoint (`/ws`)
+- Connection hub managing client subscriptions
+- pgxlisten integration subscribing to PostgreSQL events
+- Event fan-out to connected clients
+
+**Why last:** Requires all data operations migrated. Most complex networking code.
+
+#### Phase 5: Rust Retirement (Week 17)
+
+**Goal:** Remove Rust codebase, update nginx to route all traffic to Go
+
+**Deliverables:**
+- Nginx config updated (remove Rust upstream)
+- Rust server stopped
+- Archive Rust codebase (tag as `rust-legacy-final`)
+- Update documentation
+
+**Why last:** Only when 100% of functionality verified in Go.
+
+### Migration Validation Strategy
+
+**Per-route validation:**
+1. **Functional testing:** Postman/curl scripts comparing Rust vs Go responses
+2. **Load testing:** `wrk` or `hey` confirming Go performance ≥ Rust
+3. **Monitoring:** Prometheus metrics comparing error rates, latency
+4. **Canary deployment:** Route 10% traffic to Go, monitor for 24 hours, then 100%
+
+**Rollback plan:**
+- Nginx config revert (point route back to Rust)
+- No data migration needed (PostgreSQL is source of truth for both)
+- 1-minute rollback window
+
+## Build Order Recommendations
+
+### For Go API Server
+
+**Order of implementation:**
+
+1. **Project structure** (Hexagonal Architecture directories)
+2. **Database connection pool** (pgx with context timeouts)
+3. **Health check endpoint** (validates deployment)
+4. **Auth middleware** (JWT validation, API key checking)
+5. **Domain models** (Task, Conversation, Ghost structs)
+6. **Repository interfaces** (ports)
+7. **PostgreSQL repository implementations** (adapters)
+8. **Use cases** (CreateTask, UpdateTask, etc.)
+9. **HTTP handlers** (Gin/Echo routes)
+10. **WebSocket hub** (connection management)
+11. **LISTEN/NOTIFY integration** (pgxlisten)
+12. **WebSocket event fan-out** (push notifications)
+
+**Rationale:** Bottom-up approach. Database layer first (validates schema understanding), then domain logic, then HTTP layer, finally real-time.
+
+### For Lisp Runtime (No Rewrite Needed)
+
+**Current Lisp codebase stays.** Only changes needed:
+
+1. **Generalization pass** (remove Nathan-specific hardcoded paths)
+2. **Configuration file** (`.env` or `config.lisp` for database URL, LLM provider)
+3. **NOTIFY statements** (add after tick completion, memory creation)
+4. **Connection pooling** (ensure `:pooled-p t` used consistently)
+
+**Why minimal changes:** Lisp runtime proven in v1.5. Ghost tick engine, cognition broker, InnateScript interpreter all stable. Focus Go effort on API layer.
+
+### Cross-Cutting Concerns
+
+**Implement early:**
+- **Logging:** Structured logging (zerolog or zap in Go, format statements in Lisp)
+- **Error handling:** Go error wrapping with context, Lisp condition system
+- **Configuration:** Environment variables (`.env` via godotenv)
+- **Secrets management:** All credentials in `.env`, never committed
+
+**Implement later:**
+- **Metrics:** Prometheus endpoints (after core functionality stable)
+- **Distributed tracing:** OpenTelemetry (only if debugging cross-language issues)
+- **Rate limiting:** Nginx or Go middleware (only when scaling to multi-user)
 
 ## Sources
 
-- Live database schema inspection (master_chronicle, 77 tables, 2026-03-28)
-- dpn-api source: `/opt/dpn-api/src/handlers/` (perception, documents, memory)
-- dpn-core source: `/root/dpn-core/src/db/vault_notes.rs`
-- Lisp tick engine: `/opt/project-noosphere-ghosts/lisp/runtime/action-executor.lisp`
-- PARAT schema spec: `.claude/projects/-root/memory/project_parat_schema.md`
-- PROJECT.md v1.3 milestone definition
+**Confidence Assessment:**
+
+| Topic | Confidence | Sources |
+|-------|------------|---------|
+| Go + Lisp polyglot patterns | MEDIUM | WebSearch (no authoritative Go+Lisp guides), extrapolated from microservices patterns |
+| PostgreSQL as shared state | HIGH | PostgreSQL documentation (LISTEN/NOTIFY), Go/Lisp library docs |
+| Strangler Fig migration | HIGH | AWS Prescriptive Guidance, Microsoft Azure Architecture Center (2025) |
+| Go project structure | HIGH | Go community best practices (2025), Hexagonal Architecture articles |
+| Connection pooling | HIGH | pgx documentation, Postmodern documentation, performance benchmarks |
+
+**Key sources:**
+- PostgreSQL LISTEN/NOTIFY: https://www.postgresql.org/docs/current/sql-notify.html
+- Go pgx best practices: https://dev.to/mx_tech/go-with-postgresql-best-practices-for-performance-and-safety-47d7
+- Postmodern connection pooling: https://github.com/marijnh/Postmodern
+- Strangler Fig pattern: https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/strangler-fig.html
+- Hexagonal Architecture in Go: https://www.glukhov.org/post/2025/12/go-project-structure/
+
+**Gaps identified:**
+- No direct Go + Common Lisp integration examples found (relied on microservices separation principles)
+- Limited production case studies of PostgreSQL LISTEN/NOTIFY at scale (validated approach but not battle-tested at 1000+ users)
+- InnateScript generalization requirements not fully explored (Lisp codebase review needed)
+
+---
+
+*Architecture analysis: 2026-04-04*
+*Confidence: MEDIUM-HIGH (strong on Go and PostgreSQL patterns, extrapolated on Go+Lisp coordination)*
+*Recommendation: Validate LISTEN/NOTIFY latency under load before committing. Consider prototyping WebSocket fan-out with 100 simulated clients.*
