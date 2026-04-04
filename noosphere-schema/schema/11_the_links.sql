@@ -1,36 +1,26 @@
--- 11_the_links.sql
--- Wikilink relationship index — trigger-maintained backlink table.
--- Replaces the 397K-row document_edges table.
--- Every [[wikilink]] in body or meta across all 9 tables is tracked here.
+-- the_links: Automatic wikilink tracking via triggers
+-- Every [[wikilink]] in every domain table gets extracted and tracked here.
+-- Enables: backlinks, graph view, "what references this slug?"
 
-CREATE TABLE the_links (
+CREATE TABLE IF NOT EXISTS the_links (
     id              BIGSERIAL PRIMARY KEY,
-    source_table    TEXT NOT NULL,
-    source_id       BIGINT NOT NULL,
-    source_slug     TEXT NOT NULL,
-    target_slug     TEXT NOT NULL,
-    target_table    TEXT,           -- NULL if unresolved
-    target_id       BIGINT,         -- NULL if unresolved
-    link_context    TEXT NOT NULL,   -- 'body' or the meta field name
-    qualifier       TEXT,           -- 'forge', 'realms', etc. from [[forge:Nova]]
-    display_text    TEXT,           -- alias from [[Target|Display]]
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    source_table    TEXT NOT NULL,   -- e.g. 'identity', 'temporal', 'the_work'
+    source_id       BIGINT NOT NULL, -- row id in source table
+    source_field    TEXT NOT NULL,   -- which column contained the wikilink
+    target_slug     TEXT NOT NULL,   -- the slug inside the [[brackets]]
+    link_text       TEXT,            -- display text if [[slug|display text]]
+    created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 
-COMMENT ON TABLE the_links IS 'Wikilink relationship index. Trigger-maintained from all 9 domain tables. Replaces document_edges. Every [[wikilink]] tracked for instant backlink queries.';
+COMMENT ON TABLE the_links IS 'Automatic wikilink tracking. Every [[wikilink]] in every domain table extracted here via triggers.';
 
--- Forward lookups: "what does entry X link to?"
-CREATE INDEX idx_links_source ON the_links(source_table, source_id);
-CREATE INDEX idx_links_source_slug ON the_links(source_slug);
+-- Indexes for common queries
+CREATE INDEX idx_links_source           ON the_links(source_table, source_id);
+CREATE INDEX idx_links_target_slug      ON the_links(target_slug);
+CREATE INDEX idx_links_source_field     ON the_links(source_table, source_field);
 
--- Backward lookups: "what links TO entry X?" (the critical backlink query)
-CREATE INDEX idx_links_target ON the_links(target_table, target_id)
-    WHERE target_id IS NOT NULL;
-CREATE INDEX idx_links_target_slug ON the_links(target_slug);
+-- "What links TO this slug?" (backlinks)
+-- SELECT * FROM the_links WHERE target_slug = 'NathanEckenrode';
 
--- Unresolved links: for reporting broken [[wikilinks]]
-CREATE INDEX idx_links_unresolved ON the_links(target_slug)
-    WHERE target_id IS NULL;
-
--- Context filtering: "what links to X from meta.reports_to?"
-CREATE INDEX idx_links_context ON the_links(link_context);
+-- "What does this row link TO?" (outlinks)
+-- SELECT * FROM the_links WHERE source_table = 'identity' AND source_id = 1;
