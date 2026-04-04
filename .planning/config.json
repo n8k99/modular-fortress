@@ -1,5 +1,5 @@
 {
-  "model_profile": "quality",
+  "model_profile": "balanced",
   "commit_docs": true,
   "parallelization": true,
   "search_gitignored": false,
@@ -16,7 +16,7 @@
     "research": true,
     "plan_check": true,
     "verifier": true,
-    "nyquist_validation": true,
+    "nyquist_validation": false,
     "auto_advance": false,
     "node_repair": true,
     "node_repair_budget": 2,
@@ -25,24 +25,12 @@
     "text_mode": false,
     "research_before_questions": false,
     "discuss_mode": "discuss",
-    "skip_discuss": false,
-    "_auto_chain_active": false
+    "skip_discuss": false
   },
   "hooks": {
     "context_warnings": true
   },
   "agent_skills": {},
-  "planning": {
-    "sub_repos": [
-      "dpn-core"
-    ],
-    "commit_docs": false
-  },
   "mode": "yolo",
-  "granularity": "standard",
-  "sub_repos": [
-    "dpn-core",
-    "gotcha-secrets",
-    "gotcha-workspace"
-  ]
+  "granularity": "coarse"
 }
