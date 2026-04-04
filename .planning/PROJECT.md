@@ -21,7 +21,7 @@ Modular Fortress is your sovereign digital workspace — a self-hosted KDE-PIM-s
 ### Active
 
 - [ ] Migrate 83-table schema → Nine Tables (polymorphic with `kind` + JSONB)
-- [ ] Consolidate dpn-api, dpn-core, dpn-mcp → single Rust codebase
+- [ ] Rewrite Rust API servers → unified Go codebase (dpn-api, dpn-core, dpn-mcp, noosphere)
 - [ ] Database-backed note system (Obsidian replacement)
 - [ ] Wikilink graph across all nine domains
 - [ ] RSS reader interface (The Commons domain)
@@ -46,7 +46,7 @@ Modular Fortress is your sovereign digital workspace — a self-hosted KDE-PIM-s
 ## Context
 
 **Current state:**
-- Four separate Rust projects (dpn-api, dpn-core, dpn-mcp, noosphere) with overlapping concerns
+- Four separate Rust projects (dpn-api, dpn-core, dpn-mcp, noosphere) to be rewritten as unified Go codebase
 - 83-table PostgreSQL schema that's difficult to query coherently (agents across 8 tables, markets across 11, etc.)
 - Lisp codebase (project-noosphere-ghosts + innatescript) works but has Nathan-specific assumptions
 - 9,000+ markdown files exported from database (security concern, delete after migration)
@@ -87,7 +87,7 @@ Plus 3 infrastructure tables: Ticks (ghost heartbeat), Wikilinks (backlink graph
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Nine Tables over 83 tables | Current schema is unmaintainable—agents split across 8 tables, markets across 11, impossible to query coherently | — Pending |
-| Consolidate Rust codebases | Four separate projects (dpn-api, dpn-core, dpn-mcp, noosphere) create duplicate code and coordination overhead | — Pending |
+| Rust→Go rewrite | "Once Go is coded it stays in place"—22x faster compilation, 2-3x development velocity, backwards compatibility guarantee | — Pending |
 | KDE-PIM style unified interface | One application for all personal data management (notes, calendar, tasks, RSS, ghosts) instead of separate tools | — Pending |
 | Keep Lisp ghost runtime separate | Ghost cognition belongs in Lisp, not Rust—proven architecture from v1.5 | ✓ Good |
 | Private GPL repo | GPL licensing for ethical reasons, but private repo because not building for public distribution | — Pending |
