@@ -1,109 +1,93 @@
----
-gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: InnateScipt Capabilities
-status: executing
-stopped_at: Completed 31-03-PLAN.md
-last_updated: "2026-03-30T21:58:57.445Z"
-last_activity: 2026-03-30
-progress:
-  total_phases: 15
-  completed_phases: 10
-  total_plans: 19
-  completed_plans: 19
----
-
-# Project State
+# Project State: Modular Fortress
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-29)
+**Core Value:** The database is the source of truth. Every piece of personal data lives in master_chronicle and is accessible through one unified interface.
 
-**Core value:** GSD-dispatched projects must flow through to ghost execution and back without human intervention
-**Current focus:** Phase 30 — team-pipelines
+**Current Focus:** Phase 1 - Foundation & Go API Core (Go server builds, connects to PostgreSQL, establishes CRUD patterns)
 
 ## Current Position
 
-Phase: 31
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-03-30
+**Phase:** 1 - Foundation & Go API Core
+**Plan:** Not started
+**Status:** Pending planning
+**Progress:** `[□□□□□□□] 0/7 phases` (0%)
 
-Progress (v1.5): [██████████] 100%
+### Active Requirements
+- MIGR-01: Go API server builds and runs on localhost with health endpoint
+- MIGR-02: All existing Rust API endpoints replicated in Go with identical behavior
+- MIGR-03: PostgreSQL connection pool configured with pgx/v5
+- MIGR-07: All secrets moved to `.env` (database credentials, API keys)
+
+### This Phase Delivers
+Go API server operational with database connectivity and basic CRUD patterns established. When complete, developer can build and run Go server locally, connect to master_chronicle PostgreSQL, load secrets from `.env`, and nginx routes traffic for strangler fig migration.
 
 ## Performance Metrics
 
+**Phases:**
+- Completed: 0
+- In Progress: 0
+- Remaining: 7
+
+**Plans:**
+- Completed: 0
+- In Progress: 0
+- Remaining: TBD (not yet planned)
+
+**Requirements:**
+- Satisfied: 0/54 (0%)
+- In Progress: 0
+- Pending: 54
+
 **Velocity:**
-
-- Total plans completed: 57 (across v1.0-v1.4)
-- Average duration: ~25 min
-- Total execution time: ~23.7 hours
-
-**Recent Trend:**
-
-- v1.4 phases averaged 2.4 plans/phase
-- Trend: Stable
+- Plans per week: N/A (no plans completed yet)
+- Weeks since start: 0
+- Estimated completion: TBD (after Phase 1 planning)
 
 ## Accumulated Context
 
-### Decisions
+### Key Decisions
+1. **Sequential migration strategy** - Go rewrite with existing 83-table schema FIRST (Phases 1-5), then Nine Tables schema migration SECOND (Phases 6-7). Prevents blame ambiguity during debugging.
+2. **Strangler fig pattern** - Nginx routes traffic between Go (8080) and Rust (8888) during migration. Enables route-by-route cutover with rollback capability.
+3. **Coarse granularity** - 7 phases total (compressed from research's 9-phase recommendation) per config.json setting.
+4. **Hybrid schema design** - Phase 6 will use indexed columns for hot queries plus JSONB for variable data to prevent performance cliffs.
 
-- [v1.4]: SB-ALIEN FFI to libpq (zero-deps, no Quicklisp) -- proven good
-- [v1.4]: CLOS resolver protocol for Innate -- extensible method dispatch
-- [v1.4]: LLM-generated expressions with parse-round-trip validation
-- [Phase 25]: JSON parser converts underscores to hyphens, expression keys accessed as :NAME :BODY :UPDATE
-- [Phase 25]: Innate generation instructions appended to both project-review and work-task system prompts
-- [Phase 26]: Committed packages.lisp with db-auxiliary/db-conversations to avoid broken import state
-- [Phase 26]: action-error entries are caught handler-case errors (not crashes), confirming STAB-01 paren fix works
-- [Phase 26]: Surgical 2-char paren fix: remove one paren from line 497, add one to line 612 — outer let* scope restored
-- [Phase 27]: Single transaction for DDL + data migration ensures atomicity
-- [Phase 27]: Area content bundles return data plists (not AST nodes); hardcoded *area-slug-map* for slug resolution
-- [Phase 28]: Custom YAML parser (zero-deps) for agent config; dots not hyphens/colons in InnateScipt expressions
-- [Phase 28]: YAML-first capability injection: try ghost-capabilities YAML, fall back to tool-registry.json when nil (D-11)
-- [Phase 28]: Refactored mutation interface from plist to hash-table matching AF64 JSON parser output
-- [Phase 28]: Separate *capability-mutation-instructions* defparameter for modularity
-- [Phase 28]: Mutation instructions appended unconditionally in proactive-work (even without YAML capabilities), matching work-task pattern
-- [Phase 29]: Flat cond structure in parse-simple-yaml to avoid deep paren nesting
-- [Phase 29]: Serializer emission order: scalars, nested sections, top-level lists (responsibilities last)
-- [Phase 29]: write-ghost-yaml loads existing YAML before writing to preserve non-responsibility sections
-- [Phase 29]: Orbis fields as read-only YAML metadata; load-ghost-orbis returns plist for v1.6+ runtime access
-- [Phase 30]: Used get-pipeline-type-for-stage in action-planner to avoid circular dependency with action-executor
-- [Phase 30]: Preserved detect-pipeline-type wrapper for backward compatibility per D-14
-- [Phase 31]: Worldbuilding tools to JMax (canon arbiter); delegate_modular_fortress to Eliana; OpenClaw tools skipped (deprecated)
-- [Phase 31]: find-symbol for execute-tool-call in resolver avoids circular dependency; resolver tool results as conversation for TOOL-04 attribution
+### Open Questions
+- [ ] What Go project structure should we use (Hexagonal Architecture per research)?
+- [ ] Which Rust endpoints to migrate first (health check → read-only → writes)?
+- [ ] What automated parity tests look like (endpoint comparison between Go and Rust)?
+- [ ] How to handle Lisp ghost runtime coordination (LISTEN/NOTIFY channels)?
 
-### Pending Todos
+### Blockers
+None currently.
 
-None yet.
-
-### Blockers/Concerns
-
-- ~~execute-work-task paren scope bug (STAB-01)~~ -- RESOLVED in 26-03, commit 562fa2d
-- tool-registry.json hallucination problem -- ghosts guess tool names that don't match registry; Phase 28 (CAP) replaces this
-
-### Quick Tasks Completed
-
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260329-nkq | Update noosphere-ghosts README.md and PROJECT_NOOSPHERE_GHOSTS.md | 2026-03-29 | f5d77cf | [260329-nkq](./quick/260329-nkq-update-noosphere-ghosts-readme-md-and-pr/) |
-| 260329-py3 | Build GitHub sync module for noosphere-ghosts | 2026-03-29 | 9881944 | [260329-py3](./quick/260329-py3-build-github-sync-module-for-noosphere-g/) |
-| Phase 26 P01 | 3min | 2 tasks | 9 files |
-| Phase 26 P02 | 3min | 2 tasks | 0 files |
-| Phase 26 P03 | 4min | 2 tasks | 1 files |
-| Phase 27 P01 | 2min | 1 tasks | 1 files |
-| Phase 27-area-content-tables P02 | 4min | 2 tasks | 2 files |
-| Phase 28 P01 | 4min | 2 tasks | 13 files |
-| Phase 28 P02 | 3min | 1 tasks | 1 files |
-| Phase 28 P03 | 6min | 2 tasks | 4 files |
-| Phase 28 P04 | 2min | 1 tasks | 2 files |
-| Phase 29 P01 | 7min | 2 tasks | 2 files |
-| Phase 29 P02 | 4min | 2 tasks | 11 files |
-| Phase 30 P02 | 5min | 2 tasks | 4 files |
-| Phase 31 P02 | 1min | 1 tasks | 9 files |
-| Phase 31 P03 | 15min | 3 tasks | 7 files |
+### Technical Debt
+- 9,000+ markdown files exported from database (security concern, delete after migration)
+- 83-table schema difficult to query coherently (agents across 8 tables, markets across 11)
+- Nathan-specific assumptions in Lisp codebase need generalization
+- UI has mock JavaScript data, not wired to live API
 
 ## Session Continuity
 
-Last session: 2026-03-30T21:54:36.005Z
-Stopped at: Completed 31-03-PLAN.md
-Resume file: None
+### Last Session Summary
+Roadmap created with 7 phases across two phase groups:
+- Phase Group 1 (Phases 1-5): Go migration with existing 83-table schema
+- Phase Group 2 (Phases 6-7): Nine Tables schema migration
+
+All 54 v1 requirements mapped to phases. Coverage validated at 100%.
+
+### Next Session Goals
+1. Begin Phase 1 planning via `/gsd:plan-phase 1`
+2. Establish Go project structure and patterns
+3. Define first plan (likely: Go server scaffold + health endpoint)
+
+### Context for Next Agent
+- This is a dual sequential migration (Rust→Go, then 83→9 tables)
+- Research strongly recommended sequential approach to prevent blame ambiguity
+- Config specifies "coarse" granularity (fewer, larger phases)
+- All 54 requirements mapped, no orphans
+- Ready to begin Phase 1 planning
+
+---
+*Last updated: 2026-04-04 after roadmap creation*
+*Next milestone: Phase 1 complete*

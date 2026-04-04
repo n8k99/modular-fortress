@@ -137,17 +137,79 @@
 
 ## Traceability
 
-*(Populated during roadmap creation)*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TBD | TBD | Pending |
+| MIGR-01 | Phase 1 | Pending |
+| MIGR-02 | Phase 1 | Pending |
+| MIGR-03 | Phase 1 | Pending |
+| MIGR-07 | Phase 1 | Pending |
+| NOTE-01 | Phase 2 | Pending |
+| NOTE-02 | Phase 2 | Pending |
+| NOTE-03 | Phase 2 | Pending |
+| NOTE-04 | Phase 2 | Pending |
+| NOTE-05 | Phase 2 | Pending |
+| NOTE-06 | Phase 2 | Pending |
+| NOTE-07 | Phase 2 | Pending |
+| NOTE-08 | Phase 2 | Pending |
+| NOTE-09 | Phase 2 | Pending |
+| NOTE-10 | Phase 2 | Pending |
+| TASK-01 | Phase 2 | Pending |
+| TASK-02 | Phase 2 | Pending |
+| TASK-03 | Phase 2 | Pending |
+| TASK-04 | Phase 2 | Pending |
+| TASK-05 | Phase 2 | Pending |
+| TASK-06 | Phase 2 | Pending |
+| TASK-07 | Phase 2 | Pending |
+| TASK-08 | Phase 2 | Pending |
+| CALE-01 | Phase 2 | Pending |
+| CALE-02 | Phase 2 | Pending |
+| CALE-03 | Phase 2 | Pending |
+| CALE-04 | Phase 2 | Pending |
+| CALE-05 | Phase 2 | Pending |
+| CALE-06 | Phase 2 | Pending |
+| CALE-07 | Phase 2 | Pending |
+| RSS-01 | Phase 3 | Pending |
+| RSS-02 | Phase 3 | Pending |
+| RSS-03 | Phase 3 | Pending |
+| RSS-04 | Phase 3 | Pending |
+| RSS-05 | Phase 3 | Pending |
+| RSS-06 | Phase 3 | Pending |
+| RSS-07 | Phase 3 | Pending |
+| WIKI-01 | Phase 3 | Pending |
+| WIKI-02 | Phase 3 | Pending |
+| WIKI-03 | Phase 3 | Pending |
+| WIKI-04 | Phase 3 | Pending |
+| WIKI-05 | Phase 3 | Pending |
+| WIKI-06 | Phase 3 | Pending |
+| GHST-01 | Phase 4 | Pending |
+| GHST-02 | Phase 4 | Pending |
+| GHST-03 | Phase 4 | Pending |
+| GHST-04 | Phase 4 | Pending |
+| GHST-05 | Phase 4 | Pending |
+| GHST-06 | Phase 4 | Pending |
+| GHST-07 | Phase 4 | Pending |
+| AUTH-01 | Phase 4 | Pending |
+| AUTH-02 | Phase 4 | Pending |
+| AUTH-03 | Phase 4 | Pending |
+| AUTH-04 | Phase 4 | Pending |
+| AUTH-05 | Phase 4 | Pending |
+| MIGR-06 | Phase 5 | Pending |
+| UI-01 | Phase 5 | Pending |
+| UI-02 | Phase 5 | Pending |
+| UI-03 | Phase 5 | Pending |
+| UI-04 | Phase 5 | Pending |
+| UI-05 | Phase 5 | Pending |
+| UI-06 | Phase 5 | Pending |
+| MIGR-04 | Phase 6 | Pending |
+| MIGR-05 | Phase 6-7 | Pending |
 
 **Coverage:**
 - v1 requirements: 54 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 54 ⚠️
+- Mapped to phases: 54 ✓
+- Unmapped: 0 ✓
+
+**Note:** MIGR-05 spans Phases 6-7 because migration script creation (Phase 6) and validation (Phase 7) are sequential deliverables for the same requirement.
 
 ---
 *Requirements defined: 2026-04-04 after research synthesis*
-*Last updated: 2026-04-04 after initial definition*
+*Last updated: 2026-04-04 after roadmap creation*
