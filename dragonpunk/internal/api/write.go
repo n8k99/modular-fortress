@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/n8k99/modular-fortress/dragonpunk/internal/db"
-	"github.com/n8k99/modular-fortress/dragonpunk/internal/tables"
+	"github.com/n8k99/modular-fortress/dragonpunk/pkg/db"
+	"github.com/n8k99/modular-fortress/dragonpunk/pkg/tables"
 )
 
 // CreateRow handles POST /api/{table} — create a new row from JSON body.

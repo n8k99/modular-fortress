@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/n8k99/modular-fortress/dragonpunk/internal/db"
+	"github.com/n8k99/modular-fortress/dragonpunk/pkg/db"
 )
 
 // NewRouter builds the Dragonpunk HTTP router.

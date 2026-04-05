@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "0.1.0"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "0.1.0",
+			"CompanyName": "Eckenrode Muziekopname",
+			"FileDescription": "Modular Fortress",
+			"LegalCopyright": "© 2026, Nathan Eckenrode",
+			"ProductName": "Dragonpunk",
+			"Comments": "This is a comment"
+		}
+	}
+}

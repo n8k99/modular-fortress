@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsixPackagingToolTemplate
+    xmlns="http://schemas.microsoft.com/msix/packaging/msixpackagingtool/template/2022">
+    <Settings
+        AllowTelemetry="false"
+        ApplyACLsToPackageFiles="true"
+        GenerateCommandLineFile="true"
+        AllowPromptForPassword="false">
+    </Settings>
+    <Installer
+        Path="dragonpunk-app"
+        Arguments=""
+        InstallLocation="C:\Program Files\Eckenrode Muziekopname\Dragonpunk">
+    </Installer>
+    <PackageInformation
+        PackageName="Dragonpunk"
+        PackageDisplayName="Dragonpunk"
+        PublisherName="CN=Eckenrode Muziekopname"
+        PublisherDisplayName="Eckenrode Muziekopname"
+        Version="0.1.0.0"
+        PackageDescription="Modular Fortress">
+        <Capabilities>
+            <Capability Name="runFullTrust" />
+            
+        </Capabilities>
+        <Applications>
+            <Application
+                Id="com.eckenrode.dragonpunk"
+                Description="Modular Fortress"
+                DisplayName="Dragonpunk"
+                ExecutableName="dragonpunk-app"
+                EntryPoint="Windows.FullTrustApplication">
+                
+            </Application>
+        </Applications>
+        <Resources>
+            <Resource Language="en-us" />
+        </Resources>
+        <Dependencies>
+            <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+        </Dependencies>
+        <Properties>
+            <Framework>false</Framework>
+            <DisplayName>Dragonpunk</DisplayName>
+            <PublisherDisplayName>Eckenrode Muziekopname</PublisherDisplayName>
+            <Description>Modular Fortress</Description>
+            <Logo>Assets\AppIcon.png</Logo>
+        </Properties>
+    </PackageInformation>
+    <SaveLocation PackagePath="dragonpunk-app.msix" />
+    <PackageIntegrity>
+        <CertificatePath></CertificatePath>
+    </PackageIntegrity>
+</MsixPackagingToolTemplate>

@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/n8k99/modular-fortress/dragonpunk/internal/api"
-	"github.com/n8k99/modular-fortress/dragonpunk/internal/config"
-	"github.com/n8k99/modular-fortress/dragonpunk/internal/db"
+	"github.com/n8k99/modular-fortress/dragonpunk/pkg/config"
+	"github.com/n8k99/modular-fortress/dragonpunk/pkg/db"
 )
 
 func main() {

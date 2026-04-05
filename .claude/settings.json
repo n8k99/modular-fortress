@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -o em-org-graph.html https://wiki.eckenrodemuziekopname.com/em-org-graph.html)",
+      "Bash(curl -o wiki-index.html https://wiki.eckenrodemuziekopname.com/)"
+    ]
+  }
+}

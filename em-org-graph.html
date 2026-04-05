@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<title>Eckenrode Muziekopname — Noosphere Graph + Tasks</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0f; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; }
+  canvas { display: block; }
+  #tooltip {
+    position: absolute; display: none; background: rgba(10,10,20,0.95);
+    border: 1px solid #00e5ff; border-radius: 8px; padding: 12px;
+    color: #e0e0e0; font-size: 13px; max-width: 400px;
+    pointer-events: none; z-index: 100; backdrop-filter: blur(8px);
+  }
+  #tooltip h3 { color: #00e5ff; margin-bottom: 4px; font-size: 15px; }
+  #tooltip.task h3 { color: #ffc107; }
+  #tooltip.project h3 { color: #9c27b0; }
+  #tooltip .role { color: #aaa; font-style: italic; margin-bottom: 6px; }
+  #tooltip .dept { color: #ff9800; font-size: 12px; margin-bottom: 8px; }
+  #tooltip .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 11px; }
+  #tooltip .stat-label { color: #888; }
+  #tooltip .stat-value { color: #fff; font-weight: 500; }
+  #tooltip .energy-bar { height: 6px; background: #222; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  #tooltip .energy-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  #legend {
+    position: absolute; top: 16px; right: 16px; background: rgba(10,10,20,0.85);
+    border: 1px solid #333; border-radius: 8px; padding: 14px; color: #ccc;
+    font-size: 12px; z-index: 50; max-height: 90vh; overflow-y: auto;
+  }
+  #legend h4 { color: #00e5ff; margin-bottom: 8px; }
+  .legend-item { display: flex; align-items: center; margin: 4px 0; }
+  .legend-line { width: 24px; height: 3px; margin-right: 8px; border-radius: 2px; }
+  .legend-dot { width: 10px; height: 10px; margin-right: 8px; border-radius: 50%; }
+  .legend-diamond { width: 10px; height: 10px; margin-right: 8px; transform: rotate(45deg); }
+  #status-panel {
+    position: absolute; bottom: 16px; right: 16px; background: rgba(10,10,20,0.85);
+    border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #ccc;
+    font-size: 11px; z-index: 50;
+  }
+  #status-panel .status-row { display: flex; justify-content: space-between; gap: 20px; margin: 2px 0; }
+  #status-panel .label { color: #888; }
+  #status-panel .value { color: #00e5ff; font-family: monospace; }
+  #status-panel .error { color: #f44336; }
+  #status-panel .ok { color: #4caf50; }
+  #dept-panel {
+    position: absolute; bottom: 16px; left: 16px; background: rgba(10,10,20,0.85);
+    border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #ccc;
+    font-size: 11px; z-index: 50;
+  }
+  #dept-panel h4 { color: #00e5ff; margin-bottom: 8px; font-size: 12px; }
+  #dept-legend {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;
+  }
+  #dept-legend .legend-item { display: flex; align-items: center; margin: 2px 0; }
+  #dept-legend .dept-circle {
+    width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; flex-shrink: 0;
+  }
+  #controls {
+    position: absolute; bottom: 16px; left: 16px; background: rgba(10,10,20,0.85);
+    border: 1px solid #333; border-radius: 8px; padding: 10px; color: #ccc;
+    font-size: 11px; z-index: 50; max-width: 600px;
+  }
+  #controls .row { margin-bottom: 6px; }
+  #controls label { margin-right: 10px; cursor: pointer; white-space: nowrap; }
+  #controls button { margin-left: 8px; padding: 4px 10px; background: #333; border: 1px solid #555; color: #ccc; border-radius: 4px; cursor: pointer; font-size: 11px; }
+  #controls button:hover { background: #444; }
+  #controls select { padding: 3px 6px; background: #222; border: 1px solid #444; color: #ccc; border-radius: 4px; font-size: 11px; }
+  #edit-modal, #requests-modal, #project-modal, #task-modal {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(20,20,30,0.98); border: 1px solid #00e5ff;
+    border-radius: 12px; padding: 20px; color: #e0e0e0; z-index: 200;
+    display: none; min-width: 320px; max-height: 80vh; overflow-y: auto; backdrop-filter: blur(10px);
+  }
+  #project-modal { border-color: #9c27b0; min-width: 450px; }
+  #task-modal { border-color: #ffc107; min-width: 400px; }
+  #edit-modal h3, #requests-modal h3 { color: #00e5ff; margin-bottom: 16px; }
+  #edit-modal label { display: block; margin: 10px 0 4px; color: #aaa; font-size: 12px; }
+  #edit-modal select { width: 100%; padding: 8px; background: #1a1a2e; border: 1px solid #444;
+    color: #fff; border-radius: 4px; font-size: 13px; }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+  button.btn-save { padding: 8px 16px; background: #00e5ff; color: #000; border: none; border-radius: 4px; cursor: pointer; }
+  button.btn-cancel { padding: 8px 16px; background: #444; color: #ccc; border: none; border-radius: 4px; cursor: pointer; }
+  #modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+    background: rgba(0,0,0,0.6); z-index: 199; display: none; }
+  #title {
+    position: absolute; top: 46px; left: 16px; color: #00e5ff;
+    font-size: 22px; font-weight: 700; z-index: 50;
+    text-shadow: 0 0 20px rgba(0,229,255,0.3);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.1;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  #title .noir-line { color: #F5A623; font-weight: 400; letter-spacing: 0.3em; }
+  #subtitle { color: #666; font-size: 13px; font-weight: 400; }
+  #live-badge { 
+    display: inline-block; margin-left: 10px; padding: 2px 8px;
+    background: #4caf50; color: #000; font-size: 10px; font-weight: 600;
+    border-radius: 10px; vertical-align: middle; animation: pulse 2s infinite;
+  }
+  #live-badge.disconnected { background: #f44336; animation: none; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+</style>
+</head>
+<body>
+<div id="title">
+  DRAGONPUNK<br><span class="noir-line">/////NOIR\\\\\</span>
+  <span id="live-badge">LIVE</span>
+  <br><span id="subtitle">AF64 Noosphere — Agents + Tasks + Projects</span>
+</div>
+<div id="legend">
+  <h4>Node Types</h4>
+  <div class="legend-item"><div class="legend-dot" style="background:#00e5ff"></div>Agent</div>
+  <div class="legend-item"><div class="legend-diamond" style="background:#ffc107"></div>Task</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#9c27b0; width:14px; height:14px;"></div>Project</div>
+  <h4 style="margin-top:10px">Task Status</h4>
+  <div class="legend-item"><div class="legend-diamond" style="background:#f44336"></div>Unassigned</div>
+  <div class="legend-item"><div class="legend-diamond" style="background:#ffc107"></div>Assigned</div>
+  <div class="legend-item"><div class="legend-diamond" style="background:#4caf50"></div>In Progress</div>
+  <h4 style="margin-top:10px">Forge Spectrum</h4>
+  <div style="display:flex; gap:2px; margin:4px 0 8px;">
+    <div style="width:18px;height:12px;background:#D4200C;border-radius:2px" title="Blood Ember"></div>
+    <div style="width:18px;height:12px;background:#E8600A;border-radius:2px" title="Forge Copper"></div>
+    <div style="width:18px;height:12px;background:#F5A623;border-radius:2px" title="Dragon Gold"></div>
+    <div style="width:18px;height:12px;background:#2ECC71;border-radius:2px" title="Toxic Jade"></div>
+    <div style="width:18px;height:12px;background:#2196F3;border-radius:2px" title="Arc Cobalt"></div>
+    <div style="width:18px;height:12px;background:#9B59B6;border-radius:2px" title="Void Amethyst"></div>
+    <div style="width:18px;height:12px;background:#1A1A2E;border:1px solid #D4200C;border-radius:2px" title="Obsidian"></div>
+  </div>
+  <div style="font-size:10px;color:#888;">Raw ore → Obsidian blade</div>
+  <h4 style="margin-top:10px">Edges</h4>
+  <div class="legend-item"><div class="legend-line" style="background:#ff5722"></div>Reports To</div>
+  <div class="legend-item"><div class="legend-line" style="background:#4caf50; border-style:dashed"></div>Mentor</div>
+
+  <div class="legend-item"><div class="legend-line" style="background:rgba(100,100,255,0.4)"></div>Collaborator</div>
+  <div class="legend-item"><div class="legend-line" style="background:#ffc107"></div>Task → Assignee</div>
+  <div class="legend-item"><div class="legend-line" style="background:#9c27b0; border-style:dashed"></div>Project → Owner</div>
+  <div class="legend-item"><div class="legend-line" style="background:#00E5FF; border-style:dashed"></div>Pipeline Flow</div>
+</div>
+<div id="dept-panel">
+  <h4>Departments</h4>
+  <div id="dept-legend"></div>
+</div>
+<div id="status-panel">
+  <div class="status-row"><span class="label">API:</span><span id="api-status" class="value">connecting...</span></div>
+  <div class="status-row"><span class="label">Agents:</span><span id="agent-count" class="value">—</span></div>
+  <div class="status-row"><span class="label">Tasks:</span><span id="task-count" class="value">—</span></div>
+  <div class="status-row"><span class="label">Projects:</span><span id="project-count" class="value">—</span></div>
+  <div class="status-row"><span class="label">Last update:</span><span id="last-update" class="value">—</span></div>
+</div>
+<div id="controls" style="display:none;">
+  <div class="row">
+    <label><input type="checkbox" id="showReports" checked> Reports To</label>
+    <label><input type="checkbox" id="showMentor" checked> Mentor</label>
+    <!-- Liaison removed — info flow via reports_to -->
+    <label><input type="checkbox" id="showCollab"> Collaborators</label>
+    <label><input type="checkbox" id="showEnergy" checked> Energy Rings</label>
+  </div>
+  <div class="row">
+    <label><input type="checkbox" id="showTasks" checked> Show Tasks</label>
+    <label><input type="checkbox" id="showProjects" checked> Show Projects</label>
+    <select id="taskFilter">
+      <option value="all" selected>All Tasks</option>
+      <option value="assigned">Assigned Only</option>
+      <option value="unassigned">Unassigned Only</option>
+      <option value="in-progress">In Progress</option>
+      <option value="pipeline">Pipeline Only</option>
+    </select>
+    <select id="taskLimit">
+      <option value="500" selected>500 tasks</option>
+      <option value="50">50 tasks</option>
+      <option value="100">100 tasks</option>
+      <option value="200">200 tasks</option>
+    </select>
+  </div>
+  <div class="row">
+    <button id="resetLayout">Reset Layout</button>
+    <button id="refreshData">Refresh</button>
+    <label><input type="checkbox" id="autoRefresh" checked> Auto-refresh (30s)</label>
+  </div>
+</div>
+<div id="tooltip"></div>
+<div id="modal-overlay" onclick="closeModal()"></div>
+<div id="edit-modal">
+  <h3 id="edit-title">Edit Agent</h3>
+  <label>Reports To (matrix reporting)</label>
+  <select id="edit-reports" multiple size="3" style="width:100%; padding:8px; background:#1a1a2e; border:1px solid #444; color:#fff; border-radius:4px;"></select>
+  <small style="color:#888; font-size:10px;">Ctrl+click to select multiple</small>
+  <label>Mentor</label>
+  <select id="edit-mentor"></select>
+  <label>Liaises With (cross-dept info flow)</label>
+  <select id="edit-liaison" multiple size="4" style="width:100%; padding:8px; background:#1a1a2e; border:1px solid #444; color:#fff; border-radius:4px;"></select>
+  <small style="color:#888; font-size:10px;">Ctrl+click to select multiple</small>
+  <div class="btn-row">
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    <button class="btn-save" onclick="saveRelationships()">Save</button>
+  </div>
+</div>
+<div id="requests-modal">
+  <h3 id="requests-title" style="color:#f44336;">Pending Requests</h3>
+  <div id="requests-list"></div>
+  <div style="margin-top:16px; text-align:right;">
+    <button onclick="closeModal()" style="padding:8px 16px; background:#444; color:#ccc; border:none; border-radius:4px; cursor:pointer;">Close</button>
+  </div>
+</div>
+<div id="task-modal">
+  <h3 id="task-modal-title" style="color:#ffc107;">Task Details</h3>
+  <div id="task-modal-text" style="font-size:14px; color:#fff; margin:12px 0; line-height:1.4;"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; font-size:12px;">
+    <div><span style="color:#888;">Status:</span> <span id="task-modal-status"></span></div>
+    <div><span style="color:#888;">Priority:</span> <span id="task-modal-priority"></span></div>
+    <div><span style="color:#888;">Assignee:</span> <span id="task-modal-assignee"></span></div>
+    <div><span style="color:#888;">Due:</span> <span id="task-modal-due"></span></div>
+    <div><span style="color:#888;">Department:</span> <span id="task-modal-dept"></span></div>
+    <div><span style="color:#888;">Stage:</span> <span id="task-modal-stage"></span></div>
+    <div><span style="color:#888;">Goal:</span> <span id="task-modal-goal"></span></div>
+  </div>
+  <div id="task-modal-stage-notes" style="font-size:11px; color:#aaa; margin:8px 0; display:none; border-top:1px solid #333; padding-top:8px;"></div>
+  <hr style="border:none; border-top:1px solid #333; margin:16px 0;">
+  <label style="color:#888; font-size:11px;">Assign To</label>
+  <select id="task-assign-select" style="width:100%; padding:8px; background:#1a1a2e; border:1px solid #444; color:#fff; border-radius:4px; margin-bottom:12px;"></select>
+  <label style="color:#888; font-size:11px;">Link to Project</label>
+  <select id="task-project-select" style="width:100%; padding:8px; background:#1a1a2e; border:1px solid #444; color:#fff; border-radius:4px; margin-bottom:12px;"></select>
+  <label style="color:#888; font-size:11px;">Add Comment</label>
+  <textarea id="task-comment" rows="2" style="width:100%; padding:8px; background:#1a1a2e; border:1px solid #444; color:#fff; border-radius:4px; resize:vertical; margin-bottom:12px;" placeholder="Optional comment..."></textarea>
+  <div class="btn-row" style="flex-wrap:wrap; gap:8px;">
+    <button onclick="taskAction('complete')" style="padding:8px 12px; background:#4caf50; color:#fff; border:none; border-radius:4px; cursor:pointer;">✓ Complete</button>
+    <button onclick="taskAction('in-progress')" style="padding:8px 12px; background:#ff9800; color:#fff; border:none; border-radius:4px; cursor:pointer;">⏳ In Progress</button>
+    <button onclick="taskAction('assign')" style="padding:8px 12px; background:#2196f3; color:#fff; border:none; border-radius:4px; cursor:pointer;">👤 Assign</button>
+    <button onclick="taskAction('link-project')" style="padding:8px 12px; background:#9c27b0; color:#fff; border:none; border-radius:4px; cursor:pointer;">📁 Link Project</button>
+    <button onclick="taskAction('delete')" style="padding:8px 12px; background:#f44336; color:#fff; border:none; border-radius:4px; cursor:pointer;">🗑 Delete</button>
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+<div id="project-modal">
+  <h3 id="project-title" style="color:#9c27b0;">Project Details</h3>
+  <div id="project-status-badge" style="display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; margin-bottom:12px;"></div>
+  <div style="margin:12px 0;">
+    <label style="color:#888; font-size:11px;">Owner</label>
+    <div id="project-owner" style="font-size:14px; color:#fff;"></div>
+  </div>
+  <div style="margin:12px 0;">
+    <label style="color:#888; font-size:11px;">Description</label>
+    <div id="project-description" style="font-size:13px; color:#ccc; line-height:1.5; max-height:200px; overflow-y:auto;"></div>
+  </div>
+  <div style="margin:12px 0;">
+    <label style="color:#888; font-size:11px;">Goals</label>
+    <div id="project-goals" style="font-size:12px; color:#aaa; white-space:pre-wrap;"></div>
+  </div>
+  <div style="margin:12px 0;">
+    <label style="color:#888; font-size:11px;">Blockers</label>
+    <div id="project-blockers" style="font-size:12px; color:#f44336;"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-cancel" onclick="closeModal()">Close</button>
+    <button class="btn-save" onclick="editProject()">Edit Project</button>
+  </div>
+</div>
+<canvas id="canvas"></canvas>
+
+<script>
+const API_BASE = 'https://wiki.eckenrodemuziekopname.com';
+const API_KEY = 'dpn-nova-2026';
+const POLL_INTERVAL = 10000;
+const STORAGE_KEY = 'em-org-graph-positions-v2';
+
+const DEPT_COLORS = {};
+const COLOR_PALETTE = ['#00e5ff', '#ff9800', '#e91e63', '#9c27b0', '#4caf50', '#f44336', '#2196f3', '#ffc107', '#795548', '#607d8b'];
+
+// Department heads for task assignment
+const DEPT_HEADS = {};
+
+let agentNodes = [];
+let taskNodes = [];
+let projectNodes = [];
+let edges = [];
+let images = {};
+let canvas, ctx, W, H, cx, cy;
+let hoveredNode = null;
+let dragNode = null;
+let zoom = 1, panX = 0, panY = 0;
+let animTime = 0;
+let pendingRequests = {}; // agent_id -> count
+let currentEditNode = null;
+
+async function fetchPendingRequests() {
+  try {
+    const response = await fetch(`${API_BASE}/api/agents/requests/pending`, {
+      headers: { 'X-API-Key': API_KEY }
+    });
+    if (response.ok) {
+      pendingRequests = await response.json();
+    }
+  } catch (e) {
+    console.log('Could not fetch pending requests:', e);
+  }
+}
+
+function loadSavedPositions() {
+  let serverPos = {};
+  let localPos = {};
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) localPos = JSON.parse(saved);
+  } catch (e) { /* ignore */ }
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/em-org-graph-positions.json?' + Date.now(), false);
+    xhr.send();
+    if (xhr.status === 200) serverPos = JSON.parse(xhr.responseText);
+  } catch (e) { /* ignore */ }
+  // Server wins if it has data; otherwise keep localStorage
+  const hasServer = Object.keys(serverPos).length > 0;
+  const hasLocal = Object.keys(localPos).length > 0;
+  if (hasServer) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(serverPos));
+    return serverPos;
+  }
+  return localPos;
+}
+
+let _saveTimer = null;
+function savePositions() {
+  try {
+    const positions = {};
+    // Only save agent + project positions. Tasks always orbit their agent.
+    [...agentNodes, ...projectNodes].forEach(n => {
+      positions[n.uid] = { x: n.x, y: n.y };
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
+    // Debounce server save to avoid hammering on every drag pixel
+    clearTimeout(_saveTimer);
+    _saveTimer = setTimeout(() => {
+      fetch('/api/graph-positions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(positions)
+      }).catch(() => {});
+    }, 1000);
+  } catch (e) { console.warn('Save failed:', e); }
+}
+
+function applySavedPositions(savedPositions, nodes) {
+  nodes.forEach(n => {
+    if (savedPositions[n.uid]) {
+      n.x = savedPositions[n.uid].x;
+      n.y = savedPositions[n.uid].y;
+    }
+  });
+}
+
+function assignDeptColor(dept) {
+  if (!dept) return '#666';
+  if (!DEPT_COLORS[dept]) {
+    const idx = Object.keys(DEPT_COLORS).length % COLOR_PALETTE.length;
+    DEPT_COLORS[dept] = COLOR_PALETTE[idx];
+  }
+  return DEPT_COLORS[dept];
+}
+
+function buildDeptLegend() {
+  const container = document.getElementById('dept-legend');
+  container.innerHTML = '';
+  const depts = [...new Set(agentNodes.map(n => n.department))].filter(d => d).sort();
+  depts.forEach(dept => {
+    const color = assignDeptColor(dept);
+    container.innerHTML += `<div class="legend-item"><div class="dept-circle" style="background:${color}"></div>${dept}</div>`;
+  });
+}
+
+async function fetchAgents() {
+  try {
+    const response = await fetch(`${API_BASE}/api/agents`, { headers: { 'X-API-Key': API_KEY } });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const agents = await response.json();
+    
+    document.getElementById('api-status').textContent = 'connected';
+    document.getElementById('api-status').className = 'value ok';
+    document.getElementById('agent-count').textContent = agents.length;
+    document.getElementById('live-badge').classList.remove('disconnected');
+    document.getElementById('live-badge').textContent = 'LIVE';
+    
+    // Fetch pending requests
+    await fetchPendingRequests();
+    
+    // Build department heads map
+    agents.forEach(a => {
+      if (a.role && (a.role.includes('Chief') || a.role.includes('Head') || a.role.includes('Director') || a.role.includes('Lead'))) {
+        if (a.department) DEPT_HEADS[a.department.toLowerCase()] = a.id;
+      }
+    });
+    
+    return agents;
+  } catch (err) {
+    document.getElementById('api-status').textContent = err.message;
+    document.getElementById('api-status').className = 'value error';
+    document.getElementById('live-badge').classList.add('disconnected');
+    document.getElementById('live-badge').textContent = 'OFFLINE';
+    return null;
+  }
+}
+
+async function fetchTasks() {
+  const filter = document.getElementById('taskFilter').value;
+  const limit = document.getElementById('taskLimit').value;
+  let url = `${API_BASE}/api/tasks?limit=${limit}`;
+  
+  // The API returns all active tasks, we filter client-side
+  try {
+    const response = await fetch(url, { headers: { 'X-API-Key': API_KEY } });
+    if (!response.ok) return [];
+    let tasks = await response.json();
+    // Handle both {tasks: [...]} and [...] response formats
+    if (tasks.tasks) tasks = tasks.tasks;
+    
+    // Filter out deleted, done, completed, duplicate tasks
+    const hiddenStatuses = ['deleted', 'done', 'completed', 'duplicate'];
+    tasks = tasks.filter(t => !hiddenStatuses.includes(t.status));
+    
+    // Client-side filtering
+    if (filter === 'assigned') {
+      tasks = tasks.filter(t => t.assignee);
+    } else if (filter === 'unassigned') {
+      tasks = tasks.filter(t => !t.assignee && !t.department);
+    } else if (filter === 'in-progress') {
+      tasks = tasks.filter(t => t.status === 'in-progress');
+    } else if (filter === 'pipeline') {
+      tasks = tasks.filter(t => t.stage && t.stage !== 'open');
+    }
+    
+    document.getElementById('task-count').textContent = tasks.length;
+    return tasks;
+  } catch (e) {
+    console.error('Task fetch failed:', e);
+    return [];
+  }
+}
+
+async function fetchProjects() {
+  try {
+    const response = await fetch(`${API_BASE}/api/projects`, { headers: { 'X-API-Key': API_KEY } });
+    if (!response.ok) return [];
+    const data = await response.json();
+    // Handle both {projects: [...]} and [...] formats
+    const projects = data.projects || data || [];
+    document.getElementById('project-count').textContent = projects.length;
+    return projects;
+  } catch (e) {
+    console.error('Project fetch failed:', e);
+    return [];
+  }
+}
+
+function buildGraph(agents, tasks, projects) {
+  // Capture current in-memory positions before rebuilding nodes
+  const currentPositions = {};
+  [...agentNodes, ...projectNodes].forEach(n => {
+    if (n.uid && n.x !== undefined) currentPositions[n.uid] = { x: n.x, y: n.y };
+  });
+  // Merge: current positions override saved (most recent drag wins)
+  const savedPositions = { ...loadSavedPositions(), ...currentPositions };
+  const agentMap = {};
+  
+  // Build agent nodes
+  agentNodes = agents.map(a => {
+    assignDeptColor(a.department);
+    const node = {
+      uid: 'agent:' + a.id,
+      type: 'agent',
+      id: a.id,
+      name: a.full_name,
+      role: a.role,
+      department: a.department,
+      tier: a.agent_tier,
+      reports_to: a.reports_to,
+      mentor: a.mentor,
+      collaborators: a.collaborators || [],
+      liaises_with: a.liaises_with || [],
+      avatar: a.avatar,
+      energy: a.energy,
+      x: 0, y: 0,
+      radius: a.agent_tier === 'executive' ? 28 : 20
+    };
+    agentMap[a.id] = node;
+    return node;
+  });
+  
+  // Build project nodes from real projects table
+  projectNodes = (projects || []).map((p, i) => ({
+    uid: 'project:' + p.slug,
+    type: 'project',
+    id: p.slug,
+    dbId: p.id,
+    name: p.name,
+    description: p.description || '',
+    owner: p.owner || '',
+    status: p.status || 'active',
+    goals: p.goals || '',
+    blockers: p.blockers || '',
+    currentContext: p.current_context || '',
+    x: 0, y: 0,
+    radius: 18
+  }));
+  const projectMap = {};
+  projectNodes.forEach(p => projectMap[p.id] = p);
+  
+  // Build task nodes
+  taskNodes = tasks.slice(0, parseInt(document.getElementById('taskLimit').value)).map((t, i) => {
+    let targetAgent = null;
+    
+    // Find who this task connects to
+    if (t.assignee) {
+      // Try to find by id or full_name
+      targetAgent = agentMap[t.assignee] || agentMap[t.assignee.toLowerCase()] ||
+        agentNodes.find(a => a.name && a.name.toLowerCase() === t.assignee.toLowerCase());
+    } else if (t.department) {
+      // Connect to department head
+      const headId = DEPT_HEADS[t.department.toLowerCase()];
+      if (headId) targetAgent = agentMap[headId];
+    }
+    
+    return {
+      uid: 'task:' + t.id,
+      type: 'task',
+      id: t.id,
+      name: t.text || t.title || '(no title)',
+      status: t.status,
+      assignee: t.assignee,
+      department: t.department,
+      priority: t.priority,
+      dueDate: t.due_date,
+      projectId: t.project_id,
+      stage: t.stage || null,
+      goalId: t.goal_id || null,
+      pipelineOrder: t.pipeline_order || null,
+      stageNotes: t.stage_notes || null,
+      targetAgentId: targetAgent?.id,
+      x: 0, y: 0,
+      radius: t.stage ? 8 : 6  // Pipeline tasks slightly larger
+    };
+  });
+  
+  // Build edges
+  edges = [];
+  
+  // Agent edges
+  agentNodes.forEach(n => {
+    // reports_to can be array or string (for backwards compat)
+    const reportsArr = Array.isArray(n.reports_to) ? n.reports_to : (n.reports_to ? [n.reports_to] : []);
+    reportsArr.forEach(rid => {
+      if (agentMap[rid]) {
+        edges.push({ source: n.uid, target: 'agent:' + rid, type: 'reports_to' });
+      }
+    });
+    if (n.mentor && agentMap[n.mentor]) {
+      edges.push({ source: n.uid, target: 'agent:' + n.mentor, type: 'mentor' });
+    }
+    // Collaborator edges (only add one direction to avoid duplicates)
+    (n.collaborators || []).forEach(cid => {
+      if (agentMap[cid] && n.id < cid) {
+        edges.push({ source: n.uid, target: 'agent:' + cid, type: 'collaborator' });
+      }
+    });
+    // Liaison edges removed — info flow now routes via reports_to
+  });
+  
+  // Task edges
+  taskNodes.forEach(t => {
+    if (t.targetAgentId) {
+      edges.push({ source: t.uid, target: 'agent:' + t.targetAgentId, type: 'task_assign' });
+    }
+    // Task→Project edge
+    if (t.projectId) {
+      const proj = projectNodes.find(p => p.dbId === t.projectId);
+      if (proj) {
+        edges.push({ source: t.uid, target: proj.uid, type: 'task_project' });
+      }
+    }
+  });
+  
+  // Pipeline flow edges (spec→design→build→test→deploy within same goal)
+  const PIPELINE_ORDER = { goal: 0, spec: 1, 'infra-review': 2, design: 3, build: 4, 'security-review': 5, test: 6, deploy: 7, done: 8 };
+  const goalGroups = {};
+  taskNodes.forEach(t => {
+    if (t.goalId && t.stage) {
+      if (!goalGroups[t.goalId]) goalGroups[t.goalId] = [];
+      goalGroups[t.goalId].push(t);
+    }
+  });
+  Object.values(goalGroups).forEach(group => {
+    group.sort((a, b) => (PIPELINE_ORDER[a.stage] || 0) - (PIPELINE_ORDER[b.stage] || 0));
+    for (let i = 0; i < group.length - 1; i++) {
+      edges.push({ source: group[i].uid, target: group[i + 1].uid, type: 'pipeline_flow' });
+    }
+  });
+  
+  // Project→Owner edges
+  projectNodes.forEach(p => {
+    if (p.owner) {
+      // Try to match owner to agent id or name
+      const ownerLower = p.owner.toLowerCase().replace(/\s+/g, '');
+      let ownerAgent = agentMap[p.owner] || agentMap[ownerLower];
+      if (!ownerAgent) {
+        // Try matching full name
+        ownerAgent = agentNodes.find(a => a.name && a.name.toLowerCase().replace(/\s+/g, '') === ownerLower);
+      }
+      if (ownerAgent) {
+        edges.push({ source: p.uid, target: ownerAgent.uid, type: 'project_owner' });
+      }
+    }
+  });
+  
+  // Layout: use saved/current positions if available, else calculate defaults
+  const hasSavedPositions = Object.keys(savedPositions).length > 0;
+  if (!hasSavedPositions) {
+    layoutAll();
+  } else {
+    // Still need layoutAll for any NEW nodes not in saved positions
+    layoutAll();
+    applySavedPositions(savedPositions, [...agentNodes, ...projectNodes]);
+  }
+  
+  // Re-position tasks relative to agents' ACTUAL positions
+  repositionTasksToAgents();
+  
+  buildDeptLegend();
+  loadImages();
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+
+  // Auto-fit on first load
+  if (!window._hasFit) {
+    window._hasFit = true;
+    fitToView();
+  }
+}
+
+function fitToView() {
+  const allNodes = [...agentNodes, ...taskNodes, ...projectNodes];
+  if (allNodes.length === 0) return;
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  allNodes.forEach(n => {
+    if (n.x < minX) minX = n.x;
+    if (n.x > maxX) maxX = n.x;
+    if (n.y < minY) minY = n.y;
+    if (n.y > maxY) maxY = n.y;
+  });
+  const padding = 80;
+  const graphW = (maxX - minX) + padding * 2;
+  const graphH = (maxY - minY) + padding * 2;
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+  zoom = Math.min(W / graphW, H / graphH, 1.5);
+  zoom = Math.max(0.2, Math.min(zoom, 1.5));
+  panX = -centerX * zoom;
+  panY = -centerY * zoom;
+}
+
+function layoutAll() {
+  // Agents in center rings
+  // CEO has no reports_to (empty array or null/undefined)
+  const hasNoReports = n => !n.reports_to || (Array.isArray(n.reports_to) && n.reports_to.length === 0);
+  const ceo = agentNodes.find(n => hasNoReports(n) && n.tier === 'executive');
+  const executives = agentNodes.filter(n => n.tier === 'executive' && n.id !== ceo?.id);
+  const staff = agentNodes.filter(n => n.tier !== 'executive');
+  
+  if (ceo) { ceo.x = 0; ceo.y = 0; ceo.radius = 32; }
+  
+  const execRadius = 160;
+  executives.forEach((n, i) => {
+    const angle = (i / executives.length) * Math.PI * 2 - Math.PI / 2;
+    n.x = Math.cos(angle) * execRadius;
+    n.y = Math.sin(angle) * execRadius;
+    n.angle = angle;
+  });
+  
+  const staffByManager = {};
+  staff.forEach(s => {
+    // Use first manager for layout grouping (matrix reporting)
+    const reportsArr = Array.isArray(s.reports_to) ? s.reports_to : (s.reports_to ? [s.reports_to] : []);
+    const mgr = reportsArr[0] || 'unassigned';
+    if (!staffByManager[mgr]) staffByManager[mgr] = [];
+    staffByManager[mgr].push(s);
+  });
+  
+  const outerRadius = 350;
+  Object.entries(staffByManager).forEach(([mgrId, members]) => {
+    const manager = agentNodes.find(n => n.id === mgrId);
+    const baseAngle = manager?.angle || 0;
+    const spread = Math.min(0.8, members.length * 0.1);
+    members.forEach((n, i) => {
+      const offset = (i - (members.length - 1) / 2) * (spread / Math.max(members.length - 1, 1));
+      n.x = Math.cos(baseAngle + offset) * (outerRadius + (i % 2) * 40);
+      n.y = Math.sin(baseAngle + offset) * (outerRadius + (i % 2) * 40);
+    });
+  });
+  
+  // Projects in outer ring
+  const projectRadius = 550;
+  projectNodes.forEach((p, i) => {
+    const angle = (i / projectNodes.length) * Math.PI * 2;
+    p.x = Math.cos(angle) * projectRadius;
+    p.y = Math.sin(angle) * projectRadius;
+  });
+  
+  // Initial task positioning (will be re-run after saved positions applied)
+  repositionTasksToAgents();
+}
+
+function repositionTasksToAgents() {
+  // Position tasks in halo around their assigned agent's CURRENT position
+  const nodeMap = {};
+  [...agentNodes, ...projectNodes].forEach(n => nodeMap[n.uid] = n);
+  
+  // Group tasks by target agent
+  const tasksByTarget = {};
+  taskNodes.forEach(t => {
+    const key = t.targetAgentId || '_unassigned';
+    if (!tasksByTarget[key]) tasksByTarget[key] = [];
+    tasksByTarget[key].push(t);
+  });
+  
+  Object.entries(tasksByTarget).forEach(([targetId, tasks]) => {
+    if (targetId === '_unassigned') {
+      // Unassigned tasks: outer cloud
+      tasks.forEach((t, i) => {
+        const angle = (i / tasks.length) * Math.PI * 2;
+        const dist = 650 + (i % 3) * 30;
+        t.x = Math.cos(angle) * dist;
+        t.y = Math.sin(angle) * dist;
+      });
+    } else {
+      const target = nodeMap['agent:' + targetId];
+      if (!target) return;
+      
+      // Distribute tasks in tight concentric rings hugging the agent
+      const baseRadius = (target.radius || 20) + 8;
+      tasks.forEach((t, i) => {
+        const ring = Math.floor(i / 6);
+        const posInRing = i % 6;
+        const tasksInThisRing = Math.min(6, tasks.length - ring * 6);
+        const angle = (posInRing / tasksInThisRing) * Math.PI * 2 + ring * 0.4;
+        const dist = baseRadius + ring * 8;
+        t.x = target.x + Math.cos(angle) * dist;
+        t.y = target.y + Math.sin(angle) * dist;
+      });
+    }
+  });
+}
+
+function loadImages() {
+  agentNodes.forEach(n => {
+    if (!n.avatar) return;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { images[n.uid] = img; };
+    img.src = `/em-images/${n.avatar}`;
+  });
+}
+
+function getEnergyColor(energy) {
+  if (energy >= 70) return '#4caf50';
+  if (energy >= 40) return '#ff9800';
+  return '#f44336';
+}
+
+// DPS Forge Spectrum — ROY G BIV × DragonPunk Solar
+// Position-based: hot ember at inception, obsidian at completion
+const FORGE_SPECTRUM = ['#D4200C','#E8600A','#F5A623','#2ECC71','#2196F3','#9B59B6','#1A1A2E'];
+
+function forgeColor(position, totalStages) {
+  // Map position (0-based) to spectrum index
+  if (totalStages <= 1) return FORGE_SPECTRUM[0];
+  const idx = (position / (totalStages - 1)) * (FORGE_SPECTRUM.length - 1);
+  return FORGE_SPECTRUM[Math.round(idx)];
+}
+
+// Engineering pipeline: 7 stages = perfect 1:1 mapping
+const STAGE_COLORS = {
+  goal:              FORGE_SPECTRUM[0], // Blood Ember
+  spec:              FORGE_SPECTRUM[1], // Forge Copper
+  'infra-review':    FORGE_SPECTRUM[2], // Dragon Gold
+  design:            FORGE_SPECTRUM[3], // Toxic Jade
+  build:             FORGE_SPECTRUM[4], // Arc Cobalt
+  'security-review': FORGE_SPECTRUM[5], // Void Amethyst
+  test:              forgeColor(5, 8),  // Between Amethyst and Obsidian
+  deploy:            forgeColor(6, 8),  // Near Obsidian
+  done:              FORGE_SPECTRUM[6]  // Obsidian
+};
+
+function getTaskColor(task) {
+  // Pipeline tasks get stage-specific colors
+  if (task.stage && STAGE_COLORS[task.stage]) return STAGE_COLORS[task.stage];
+  // Fallback to status-based coloring
+  if (task.status === 'done' || task.status === 'completed') return '#666';
+  if (!task.assignee && !task.department) return '#f44336';
+  if (task.status === 'in-progress') return '#4caf50';
+  return '#ffc107';
+}
+
+function draw() {
+  animTime += 0.016;
+  
+  ctx.save();
+  ctx.clearRect(0, 0, W, H);
+  ctx.translate(cx + panX, cy + panY);
+  ctx.scale(zoom, zoom);
+  
+  // Guide rings
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  [160, 350, 550, 700].forEach(r => {
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  
+  const showReports = document.getElementById('showReports').checked;
+  const showMentor = document.getElementById('showMentor').checked;
+  const showLiaison = false; // removed
+  const showCollab = document.getElementById('showCollab').checked;
+  const showTasks = document.getElementById('showTasks').checked;
+  const showProjects = document.getElementById('showProjects').checked;
+  const showEnergy = document.getElementById('showEnergy').checked;
+  
+  const nodeMap = {};
+  [...agentNodes, ...taskNodes, ...projectNodes].forEach(n => nodeMap[n.uid] = n);
+  
+  // Draw edges
+  edges.forEach(e => {
+    if (e.type === 'reports_to' && !showReports) return;
+    if (e.type === 'mentor' && !showMentor) return;
+    if (e.type === 'liaison' && !showLiaison) return;
+    if (e.type === 'collaborator' && !showCollab) return;
+    if ((e.type === 'task_assign' || e.type === 'task_project' || e.type === 'pipeline_flow') && !showTasks) return;
+    if (e.type === 'project_owner' && !showProjects) return;
+    
+    const s = nodeMap[e.source];
+    const t = nodeMap[e.target];
+    if (!s || !t) return;
+    
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(t.x, t.y);
+    
+    if (e.type === 'mentor') {
+      ctx.strokeStyle = '#4caf50';
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.4;
+      ctx.setLineDash([4, 4]);
+    } else if (e.type === 'liaison') {
+      ctx.strokeStyle = '#e91e63';
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.6;
+      ctx.setLineDash([8, 4]);
+    } else if (e.type === 'collaborator') {
+      ctx.strokeStyle = 'rgba(100,100,255,0.4)';
+      ctx.lineWidth = 0.5;
+      ctx.globalAlpha = 0.3;
+    } else if (e.type === 'reports_to') {
+      ctx.strokeStyle = '#ff5722';
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.4;
+    } else if (e.type === 'task_assign') {
+      ctx.strokeStyle = '#ffc107';
+      ctx.lineWidth = 0.5;
+      ctx.globalAlpha = 0.3;
+    } else if (e.type === 'project_owner') {
+      ctx.strokeStyle = '#9c27b0';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.6;
+      ctx.setLineDash([6, 3]);
+    } else if (e.type === 'pipeline_flow') {
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.8;
+      ctx.setLineDash([6, 3]);
+      // Draw arrowhead at target
+      const angle = Math.atan2(t.y - s.y, t.x - s.x);
+      const arrLen = 8;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(t.x - arrLen * Math.cos(angle - 0.3), t.y - arrLen * Math.sin(angle - 0.3));
+      ctx.lineTo(t.x, t.y);
+      ctx.lineTo(t.x - arrLen * Math.cos(angle + 0.3), t.y - arrLen * Math.sin(angle + 0.3));
+      ctx.fillStyle = '#00e5ff';
+      ctx.fill();
+    } else if (e.type === 'task_project') {
+      ctx.strokeStyle = '#9c27b0';
+      ctx.lineWidth = 0.8;
+      ctx.globalAlpha = 0.4;
+    }
+    
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  });
+  
+  // Draw project nodes
+  if (showProjects) {
+    projectNodes.forEach(n => {
+      const isHovered = hoveredNode && hoveredNode.uid === n.uid;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+      ctx.fillStyle = isHovered ? '#ce93d8' : '#9c27b0';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = isHovered ? 2 : 1;
+      ctx.stroke();
+    });
+  }
+  
+  // Draw task nodes (diamonds)
+  if (showTasks) {
+    taskNodes.forEach(n => {
+      const isHovered = hoveredNode && hoveredNode.uid === n.uid;
+      const r = n.radius * (isHovered ? 1.5 : 1);
+      const color = getTaskColor(n);
+      
+      ctx.save();
+      ctx.translate(n.x, n.y);
+      
+      // DPS glow for in-progress pipeline tasks
+      if (n.stage && n.status === 'in-progress') {
+        ctx.beginPath();
+        ctx.rotate(Math.PI / 4);
+        ctx.rect(-r*2, -r*2, r*4, r*4);
+        ctx.rotate(-Math.PI / 4);
+        const glow = ctx.createRadialGradient(0, 0, r, 0, 0, r*3);
+        glow.addColorStop(0, color + '80');
+        glow.addColorStop(1, color + '00');
+        ctx.fillStyle = glow;
+        ctx.fill();
+        ctx.setTransform(ctx.getTransform()); // reset rotation
+      }
+      
+      ctx.rotate(Math.PI / 4);
+      ctx.beginPath();
+      ctx.rect(-r, -r, r * 2, r * 2);
+      ctx.fillStyle = color;
+      // Done = 40% opacity (forged and cooling), others normal
+      ctx.globalAlpha = n.stage === 'done' ? 0.4 : (isHovered ? 1 : 0.7);
+      ctx.fill();
+      // Obsidian done-stage gets ember border
+      ctx.strokeStyle = n.stage === 'done' ? '#D4200C' : '#fff';
+      ctx.lineWidth = isHovered ? 1.5 : (n.stage === 'done' ? 1 : 0.5);
+      ctx.stroke();
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    });
+  }
+  
+  // Draw agent nodes
+  agentNodes.forEach(n => {
+    const r = n.radius || 20;
+    const isHovered = hoveredNode && hoveredNode.uid === n.uid;
+    
+    if (showEnergy && n.energy !== undefined) {
+      const ringRadius = r + 6;
+      const energyAngle = (n.energy / 100) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, ringRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, ringRadius, -Math.PI / 2, -Math.PI / 2 + energyAngle);
+      ctx.strokeStyle = getEnergyColor(n.energy);
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.lineCap = 'butt';
+    }
+    
+    const deptColor = DEPT_COLORS[n.department] || '#666';
+    
+    if (isHovered || n.tier === 'executive') {
+      ctx.shadowColor = deptColor;
+      ctx.shadowBlur = isHovered ? 25 : 15;
+    }
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.strokeStyle = deptColor;
+    ctx.lineWidth = isHovered ? 3 : 2;
+    ctx.stroke();
+    ctx.clip();
+    
+    if (images[n.uid]) {
+      ctx.drawImage(images[n.uid], n.x - r, n.y - r, r * 2, r * 2);
+    } else {
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+      ctx.fillStyle = deptColor;
+      ctx.font = `${r * 0.6}px system-ui`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const initials = (n.name || '??').split(' ').map(w => w[0]).join('').slice(0, 2);
+      ctx.fillText(initials, n.x, n.y);
+    }
+    ctx.restore();
+    ctx.shadowBlur = 0;
+    
+    // Draw notification pip if agent has pending requests
+    const reqCount = pendingRequests[n.id] || 0;
+    if (reqCount > 0) {
+      const pipX = n.x + r * 0.7;
+      const pipY = n.y - r * 0.7;
+      const pipR = Math.max(6, r * 0.3);
+      
+      ctx.beginPath();
+      ctx.arc(pipX, pipY, pipR, 0, Math.PI * 2);
+      ctx.fillStyle = '#f44336';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      if (reqCount > 1) {
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${pipR}px system-ui`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(reqCount > 9 ? '9+' : reqCount, pipX, pipY);
+      }
+    }
+  });
+  
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+
+function screenToWorld(sx, sy) {
+  return { x: (sx - cx - panX) / zoom, y: (sy - cy - panY) / zoom };
+}
+
+function findNode(wx, wy) {
+  const showTasks = document.getElementById('showTasks').checked;
+  const showProjects = document.getElementById('showProjects').checked;
+  
+  const all = [...agentNodes];
+  if (showTasks) all.push(...taskNodes);
+  if (showProjects) all.push(...projectNodes);
+  
+  for (let i = all.length - 1; i >= 0; i--) {
+    const n = all[i];
+    const dx = wx - n.x, dy = wy - n.y;
+    const r = (n.radius || 6) * (n.type === 'task' ? 1.5 : 1);
+    if (dx * dx + dy * dy <= r * r) return n;
+  }
+  return null;
+}
+
+function formatTooltip(node) {
+  if (node.type === 'task') {
+    const stageHtml = node.stage ? `<span class="stat-label">Stage:</span><span class="stat-value" style="color:${STAGE_COLORS[node.stage] || '#fff'}">${node.stage.toUpperCase()}</span>` : '';
+    const goalHtml = node.goalId ? `<span class="stat-label">Goal:</span><span class="stat-value">#${node.goalId}</span>` : '';
+    const notesHtml = node.stageNotes ? `<div style="margin-top:8px; font-size:11px; color:#aaa; border-top:1px solid #333; padding-top:6px;">${node.stageNotes.slice(0, 200)}${node.stageNotes.length > 200 ? '...' : ''}</div>` : '';
+    return `<h3>${node.name.slice(0, 80)}${node.name.length > 80 ? '...' : ''}</h3>
+      <div class="role">Task #${node.id}</div>
+      <div class="stats">
+        <span class="stat-label">Status:</span><span class="stat-value">${node.status || 'pending'}</span>
+        <span class="stat-label">Assignee:</span><span class="stat-value">${node.assignee || '—'}</span>
+        ${stageHtml}
+        ${goalHtml}
+        <span class="stat-label">Department:</span><span class="stat-value">${node.department || '—'}</span>
+        <span class="stat-label">Priority:</span><span class="stat-value">${node.priority || 'normal'}</span>
+      </div>${notesHtml}`;
+  } else if (node.type === 'project') {
+    const desc = node.description ? node.description.slice(0, 150) + (node.description.length > 150 ? '...' : '') : '—';
+    return `<h3>${node.name}</h3>
+      <div class="role">Project (${node.status || 'active'})</div>
+      <div class="stats">
+        <span class="stat-label">Owner:</span><span class="stat-value">${node.owner || '—'}</span>
+        <span class="stat-label">Slug:</span><span class="stat-value">${node.id}</span>
+      </div>
+      <div style="margin-top:8px; font-size:11px; color:#aaa;">${desc}</div>`;
+  } else {
+    const energyColor = getEnergyColor(node.energy || 100);
+    return `<h3>${node.name}</h3>
+      <div class="role">${node.role || 'No role'}</div>
+      <div class="dept">${node.department} • ${node.tier}</div>
+      <div class="energy-bar">
+        <div class="energy-fill" style="width: ${node.energy || 100}%; background: ${energyColor}"></div>
+      </div>
+      <div class="stats">
+        <span class="stat-label">Energy:</span><span class="stat-value">${(node.energy || 100).toFixed(0)}%</span>
+        <span class="stat-label">Reports to:</span><span class="stat-value">${Array.isArray(node.reports_to) ? (node.reports_to.length ? node.reports_to.join(', ') : '—') : (node.reports_to || '—')}</span>
+      </div>`;
+  }
+}
+
+async function init() {
+  canvas = document.getElementById('canvas');
+  ctx = canvas.getContext('2d');
+  
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  
+  // Initial load
+  const agents = await fetchAgents();
+  const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+  const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+  if (agents) buildGraph(agents, tasks, projects);
+  
+  requestAnimationFrame(draw);
+  
+  // Mouse handlers
+  const tooltip = document.getElementById('tooltip');
+  
+  canvas.addEventListener('mousemove', e => {
+    const w = screenToWorld(e.clientX, e.clientY);
+    if (dragNode) {
+      dragNode.x = w.x;
+      dragNode.y = w.y;
+      return;
+    }
+    const node = findNode(w.x, w.y);
+    hoveredNode = node;
+    canvas.style.cursor = node ? 'pointer' : 'grab';
+    
+    if (node) {
+      tooltip.innerHTML = formatTooltip(node);
+      tooltip.className = node.type || '';
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 16) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+    } else {
+      tooltip.style.display = 'none';
+    }
+  });
+  
+  canvas.addEventListener('mousedown', e => {
+    const w = screenToWorld(e.clientX, e.clientY);
+    const node = findNode(w.x, w.y);
+    if (node) {
+      dragNode = node;
+      canvas.style.cursor = 'grabbing';
+    }
+  });
+  
+  canvas.addEventListener('mouseup', () => {
+    if (dragNode) savePositions();
+    dragNode = null;
+  });
+  
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoom *= e.deltaY > 0 ? 0.9 : 1.1;
+    zoom = Math.max(0.2, Math.min(4, zoom));
+  }, { passive: false });
+  
+  // Pan
+  let panning = false, lastPanX, lastPanY;
+  canvas.addEventListener('mousedown', e => {
+    const w = screenToWorld(e.clientX, e.clientY);
+    if (!findNode(w.x, w.y)) {
+      panning = true;
+      lastPanX = e.clientX;
+      lastPanY = e.clientY;
+    }
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (panning && !dragNode) {
+      panX += e.clientX - lastPanX;
+      panY += e.clientY - lastPanY;
+      lastPanX = e.clientX;
+      lastPanY = e.clientY;
+    }
+  });
+  canvas.addEventListener('mouseup', () => { panning = false; });
+  
+  // Controls
+  document.getElementById('resetLayout').addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    layoutAll();
+    savePositions();
+  });
+  
+  document.getElementById('refreshData').addEventListener('click', async () => {
+    const agents = await fetchAgents();
+    const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+    const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+    if (agents) buildGraph(agents, tasks, projects);
+  });
+  
+  // Reload when toggles change
+  ['showTasks', 'showProjects', 'taskFilter', 'taskLimit'].forEach(id => {
+    document.getElementById(id).addEventListener('change', async () => {
+      const agents = await fetchAgents();
+      const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+      const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+      if (agents) buildGraph(agents, tasks, projects);
+    });
+  });
+  
+  // Auto-refresh every 30s
+  setInterval(async () => {
+    if (!document.getElementById('autoRefresh').checked) return;
+    const agents = await fetchAgents();
+    const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+    const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+    if (agents) buildGraph(agents, tasks, projects);
+  }, 30000);
+  
+  // Double-click to edit agent, view project, or manage task
+  canvas.addEventListener('dblclick', e => {
+    const { x, y } = screenToWorld(e.clientX, e.clientY);
+    const node = findNode(x, y);
+    if (node && node.type === 'agent') openEditModal(node);
+    else if (node && node.type === 'project') openProjectModal(node);
+    else if (node && node.type === 'task') openTaskModal(node);
+  });
+  
+  // Click on notification pip to show requests
+  canvas.addEventListener('click', e => {
+    const { x, y } = screenToWorld(e.clientX, e.clientY);
+    for (const n of agentNodes) {
+      const reqCount = pendingRequests[n.id] || 0;
+      if (reqCount > 0) {
+        const r = n.radius || 20;
+        const pipX = n.x + r * 0.7;
+        const pipY = n.y - r * 0.7;
+        const pipR = Math.max(6, r * 0.3);
+        const dx = x - pipX, dy = y - pipY;
+        if (dx * dx + dy * dy <= pipR * pipR) {
+          openRequestsModal(n);
+          return;
+        }
+      }
+    }
+  });
+}
+
+function openEditModal(node) {
+  currentEditNode = node;
+  document.getElementById('edit-title').textContent = `Edit: ${node.name}`;
+  
+  const reportsSelect = document.getElementById('edit-reports');
+  const mentorSelect = document.getElementById('edit-mentor');
+  const liaisonSelect = document.getElementById('edit-liaison');
+  
+  reportsSelect.innerHTML = '';
+  mentorSelect.innerHTML = '<option value="">— None —</option>';
+  liaisonSelect.innerHTML = '';
+  
+  const currentReports = Array.isArray(node.reports_to) ? node.reports_to : (node.reports_to ? [node.reports_to] : []);
+  const currentLiaisons = node.liaises_with || [];
+  
+  agentNodes.forEach(a => {
+    if (a.id !== node.id) {
+      reportsSelect.innerHTML += `<option value="${a.id}" ${currentReports.includes(a.id) ? 'selected' : ''}>${a.name}</option>`;
+      mentorSelect.innerHTML += `<option value="${a.id}" ${node.mentor === a.id ? 'selected' : ''}>${a.name}</option>`;
+      liaisonSelect.innerHTML += `<option value="${a.id}" ${currentLiaisons.includes(a.id) ? 'selected' : ''}>${a.name} (${a.department || '?'})</option>`;
+    }
+  });
+  
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('edit-modal').style.display = 'block';
+}
+
+async function openRequestsModal(node) {
+  document.getElementById('requests-title').textContent = `Pending Requests: ${node.name}`;
+  document.getElementById('requests-list').innerHTML = '<p style="color:#888">Loading...</p>';
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('requests-modal').style.display = 'block';
+  
+  try {
+    const resp = await fetch(`${API_BASE}/api/agents/${node.id}/requests`, {
+      headers: { 'X-API-Key': API_KEY }
+    });
+    if (!resp.ok) throw new Error('Failed to load');
+    const requests = await resp.json();
+    
+    if (requests.length === 0) {
+      document.getElementById('requests-list').innerHTML = '<p style="color:#888">No pending requests</p>';
+      return;
+    }
+    
+    const html = requests.map(r => `
+      <div style="border:1px solid #333; border-radius:6px; padding:10px; margin-bottom:8px; background:#1a1a2e;">
+        <div style="font-weight:500; color:#fff;">${r.subject || '(no subject)'}</div>
+        <div style="font-size:11px; color:#888; margin:4px 0;">
+          From: ${r.from_agent || '?'} • Priority: ${r.priority || 'normal'} • ${r.request_type || 'task'}
+        </div>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          <button onclick="updateRequest(${r.id}, 'resolved')" style="padding:4px 10px; background:#4caf50; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:11px;">✓ Complete</button>
+          <button onclick="updateRequest(${r.id}, 'deferred')" style="padding:4px 10px; background:#ff9800; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:11px;">⏸ Defer</button>
+          <button onclick="updateRequest(${r.id}, 'archived')" style="padding:4px 10px; background:#666; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:11px;">📦 Archive</button>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('requests-list').innerHTML = html;
+  } catch (e) {
+    document.getElementById('requests-list').innerHTML = `<p style="color:#f44336">Error: ${e.message}</p>`;
+  }
+}
+
+async function updateRequest(id, status) {
+  try {
+    const resp = await fetch(`${API_BASE}/api/agents/requests/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      body: JSON.stringify({ status })
+    });
+    if (!resp.ok) throw new Error('Update failed');
+    alert('Request updated!');
+    closeModal();
+    fetchPendingRequests(); // Refresh counts
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function saveRelationships() {
+  if (!currentEditNode) return;
+  
+  const reportsSelect = document.getElementById('edit-reports');
+  const reports_to = Array.from(reportsSelect.selectedOptions).map(o => o.value);
+  const mentor = document.getElementById('edit-mentor').value || null;
+  const liaisonSelect = document.getElementById('edit-liaison');
+  const liaises_with = Array.from(liaisonSelect.selectedOptions).map(o => o.value);
+  
+  try {
+    const resp = await fetch(`${API_BASE}/api/agents/${currentEditNode.id}/relationships`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      body: JSON.stringify({ reports_to, mentor, liaises_with })
+    });
+    if (!resp.ok) throw new Error('Update failed');
+    
+    // Update local node
+    currentEditNode.reports_to = reports_to;
+    currentEditNode.mentor = mentor;
+    
+    // Rebuild edges
+    const agents = await fetchAgents();
+    const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+    const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+    if (agents) buildGraph(agents, tasks, projects);
+    
+    closeModal();
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.getElementById('edit-modal').style.display = 'none';
+  document.getElementById('requests-modal').style.display = 'none';
+  document.getElementById('project-modal').style.display = 'none';
+  document.getElementById('task-modal').style.display = 'none';
+}
+
+let currentTaskNode = null;
+
+function openTaskModal(node) {
+  currentTaskNode = node;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('task-modal').style.display = 'block';
+  
+  document.getElementById('task-modal-title').textContent = `Task #${node.id}`;
+  document.getElementById('task-modal-text').textContent = node.name || '(no description)';
+  document.getElementById('task-modal-status').textContent = node.status || 'open';
+  document.getElementById('task-modal-priority').textContent = node.priority || 'normal';
+  document.getElementById('task-modal-assignee').textContent = node.assignee || '—';
+  document.getElementById('task-modal-due').textContent = node.dueDate || '—';
+  document.getElementById('task-modal-dept').textContent = node.department || '—';
+  const stageEl = document.getElementById('task-modal-stage');
+  stageEl.textContent = node.stage ? node.stage.toUpperCase() : '—';
+  stageEl.style.color = (node.stage && STAGE_COLORS[node.stage]) || '#fff';
+  document.getElementById('task-modal-goal').textContent = node.goalId ? `#${node.goalId}` : '—';
+  const notesEl = document.getElementById('task-modal-stage-notes');
+  if (node.stageNotes) { notesEl.textContent = node.stageNotes; notesEl.style.display = 'block'; }
+  else { notesEl.style.display = 'none'; }
+  
+  // Populate assignee dropdown
+  const assignSelect = document.getElementById('task-assign-select');
+  assignSelect.innerHTML = '<option value="">— Select Agent —</option>';
+  agentNodes.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.id;
+    opt.textContent = `${a.name} (${a.department || 'no dept'})`;
+    if (a.id === node.assignee || a.name === node.assignee) opt.selected = true;
+    assignSelect.appendChild(opt);
+  });
+  
+  // Populate project dropdown
+  const projSelect = document.getElementById('task-project-select');
+  projSelect.innerHTML = '<option value="">— No Project —</option>';
+  projectNodes.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.dbId;
+    opt.textContent = p.name;
+    if (p.dbId === node.projectId) opt.selected = true;
+    projSelect.appendChild(opt);
+  });
+  
+  document.getElementById('task-comment').value = '';
+}
+
+async function taskAction(action) {
+  if (!currentTaskNode) return;
+  
+  const taskId = currentTaskNode.id;
+  let method = 'PATCH';
+  let body = {};
+  
+  if (action === 'complete') {
+    body.status = 'done';
+    body.completed_date = new Date().toISOString().slice(0, 10);
+  } else if (action === 'in-progress') {
+    body.status = 'in-progress';
+  } else if (action === 'delete') {
+    if (!confirm('Delete this task?')) return;
+    body.status = 'deleted';
+  } else if (action === 'assign') {
+    const assignee = document.getElementById('task-assign-select').value;
+    if (!assignee) {
+      alert('Please select an agent to assign');
+      return;
+    }
+    body.assignee = assignee;
+  } else if (action === 'link-project') {
+    const projectId = document.getElementById('task-project-select').value;
+    if (!projectId) {
+      alert('Please select a project');
+      return;
+    }
+    body.project_id = parseInt(projectId);
+  }
+  
+  try {
+    const fetchOpts = {
+      method: method,
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY }
+    };
+    if (method !== 'DELETE') {
+      fetchOpts.body = JSON.stringify(body);
+    }
+    
+    const resp = await fetch(`${API_BASE}/api/af64/tasks/${taskId}`, fetchOpts);
+    
+    if (!resp.ok) throw new Error('Update failed');
+    
+    // Refresh data
+    const agents = await fetchAgents();
+    const tasks = document.getElementById('showTasks').checked ? await fetchTasks() : [];
+    const projects = document.getElementById('showProjects').checked ? await fetchProjects() : [];
+    if (agents) buildGraph(agents, tasks, projects);
+    
+    closeModal();
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+let currentProjectNode = null;
+
+async function openProjectModal(node) {
+  currentProjectNode = node;
+  document.getElementById('modal-overlay').style.display = 'block';
+  document.getElementById('project-modal').style.display = 'block';
+  
+  document.getElementById('project-title').textContent = node.name;
+  
+  const badge = document.getElementById('project-status-badge');
+  badge.textContent = (node.status || 'active').toUpperCase();
+  badge.style.background = node.status === 'active' ? '#4caf50' : 
+                           node.status === 'paused' ? '#ff9800' : 
+                           node.status === 'completed' ? '#2196f3' : '#666';
+  badge.style.color = '#fff';
+  
+  document.getElementById('project-owner').textContent = node.owner || '—';
+  document.getElementById('project-description').textContent = node.description || 'No description available';
+  
+  // Goals and blockers might not be in API response yet
+  const goalsEl = document.getElementById('project-goals');
+  const blockersEl = document.getElementById('project-blockers');
+  goalsEl.textContent = node.goals || '(not set)';
+  blockersEl.textContent = node.blockers || 'None';
+  
+  // Hide goals/blockers sections if empty
+  goalsEl.parentElement.style.display = node.goals ? 'block' : 'none';
+  blockersEl.parentElement.style.display = node.blockers ? 'block' : 'none';
+}
+
+function editProject() {
+  if (!currentProjectNode) return;
+  // Open the project document in a new tab for editing
+  const docUrl = `${API_BASE}/doc/Projects/${currentProjectNode.id}`;
+  window.open(docUrl, '_blank');
+  closeModal();
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

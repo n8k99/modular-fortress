@@ -1,6 +1,6 @@
 # GSD State
 
-**Last Completed Milestone:** M003: Dragonpunk Write API — Create, Update, Delete, Move
+**Last Completed Milestone:** M004: Wails Desktop Shell — Native Window onto master_chronicle
 **Active Slice:** None
 **Phase:** complete
 **Requirements Status:** 6 active · 0 validated · 1 deferred · 2 out of scope
@@ -9,6 +9,7 @@
 - ✅ **M001:** Dragonpunk Bootstrap — Health + DB Connectivity
 - ✅ **M002:** Dragonpunk Read API — Browse the Nine Tables
 - ✅ **M003:** Dragonpunk Write API — Create, Update, Delete, Move
+- ✅ **M004:** Wails Desktop Shell — Native Window onto master_chronicle
 
 ## Recent Decisions
 - None recorded

@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
+
+:root {
+    --void: #08080D;
+    --smoke: #13131A;
+    --panel: #0F0F16;
+    --ember: #C8860A;
+    --ember-mid: #8B5E00;
+    --ember-dim: rgba(200,134,10,0.15);
+    --text: #D8D4CC;
+    --text-dim: #777770;
+    --text-muted: #44443F;
+    --border: rgba(200,134,10,0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    user-select: none;
+    --wails-draggable: drag;
+}
+
+#app {
+    text-align: center;
+    padding: 2rem;
+}
+
+.header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--ember);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.status {
+    margin-top: 2rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.status.connected {
+    color: var(--ember);
+    border-color: var(--ember-mid);
+}
+
+.content {
+    margin-top: 2rem;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.table-row .name {
+    color: var(--text);
+}
+
+.table-row .count {
+    color: var(--ember);
+    font-weight: 500;
+}
+
+.table-row:hover {
+    background: var(--ember-dim);
+    cursor: pointer;
+}
+
+.table-row.selected {
+    background: var(--ember-dim);
+    border-color: var(--ember-mid);
+}
+
+.section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 1px;
+}
+
+.kinds-panel {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+.kind-header {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-mid);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.kind-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    font-size: 12px;
+}
+
+.kind-row .kind-name {
+    color: var(--text-dim);
+}
+
+.kind-row .kind-count {
+    color: var(--text-muted);
+}
