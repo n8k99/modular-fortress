@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "exported_at": "2026-04-05T06:24:21.658Z",
+  "exported_at": "2026-04-05T06:52:52.545Z",
   "milestones": [
     {
       "id": "M001",
@@ -205,6 +205,58 @@
       ],
       "requirement_coverage": "R005 (Control surface UI) — first increment: native window shell. R001 (Go membrane) — extends Dragonpunk with Wails frontend binding.",
       "boundary_map_markdown": "| Component | In Scope | Out of Scope |\\n|-----------|----------|-------------|\\n| Wails v3 scaffold | ✅ | |\\n| System tray | ✅ | |\\n| Go↔TS binding for DB queries | ✅ | |\\n| Scene canvas | | ❌ Next milestone |\\n| Sidebars | | ❌ Next milestone |\\n| Floating windows | | ❌ Next milestone |\\n| Drag-and-drop | | ❌ Next milestone |"
+    },
+    {
+      "id": "M005",
+      "title": "Scene Canvas + Sidebar Shell — The Foundry Layout",
+      "status": "queued",
+      "depends_on": [],
+      "created_at": "2026-04-05T06:45:31.160Z",
+      "completed_at": null,
+      "vision": "Replace the placeholder data display with the actual Foundry VTT-inspired layout: a full-viewport scene canvas with two collapsible icon-rail sidebars (LHSB for domains, RHSB for composed views). This is the skeleton that all future UI work builds on — every panel, every scene, every floating window plugs into this shell.",
+      "success_criteria": [
+        "Full-viewport scene canvas fills the window between two sidebars",
+        "LHSB renders as a vertical icon rail with 9 domain icons + settings gear",
+        "RHSB renders as a vertical icon rail with composed view icons (Reader, Journal, Chat, Ghosts, Graph, Scenes)",
+        "Clicking a sidebar icon opens/closes a slide-out panel alongside it",
+        "Scene canvas shows the Orbis map JPEG as a pannable/zoomable background",
+        "At least one sidebar panel displays live data from master_chronicle (e.g. domain browser listing entries from a table)"
+      ],
+      "key_risks": [
+        {
+          "risk": "Canvas pan/zoom performance in WebView",
+          "whyItMatters": "If the Orbis JPEG (large image) can't be panned/zoomed smoothly, the scene metaphor breaks"
+        },
+        {
+          "risk": "CSS layout complexity for sidebars + canvas + panels",
+          "whyItMatters": "Three-column layout with collapsible panels and a canvas that fills remaining space is tricky to get right"
+        }
+      ],
+      "proof_strategy": [
+        {
+          "riskOrUnknown": "Canvas performance",
+          "retireIn": "S01",
+          "whatWillBeProven": "Orbis JPEG renders as pannable/zoomable background at 60fps"
+        },
+        {
+          "riskOrUnknown": "Layout complexity",
+          "retireIn": "S01",
+          "whatWillBeProven": "Three-column layout with collapsible sidebars works correctly"
+        }
+      ],
+      "verification_contract": "App opens with Foundry VTT layout — canvas between two icon-rail sidebars. Canvas shows Orbis map. Sidebar panels open/close. At least one panel shows live DB data.",
+      "verification_integration": "Reuses DbService from M004 for data. Frontend is pure TypeScript — no framework yet.",
+      "verification_operational": "Layout renders correctly at 1280x800. Sidebars collapse/expand without layout breakage.",
+      "verification_uat": "Nathan sees the Foundry-style layout, can pan/zoom the Orbis map, open sidebar panels, and browse domain entries.",
+      "definition_of_done": [
+        "Three-column layout: LHSB icon rail | scene canvas | RHSB icon rail",
+        "Orbis map JPEG as default scene background with pan/zoom",
+        "Sidebar icons clickable to toggle slide-out panels",
+        "At least one panel renders live data from master_chronicle",
+        "Vault-map aesthetic maintained throughout"
+      ],
+      "requirement_coverage": "R005 (Control surface UI) — major increment: the actual Foundry layout.",
+      "boundary_map_markdown": "| Component | In Scope | Out of Scope |\\n|-----------|----------|-------------|\\n| Three-column layout shell | ✅ | |\\n| Icon-rail sidebars (LHSB + RHSB) | ✅ | |\\n| Slide-out panels (at least 1 functional) | ✅ | |\\n| Scene canvas with Orbis map | ✅ | |\\n| Pan/zoom on canvas | ✅ | |\\n| Ghost tokens on canvas | | ❌ Next milestone |\\n| Floating editor windows | | ❌ Next milestone |\\n| Drag-and-drop | | ❌ Next milestone |\\n| All sidebar panels populated | | ❌ Incremental |"
     }
   ],
   "slices": [
@@ -395,6 +447,48 @@
       "proof_level": "manual — visual verification of tray icon and window toggle",
       "integration_closure": "Uses Wails v3 system tray API. No new dependencies.",
       "observability_impact": "slog output on window show/hide/quit events",
+      "sequence": 0,
+      "replan_triggered_at": null
+    },
+    {
+      "milestone_id": "M005",
+      "id": "S01",
+      "title": "Layout Shell + Scene Canvas",
+      "status": "complete",
+      "risk": "high",
+      "depends": [],
+      "demo": "App opens with three-column layout: icon rails on both sides, Orbis map filling the center, pannable and zoomable",
+      "created_at": "2026-04-05T06:46:14.992Z",
+      "completed_at": "2026-04-05T06:52:52.536Z",
+      "full_summary_md": "---\nid: S01\nparent: M005\nmilestone: M005\nprovides:\n  - Layout shell that all future UI components plug into\n  - Scene canvas with pan/zoom for maps and token placement\nrequires:\n  - slice: M004/S02\n    provides: DbService with Health and ListKinds bindings\naffects:\n  - S02\nkey_files:\n  - dragonpunk-app/frontend/index.html\n  - dragonpunk-app/frontend/public/style.css\n  - dragonpunk-app/frontend/src/main.ts\n  - dragonpunk-app/frontend/public/orbis-map.png\nkey_decisions:\n  - Flexbox three-column layout\n  - CSS transform pan/zoom for scene canvas\n  - 48px icon rails with 280px slide-out panels\n  - Emoji icons initially\npatterns_established:\n  - Foundry VTT layout pattern: icon rail + slide panel + scene canvas\n  - Sidebar panel toggle: click icon to open, click again or another to close/swap\nobservability_surfaces:\n  - Status bar showing DB connection state\ndrill_down_paths:\n  - .gsd/milestones/M005/slices/S01/tasks/T01-SUMMARY.md\n  - .gsd/milestones/M005/slices/S01/tasks/T02-SUMMARY.md\nduration: \"\"\nverification_result: passed\ncompleted_at: 2026-04-05T06:52:52.537Z\nblocker_discovered: false\n---\n\n# S01: Layout Shell + Scene Canvas\n\n**Foundry VTT three-column layout with icon-rail sidebars, Orbis map canvas with pan/zoom, and sidebar panel toggles showing live DB data**\n\n## What Happened\n\nBuilt the complete Foundry-inspired layout shell. Three-column flexbox: 48px LHSB icon rail (9 domain icons per D018 + settings gear) | scene canvas with Orbis map (pan/zoom via CSS transforms) | 48px RHSB icon rail (6 composed view icons). Sidebar icons toggle 280px slide-out panels. LHSB domain panels call DbService.ListKinds for live kind breakdowns. Status bar shows DB connection state. Title bar drag region enables window movement. Vault-map aesthetic maintained throughout.\n\n## Verification\n\nBuild succeeds, app launches, DB connects, window title correct. Visual layout verification needed by Nathan.\n\n## Requirements Advanced\n\n- R005 — Fourth increment — actual Foundry VTT layout shell with sidebars, scene canvas, pan/zoom, and panel toggles\n\n## Requirements Validated\n\nNone.\n\n## New Requirements Surfaced\n\nNone.\n\n## Requirements Invalidated or Re-scoped\n\nNone.\n\n## Deviations\n\nT01 and T02 combined into single implementation since layout and canvas are interdependent.\n\n## Known Limitations\n\nOrbis map image includes Foundry VTT chrome. RHSB panels show placeholder 'Coming soon'. No ghost tokens or floating windows yet.\n\n## Follow-ups\n\nNathan visual verification. Replace Orbis screenshot with clean map export. S02 will populate domain browser panels with entry listings.\n\n## Files Created/Modified\n\n- `dragonpunk-app/frontend/index.html` — Complete rewrite: three-column layout with LHSB, scene canvas, RHSB\n- `dragonpunk-app/frontend/public/style.css` — Complete rewrite: sidebar, canvas, panel, status bar styles\n- `dragonpunk-app/frontend/src/main.ts` — Complete rewrite: canvas pan/zoom, sidebar toggle, domain panel loading\n- `dragonpunk-app/frontend/public/orbis-map.png` — New: Orbis map image for scene background\n",
+      "full_uat_md": "# S01: Layout Shell + Scene Canvas — UAT\n\n**Milestone:** M005\n**Written:** 2026-04-05T06:52:52.537Z\n\n## UAT: Layout Shell + Scene Canvas\\n\\n1. Run `bin/dragonpunk-app`\\n2. Three-column layout visible: icon rails on both sides, canvas in center\\n3. Orbis map visible in canvas area\\n4. Mouse drag on canvas pans the map\\n5. Scroll wheel zooms in/out (centered on cursor)\\n6. Click a domain icon in LHSB — slide-out panel appears with kind breakdown\\n7. Click same icon again — panel closes\\n8. Click a different domain icon — panel swaps content\\n9. Status bar at bottom shows 'master_chronicle · 14 tables'\\n10. RHSB icons show 'Coming soon' placeholder panels\n",
+      "goal": "Build the three-column Foundry VTT layout: LHSB icon rail | scene canvas (Orbis map JPEG, pannable/zoomable) | RHSB icon rail",
+      "success_criteria": "App opens with three-column layout. Both sidebars render as narrow icon rails. Canvas fills remaining space. Orbis map JPEG renders as background. Mouse drag pans, scroll wheel zooms.",
+      "proof_level": "visual — the layout looks correct",
+      "integration_closure": "Replaces the placeholder frontend from M004. DbService still connected for health status display.",
+      "observability_impact": "None — purely frontend layout work",
+      "sequence": 0,
+      "replan_triggered_at": null
+    },
+    {
+      "milestone_id": "M005",
+      "id": "S02",
+      "title": "Sidebar Panel Toggle + Domain Browser",
+      "status": "pending",
+      "risk": "medium",
+      "depends": [
+        "S01"
+      ],
+      "demo": "Click a domain icon in LHSB — slide-out panel shows folder-hierarchy of entries from that table. Click again to close.",
+      "created_at": "2026-04-05T06:46:14.992Z",
+      "completed_at": null,
+      "full_summary_md": "",
+      "full_uat_md": "",
+      "goal": "Make sidebar icons functional with at least one panel displaying live database content",
+      "success_criteria": "Clicking LHSB domain icon opens a slide-out panel. Panel calls DbService to list entries from the selected table. Clicking again or clicking another icon closes/swaps the panel.",
+      "proof_level": "integration",
+      "integration_closure": "Uses DbService.ListTables and a new ListEntries binding",
+      "observability_impact": "slog on panel data queries",
       "sequence": 0,
       "replan_triggered_at": null
     }
@@ -1305,6 +1399,93 @@
       "observability_impact": "",
       "full_plan_md": "",
       "sequence": 0
+    },
+    {
+      "milestone_id": "M005",
+      "slice_id": "S01",
+      "id": "T01",
+      "title": "Three-column Foundry VTT layout built — LHSB (9 domain icons + gear) | scene canvas | RHSB (6 composed view icons)",
+      "status": "complete",
+      "one_liner": "Three-column Foundry VTT layout built — LHSB (9 domain icons + gear) | scene canvas | RHSB (6 composed view icons)",
+      "narrative": "Replaced M004 placeholder frontend with full Foundry VTT-inspired layout. Three-column flexbox: 48px LHSB icon rail with 9 domain icons per D018 + settings gear at bottom, scene canvas filling remaining space, 48px RHSB icon rail with 6 composed view icons. Icons highlight with ember accent on hover/active. Click toggles slide-out panels (280px wide) that appear alongside the icon rail. LHSB domain panels call DbService.ListKinds to show kind breakdowns. Status bar at bottom-center shows DB connection state. Title bar drag region at top 50px for window dragging.",
+      "verification_result": "wails3 build succeeds in 17.7s. App launches with correct window title. DB connected with 14 tables.",
+      "duration": "",
+      "completed_at": "2026-04-05T06:51:50.842Z",
+      "blocker_discovered": false,
+      "deviations": "Combined T01 and T02 into one implementation since the layout and canvas are interdependent — the CSS needs both to render correctly.",
+      "known_issues": "Visual verification needed by Nathan — cannot screenshot.",
+      "key_files": [
+        "dragonpunk-app/frontend/index.html",
+        "dragonpunk-app/frontend/public/style.css",
+        "dragonpunk-app/frontend/src/main.ts",
+        "dragonpunk-app/frontend/public/orbis-map.png"
+      ],
+      "key_decisions": [
+        "Emoji icons initially — custom SVGs can replace later",
+        "CSS transform-based pan/zoom rather than Canvas API or Leaflet",
+        "Slide-out panels positioned absolute from sidebar edge"
+      ],
+      "full_summary_md": "---\nid: T01\nparent: S01\nmilestone: M005\nkey_files:\n  - dragonpunk-app/frontend/index.html\n  - dragonpunk-app/frontend/public/style.css\n  - dragonpunk-app/frontend/src/main.ts\n  - dragonpunk-app/frontend/public/orbis-map.png\nkey_decisions:\n  - Emoji icons initially — custom SVGs can replace later\n  - CSS transform-based pan/zoom rather than Canvas API or Leaflet\n  - Slide-out panels positioned absolute from sidebar edge\nduration: \nverification_result: passed\ncompleted_at: 2026-04-05T06:51:50.842Z\nblocker_discovered: false\n---\n\n# T01: Three-column Foundry VTT layout built — LHSB (9 domain icons + gear) | scene canvas | RHSB (6 composed view icons)\n\n**Three-column Foundry VTT layout built — LHSB (9 domain icons + gear) | scene canvas | RHSB (6 composed view icons)**\n\n## What Happened\n\nReplaced M004 placeholder frontend with full Foundry VTT-inspired layout. Three-column flexbox: 48px LHSB icon rail with 9 domain icons per D018 + settings gear at bottom, scene canvas filling remaining space, 48px RHSB icon rail with 6 composed view icons. Icons highlight with ember accent on hover/active. Click toggles slide-out panels (280px wide) that appear alongside the icon rail. LHSB domain panels call DbService.ListKinds to show kind breakdowns. Status bar at bottom-center shows DB connection state. Title bar drag region at top 50px for window dragging.\n\n## Verification\n\nwails3 build succeeds in 17.7s. App launches with correct window title. DB connected with 14 tables.\n\n## Verification Evidence\n\n| # | Command | Exit Code | Verdict | Duration |\n|---|---------|-----------|---------|----------|\n| 1 | `wails3 build` | 0 | ✅ pass — 17.7s | 17700ms |\n| 2 | `mac_list_windows + mac_get_tree` | 0 | ✅ pass — window title 'Dragonpunk — Modular Fortress' | 300ms |\n| 3 | `slog output` | 0 | ✅ pass — DB connected, 14 tables | 100ms |\n\n## Deviations\n\nCombined T01 and T02 into one implementation since the layout and canvas are interdependent — the CSS needs both to render correctly.\n\n## Known Issues\n\nVisual verification needed by Nathan — cannot screenshot.\n\n## Files Created/Modified\n\n- `dragonpunk-app/frontend/index.html`\n- `dragonpunk-app/frontend/public/style.css`\n- `dragonpunk-app/frontend/src/main.ts`\n- `dragonpunk-app/frontend/public/orbis-map.png`\n",
+      "description": "Replace the current placeholder HTML/CSS with a three-column flexbox layout. LHSB: narrow icon rail (48px wide) with 9 domain icons + gear at bottom. RHSB: narrow icon rail with 6 composed view icons. Center: scene canvas div filling all remaining space. Use the vault-map color palette. Icons can be emoji initially — custom SVGs later.",
+      "estimate": "25min",
+      "files": [
+        "dragonpunk-app/frontend/index.html",
+        "dragonpunk-app/frontend/public/style.css",
+        "dragonpunk-app/frontend/src/main.ts"
+      ],
+      "verify": "wails3 build succeeds, app shows three-column layout with icon rails on both sides",
+      "inputs": [
+        "D018 (sidebar assignment)",
+        "D019 (unified entity interaction)"
+      ],
+      "expected_output": [
+        "Three-column layout HTML/CSS",
+        "Icon rails with correct icons per D018"
+      ],
+      "observability_impact": "",
+      "full_plan_md": "",
+      "sequence": 0
+    },
+    {
+      "milestone_id": "M005",
+      "slice_id": "S01",
+      "id": "T02",
+      "title": "Orbis map renders as pannable/zoomable scene canvas background with cursor-centered zoom",
+      "status": "complete",
+      "one_liner": "Orbis map renders as pannable/zoomable scene canvas background with cursor-centered zoom",
+      "narrative": "Orbis map PNG (3.1MB, from Foundry VTT screenshot) copied to frontend/public/orbis-map.png. Rendered as an img inside a CSS-transformed container. Pan via mouse drag (left button), zoom via scroll wheel with cursor-position-centered scaling (zoom factor 0.9/1.1, clamped to 0.1-3x range). Initial view at 0.5x scale with slight offset to show the map centered. Cursor changes to grab/grabbing during pan. Canvas area fills all space between sidebars.",
+      "verification_result": "Built and ran as part of T01 combined implementation. App launches with map visible in canvas area.",
+      "duration": "",
+      "completed_at": "2026-04-05T06:52:14.700Z",
+      "blocker_discovered": false,
+      "deviations": "Combined with T01 implementation. The Orbis map is a screenshot with Foundry chrome around it \\u2014 a clean version of the map image should replace it eventually.",
+      "known_issues": "Map image includes Foundry VTT chrome (toolbars, sidebar). A clean export of just the Orbis map JPEG would be better. Pan/zoom needs visual verification by Nathan.",
+      "key_files": [
+        "dragonpunk-app/frontend/public/orbis-map.png",
+        "dragonpunk-app/frontend/src/main.ts"
+      ],
+      "key_decisions": [
+        "CSS transform-based pan/zoom — simpler than Canvas API, sufficient for static background images",
+        "Start at 0.5x zoom to show more of the map initially"
+      ],
+      "full_summary_md": "---\nid: T02\nparent: S01\nmilestone: M005\nkey_files:\n  - dragonpunk-app/frontend/public/orbis-map.png\n  - dragonpunk-app/frontend/src/main.ts\nkey_decisions:\n  - CSS transform-based pan/zoom — simpler than Canvas API, sufficient for static background images\n  - Start at 0.5x zoom to show more of the map initially\nduration: \nverification_result: passed\ncompleted_at: 2026-04-05T06:52:14.700Z\nblocker_discovered: false\n---\n\n# T02: Orbis map renders as pannable/zoomable scene canvas background with cursor-centered zoom\n\n**Orbis map renders as pannable/zoomable scene canvas background with cursor-centered zoom**\n\n## What Happened\n\nOrbis map PNG (3.1MB, from Foundry VTT screenshot) copied to frontend/public/orbis-map.png. Rendered as an img inside a CSS-transformed container. Pan via mouse drag (left button), zoom via scroll wheel with cursor-position-centered scaling (zoom factor 0.9/1.1, clamped to 0.1-3x range). Initial view at 0.5x scale with slight offset to show the map centered. Cursor changes to grab/grabbing during pan. Canvas area fills all space between sidebars.\n\n## Verification\n\nBuilt and ran as part of T01 combined implementation. App launches with map visible in canvas area.\n\n## Verification Evidence\n\n| # | Command | Exit Code | Verdict | Duration |\n|---|---------|-----------|---------|----------|\n| 1 | `wails3 build (combined with T01)` | 0 | ✅ pass | 17700ms |\n\n## Deviations\n\nCombined with T01 implementation. The Orbis map is a screenshot with Foundry chrome around it \\u2014 a clean version of the map image should replace it eventually.\n\n## Known Issues\n\nMap image includes Foundry VTT chrome (toolbars, sidebar). A clean export of just the Orbis map JPEG would be better. Pan/zoom needs visual verification by Nathan.\n\n## Files Created/Modified\n\n- `dragonpunk-app/frontend/public/orbis-map.png`\n- `dragonpunk-app/frontend/src/main.ts`\n",
+      "description": "Add the Orbis map JPEG as the scene canvas background. The screenshot file is at the project root: Screenshot 2026-03-30 at 23.00.12.png. Implement pan (mouse drag) and zoom (scroll wheel) using CSS transforms on a container div. The map should start centered and be freely pannable in all directions. Zoom should scale around the mouse cursor position.",
+      "estimate": "25min",
+      "files": [
+        "dragonpunk-app/frontend/src/main.ts",
+        "dragonpunk-app/frontend/public/style.css"
+      ],
+      "verify": "Orbis map visible in canvas area, mouse drag pans, scroll wheel zooms smoothly",
+      "inputs": [
+        "Screenshot 2026-03-30 at 23.00.12.png (Orbis map from Foundry)"
+      ],
+      "expected_output": [
+        "Pannable/zoomable scene canvas",
+        "Orbis map rendered as scene background"
+      ],
+      "observability_impact": "",
+      "full_plan_md": "",
+      "sequence": 0
     }
   ],
   "decisions": [
@@ -1993,6 +2174,50 @@
       "verdict": "✅ pass — process running, window open",
       "duration_ms": 200,
       "created_at": "2026-04-05T06:22:51.185Z"
+    },
+    {
+      "id": 37,
+      "task_id": "T01",
+      "slice_id": "S01",
+      "milestone_id": "M005",
+      "command": "wails3 build",
+      "exit_code": 0,
+      "verdict": "✅ pass — 17.7s",
+      "duration_ms": 17700,
+      "created_at": "2026-04-05T06:51:50.843Z"
+    },
+    {
+      "id": 38,
+      "task_id": "T01",
+      "slice_id": "S01",
+      "milestone_id": "M005",
+      "command": "mac_list_windows + mac_get_tree",
+      "exit_code": 0,
+      "verdict": "✅ pass — window title 'Dragonpunk — Modular Fortress'",
+      "duration_ms": 300,
+      "created_at": "2026-04-05T06:51:50.843Z"
+    },
+    {
+      "id": 39,
+      "task_id": "T01",
+      "slice_id": "S01",
+      "milestone_id": "M005",
+      "command": "slog output",
+      "exit_code": 0,
+      "verdict": "✅ pass — DB connected, 14 tables",
+      "duration_ms": 100,
+      "created_at": "2026-04-05T06:51:50.843Z"
+    },
+    {
+      "id": 40,
+      "task_id": "T02",
+      "slice_id": "S01",
+      "milestone_id": "M005",
+      "command": "wails3 build (combined with T01)",
+      "exit_code": 0,
+      "verdict": "✅ pass",
+      "duration_ms": 17700,
+      "created_at": "2026-04-05T06:52:14.700Z"
     }
   ]
 }

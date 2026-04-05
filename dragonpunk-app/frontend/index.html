@@ -8,12 +8,50 @@
 </head>
 <body>
     <div id="app">
-        <div class="header">
-            <h1>Dragonpunk</h1>
-            <p class="tagline">Modular Fortress — Your desk. Your ghosts. Your data.</p>
-        </div>
-        <div id="status" class="status">Connecting to master_chronicle...</div>
-        <div id="content" class="content"></div>
+        <!-- LHSB: Domain browsers -->
+        <nav id="lhsb" class="sidebar left">
+            <div class="sidebar-icons">
+                <button class="sb-icon" data-domain="the_chronicles" title="The Chronicles">📜</button>
+                <button class="sb-icon" data-domain="the_realms" title="The Realms">🏰</button>
+                <button class="sb-icon" data-domain="the_press" title="The Press">📰</button>
+                <button class="sb-icon" data-domain="the_markets" title="The Markets">📈</button>
+                <button class="sb-icon" data-domain="the_music" title="The Music">🎵</button>
+                <button class="sb-icon" data-domain="the_forge" title="The Forge">🔨</button>
+                <button class="sb-icon" data-domain="the_commons" title="The Commons">📦</button>
+                <button class="sb-icon" data-domain="the_work" title="The Work">📋</button>
+                <button class="sb-icon" data-domain="the_post" title="The Post">✉️</button>
+            </div>
+            <div class="sidebar-bottom">
+                <button class="sb-icon" data-panel="settings" title="Settings">⚙️</button>
+            </div>
+            <div id="lhsb-panel" class="slide-panel left" hidden></div>
+        </nav>
+
+        <!-- Scene canvas -->
+        <main id="scene-canvas">
+            <div id="scene-viewport">
+                <div id="scene-content">
+                    <img id="scene-bg" src="/orbis-map.png" alt="Orbis" draggable="false" />
+                </div>
+            </div>
+            <div id="scene-status">
+                <span id="status-indicator" class="status-dot"></span>
+                <span id="status-text">connecting...</span>
+            </div>
+        </main>
+
+        <!-- RHSB: Composed views -->
+        <nav id="rhsb" class="sidebar right">
+            <div class="sidebar-icons">
+                <button class="sb-icon" data-panel="reader" title="Reader">📖</button>
+                <button class="sb-icon" data-panel="journal" title="Journal">📓</button>
+                <button class="sb-icon" data-panel="chat" title="Chat">💬</button>
+                <button class="sb-icon" data-panel="ghosts" title="Ghost Roster">👥</button>
+                <button class="sb-icon" data-panel="graph" title="Graph">📊</button>
+                <button class="sb-icon" data-panel="scenes" title="Scenes">🎭</button>
+            </div>
+            <div id="rhsb-panel" class="slide-panel right" hidden></div>
+        </nav>
     </div>
     <script type="module" src="/src/main.ts"></script>
 </body>

@@ -11,132 +11,213 @@
     --text-dim: #777770;
     --text-muted: #44443F;
     --border: rgba(200,134,10,0.18);
+    --border-dim: rgba(200,134,10,0.07);
+    --sidebar-width: 48px;
+    --panel-width: 280px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
+html, body {
+    height: 100%;
+    overflow: hidden;
     background: var(--void);
     color: var(--text);
     font-family: 'IBM Plex Mono', monospace;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     -webkit-user-select: none;
     user-select: none;
-    --wails-draggable: drag;
 }
 
+/* ── APP LAYOUT ── */
 #app {
-    text-align: center;
-    padding: 2rem;
-}
-
-.header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 64px;
-    font-weight: 300;
-    color: var(--ember);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-}
-
-.tagline {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.status {
-    margin-top: 2rem;
-    font-size: 12px;
-    color: var(--text-muted);
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    display: inline-block;
-}
-
-.status.connected {
-    color: var(--ember);
-    border-color: var(--ember-mid);
-}
-
-.content {
-    margin-top: 2rem;
-    text-align: left;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.table-row {
     display: flex;
-    justify-content: space-between;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
+    height: 100vh;
+    width: 100vw;
 }
 
-.table-row .name {
+/* ── SIDEBARS ── */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--smoke);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar.left {
+    border-right: 1px solid var(--border-dim);
+}
+
+.sidebar.right {
+    border-left: 1px solid var(--border-dim);
+}
+
+.sidebar-icons {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    gap: 2px;
+    flex: 1;
+}
+
+.sidebar-bottom {
+    padding: 8px 0;
+    border-top: 1px solid var(--border-dim);
+}
+
+.sb-icon {
+    width: var(--sidebar-width);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+    position: relative;
+}
+
+.sidebar.left .sb-icon:hover,
+.sidebar.left .sb-icon.active {
+    background: var(--ember-dim);
+    border-left-color: var(--ember);
+}
+
+.sidebar.right .sb-icon:hover,
+.sidebar.right .sb-icon.active {
+    background: var(--ember-dim);
+    border-right-color: var(--ember);
+}
+
+/* ── SLIDE-OUT PANELS ── */
+.slide-panel {
+    position: absolute;
+    top: 0;
+    width: var(--panel-width);
+    height: 100%;
+    background: var(--panel);
+    overflow-y: auto;
+    z-index: 5;
+    padding: 16px;
+    font-size: 12px;
+}
+
+.slide-panel.left {
+    left: var(--sidebar-width);
+    border-right: 1px solid var(--border);
+}
+
+.slide-panel.right {
+    right: var(--sidebar-width);
+    border-left: 1px solid var(--border);
+}
+
+.panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ember);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-dim);
+}
+
+.panel-entry {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-dim);
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: color 0.1s;
+}
+
+.panel-entry:hover {
     color: var(--text);
 }
 
-.table-row .count {
-    color: var(--ember);
-    font-weight: 500;
-}
-
-.table-row:hover {
-    background: var(--ember-dim);
-    cursor: pointer;
-}
-
-.table-row.selected {
-    background: var(--ember-dim);
-    border-color: var(--ember-mid);
-}
-
-.section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 300;
-    color: var(--text-dim);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-    letter-spacing: 1px;
-}
-
-.kinds-panel {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-}
-
-.kind-header {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--ember-mid);
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.kind-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.25rem 0;
+.panel-entry .entry-title {
     font-size: 12px;
 }
 
-.kind-row .kind-name {
-    color: var(--text-dim);
+.panel-entry .entry-kind {
+    font-size: 10px;
+    color: var(--text-muted);
 }
 
-.kind-row .kind-count {
-    color: var(--text-muted);
+/* ── SCENE CANVAS ── */
+#scene-canvas {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--void);
+    cursor: grab;
+}
+
+#scene-canvas:active {
+    cursor: grabbing;
+}
+
+#scene-viewport {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#scene-content {
+    position: absolute;
+    transform-origin: 0 0;
+    will-change: transform;
+}
+
+#scene-bg {
+    display: block;
+    pointer-events: none;
+}
+
+/* ── STATUS BAR ── */
+#scene-status {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8, 8, 13, 0.85);
+    border: 1px solid var(--border-dim);
+    border-radius: 4px;
+    padding: 4px 16px;
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 5;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+}
+
+.status-dot.connected {
+    background: #2E9E78;
+}
+
+/* ── TITLE BAR DRAG REGION ── */
+#scene-canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    --wails-draggable: drag;
+    z-index: 1;
+    pointer-events: auto;
 }
